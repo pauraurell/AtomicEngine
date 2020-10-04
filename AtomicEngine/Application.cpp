@@ -4,28 +4,18 @@ Application::Application()
 {
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
-	audio = new ModuleAudio(this, true);
 	scene_intro = new ModuleSceneIntro(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
-	player = new ModulePlayer(this);
-
-	// The order of calls is very important!
-	// Modules will Init() Start() and Update in this order
-	// They will CleanUp() in reverse order
 
 	// Main Modules
 	AddModule(window);
+	AddModule(renderer3D);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(audio);
 	
 	// Scenes
 	AddModule(scene_intro);
-	AddModule(player);
-
-	// Renderer last!
-	AddModule(renderer3D);
 }
 
 Application::~Application()
@@ -52,10 +42,6 @@ bool Application::Init()
 		item = item->next;
 	}
 
-	// Awake() the scene module for map loading
-	LOG("Scene Awake --------------");
-	ret = scene_intro->Awake();
-
 	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
 	item = list_modules.getFirst();
@@ -66,15 +52,13 @@ bool Application::Init()
 		item = item->next;
 	}
 	
-	ms_timer.Start();
 	return ret;
 }
+
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
-	ms_timer.Start();
 }
 
 // ---------------------------------------------
@@ -92,7 +76,7 @@ update_status Application::Update()
 	
 	while(item != NULL && ret == UPDATE_CONTINUE)
 	{
-		ret = item->data->PreUpdate(dt);
+		ret = item->data->PreUpdate();
 		item = item->next;
 	}
 
@@ -100,7 +84,7 @@ update_status Application::Update()
 
 	while(item != NULL && ret == UPDATE_CONTINUE)
 	{
-		ret = item->data->Update(dt);
+		ret = item->data->Update();
 		item = item->next;
 	}
 
@@ -108,7 +92,7 @@ update_status Application::Update()
 
 	while(item != NULL && ret == UPDATE_CONTINUE)
 	{
-		ret = item->data->PostUpdate(dt);
+		ret = item->data->PostUpdate();
 		item = item->next;
 	}
 

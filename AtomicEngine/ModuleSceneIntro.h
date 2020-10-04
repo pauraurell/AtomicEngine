@@ -2,13 +2,11 @@
 #include "Module.h"
 #include "p2DynArray.h"
 #include "Globals.h"
-#include "Primitive.h"
-#include "Timer.h"
 
-#include "PugiXml\src\pugixml.hpp"
+#define BOUNCER_TIME 200
 
-
-struct Timer;
+struct PhysBody3D;
+class Cube;
 
 class ModuleSceneIntro : public Module
 {
@@ -16,17 +14,9 @@ public:
 	ModuleSceneIntro(Application* app, bool start_enabled = true);
 	~ModuleSceneIntro();
 
-	bool Awake();
 	bool Start();
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	update_status Update();
 	bool CleanUp();
 
-	
-private:
-	pugi::xml_document map_file;
-	pugi::xml_node map_node;
-
-	pugi::xml_node LoadMap(pugi::xml_document&) const;
-
+public:
 };
