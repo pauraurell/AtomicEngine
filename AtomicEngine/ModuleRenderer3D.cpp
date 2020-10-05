@@ -6,6 +6,7 @@
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include "MathGeoLib\include\MathGeoLib.h"
 
 #pragma comment (lib, "glu32.lib")   
 #pragma comment (lib, "opengl32.lib")
