@@ -1,5 +1,4 @@
 #pragma once
-#include "p2List.h"
 #include "Globals.h"
 #include "Timer.h"
 #include "Module.h"
@@ -8,6 +7,8 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleCamera3D.h"
+#include <vector>
+
 
 class Application
 {
@@ -20,7 +21,7 @@ public:
 
 private:
 
-	p2List<Module*> list_modules;
+		std::vector<Module*> list_modules;
 
 public:
 
