@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "Primitive.h"
 
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
@@ -14,6 +15,7 @@
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	wireframe_mode = false;
 }
 
 // Destructor
@@ -95,7 +97,7 @@ bool ModuleRenderer3D::Init()
 		lights[0].ref = GL_LIGHT0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
 		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		lights[0].SetPos(0.0f, 0.0f, 2.5f);
+		lights[0].SetPos(0.0f, 2.5f, 1);
 		lights[0].Init();
 
 		GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -136,12 +138,152 @@ update_status ModuleRenderer3D::PreUpdate()
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		wireframe_mode = !wireframe_mode;
+	
+
 	return UPDATE_CONTINUE;
 }
 
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
+	//LINE
+	//glLineWidth(2.0f);
+	//glBegin(GL_LINES);
+	//glVertex3f(0.f, 0.f, 0.f);
+	//glVertex3f(0.f, 10.f, 0.f);
+	//glEnd();
+
+
+	//CUBE WITH DIRECT MODE
+	
+	/*glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
+
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(0.f, 2.f, 0.f);
+	
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(2.f, 2.f, 2.f);
+
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(2.f, 2.f, 2.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(2.f, 0.f, 2.f);
+
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(0.f, 2.f, 0.f);
+
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(2.f, 0.f, 0.f);
+
+	glEnd();*/
+	//glLineWidth(1.0f);
+
+
+	//CUBE WITH VERTEX ARRAYS
+	
+	GLfloat vertices[] =
+	{
+		0.f, 2.f, 0.f,
+		0.f, 0.f, 0.f,
+		0.f, 0.f, 2.f,
+		0.f, 0.f, 2.f,
+		0.f, 2.f, 2.f,
+		0.f, 2.f, 0.f,
+
+		2.f, 2.f, 0.f,
+		2.f, 0.f, 2.f,
+		2.f, 0.f, 0.f,
+		2.f, 0.f, 2.f,
+		2.f, 2.f, 0.f,
+		2.f, 2.f, 2.f,
+
+		0.f, 2.f, 0.f,
+		2.f, 2.f, 0.f,
+		2.f, 0.f, 0.f,
+		0.f, 2.f, 0.f,
+		2.f, 0.f, 0.f,
+		0.f, 0.f, 0.f,
+
+		0.f, 2.f, 2.f,
+		2.f, 0.f, 2.f,
+		2.f, 2.f, 2.f,
+		0.f, 2.f, 2.f,
+		0.f, 0.f, 2.f,
+		2.f, 0.f, 2.f,
+
+		0.f, 2.f, 2.f,
+		2.f, 2.f, 2.f,
+		2.f, 2.f, 0.f,
+		0.f, 2.f, 2.f,
+		2.f, 2.f, 0.f,
+		0.f, 2.f, 0.f,
+
+		0.f, 0.f, 2.f,
+		2.f, 0.f, 0.f,
+		2.f, 0.f, 2.f,
+		0.f, 0.f, 2.f,
+		0.f, 0.f, 0.f,
+		2.f, 0.f, 0.f
+	};
+
+	uint my_id = 0;
+	glGenBuffers(1, (GLuint*)&(my_id));
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 108, vertices, GL_STATIC_DRAW);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	//--Toogle wireframe mode--//
+	if (wireframe_mode) 
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else 
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//-------------------------//
+
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+
+
+	//CUBE WITH INDEX ARRAY (todo)
+
+	//uint my_indices = 0;
+	//glGenBuffers(1, (GLuint*)&(my_indices));
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)* num_indices, indices, GL_STATIC_DRAW);
+
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	//glDrawElements(GL_TRIANGLES, number_of_indices, GL_UNSIGNED_INT, NULL);
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
