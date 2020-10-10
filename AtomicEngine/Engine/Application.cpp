@@ -14,10 +14,10 @@ Application::Application()
 	AddModule(renderer3D);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(gui);
-	
+
 	// Scenes
 	AddModule(scene_intro);
+	AddModule(gui);
 }
 
 Application::~Application()
