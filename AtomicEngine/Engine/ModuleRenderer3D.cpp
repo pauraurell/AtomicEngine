@@ -116,10 +116,6 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	ImGui::CreateContext();
-	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
-	ImGui_ImplOpenGL3_Init();
-
 	return ret;
 }
 
@@ -283,32 +279,6 @@ update_status ModuleRenderer3D::PostUpdate()
 
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
 	//glDrawElements(GL_TRIANGLES, number_of_indices, GL_UNSIGNED_INT, NULL);
-
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
-	ImGui::NewFrame();
-
-	//Example Window
-	ImGui::Begin("Test ImGui Window Title", NULL);
-	ImGui::Text("Test ImGui Window Text");
-	ImGui::End();
-
-
-	//Demo Window
-	ImGui::ShowDemoWindow();
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-
-	}
 
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
