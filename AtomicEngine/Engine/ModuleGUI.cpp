@@ -45,22 +45,95 @@ update_status ModuleGUI::Update()
 	ImGui::Text("Test ImGui Window Text");
 	ImGui::End();
 
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("New Project"))
+			{
+				return UPDATE_STOP;
+			}
+
+			if (ImGui::MenuItem("Open"))
+			{
+				return UPDATE_STOP;
+			}
+
+			if (ImGui::MenuItem("Save"))
+			{
+				return UPDATE_STOP;
+			}
+
+			if (ImGui::MenuItem("Exit"))
+			{
+				return UPDATE_STOP;
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Edit"))
+		{
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("View"))
+		{
+			if (ImGui::MenuItem("Configuration"))
+			{
+				//Do something
+			}
+			
+			if (ImGui::MenuItem("Console"))
+			{
+				//Do something
+			}
+			
+			if (ImGui::MenuItem("Wireframe Mode"))
+			{
+				App->renderer3D->wireframe_mode = !App->renderer3D->wireframe_mode;
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Window"))
+		{
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Help"))
+		{
+			if (ImGui::MenuItem("Engine Documentation"))
+			{
+				ShellExecuteA(NULL, "open", "https://github.com/pauraurell/AtomicEngine", NULL, NULL, SW_SHOWNORMAL);
+			}
+
+			if (ImGui::MenuItem("ImGui Documentation"))
+			{
+				ShellExecuteA(NULL, "open", "https://github.com/ocornut/imgui", NULL, NULL, SW_SHOWNORMAL);
+			
+			}
+
+			if (ImGui::MenuItem("Download lastest"))
+			{
+				ShellExecuteA(NULL, "open", "https://github.com/pauraurell/AtomicEngine", NULL, NULL, SW_SHOWNORMAL);
+			}
+
+			if (ImGui::MenuItem("About"))
+			{
+				//Do something
+			}
+			ImGui::EndMenu();
+		}
+
+	
+		ImGui::EndMainMenuBar();
+	}
 
 	//Demo Window
 	ImGui::ShowDemoWindow();
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-
-	}
 
 	return UPDATE_CONTINUE;
 }
