@@ -191,7 +191,19 @@ update_status ModuleGUI::Update()
 		}
 		if (ImGui::CollapsingHeader("Hardware"))
 		{
-		
+			ImVec4 tColor(0.95f, 0.5f, 0.07f, 1.0f);
+			ImGui::Text("SDL version:"); ImGui::SameLine();
+			ImGui::TextColored(tColor, "%d.%d.%d", SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL);
+			ImGui::Separator();
+
+			int cpu, ram, cache;
+			ImGui::Text("CPUs:"); ImGui::SameLine();
+			ImGui::TextColored(tColor, "%i", cpu = SDL_GetCPUCount()); ImGui::SameLine();
+			ImGui::TextColored(tColor, "(Cache: %iKb)", cache = SDL_GetCPUCacheLineSize());
+			ImGui::Text("RAM:"); ImGui::SameLine();
+			ImGui::TextColored(tColor, "%i.0GB", ram = (SDL_GetSystemRAM() * 0.001));
+			ImGui::Text("Caps: "); ImGui::SameLine();
+			//ImGui::TextColored(tColor, "%s", )
 		}
 		ImGui::End();
 	}
