@@ -13,22 +13,22 @@
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	demowindow = false;
-	aboutwindow = false;
-	consolewindow = false;
 	ConfigurationWindowActive = false;
+	ConsoleWindowActive = false;
+	AboutWindowActive = false;
 
 	fullscreen = false;
 	resizable = false;
 	borderless = true;
 	fulldesktop = false;
 
+	fps_log = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+	ms_log = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+	fps = 0;
+
 	width = 1280;
 	height = 920;
 	brightness = 1.0f;
-
-	fps_log = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-	ms_log = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-	fps = 0;
 }
 
 ModuleGUI::~ModuleGUI()
@@ -59,28 +59,23 @@ update_status ModuleGUI::PreUpdate()
 
 update_status ModuleGUI::Update()
 {
-	//Example Window
-	ImGui::Begin("Test ImGui Window Title", NULL);
-	ImGui::Text("Test ImGui Window Text");
-	ImGui::End();
-
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("New Project"))
 			{
-				return UPDATE_STOP;
+				
 			}
 
 			if (ImGui::MenuItem("Open"))
 			{
-				return UPDATE_STOP;
+				
 			}
 
 			if (ImGui::MenuItem("Save"))
 			{
-				return UPDATE_STOP;
+				
 			}
 
 			if (ImGui::MenuItem("Exit"))
@@ -129,7 +124,6 @@ update_status ModuleGUI::Update()
 			if (ImGui::MenuItem("ImGui Documentation"))
 			{
 				ShellExecuteA(NULL, "open", "https://github.com/ocornut/imgui", NULL, NULL, SW_SHOWNORMAL);
-			
 			}
 
 			if (ImGui::MenuItem("Download lastest"))
@@ -139,8 +133,9 @@ update_status ModuleGUI::Update()
 
 			if (ImGui::MenuItem("About"))
 			{
-				//Do something
+				AboutWindowActive = true;
 			}
+
 			ImGui::EndMenu();
 		}
 
@@ -170,6 +165,7 @@ update_status ModuleGUI::Update()
 			ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, size);
 
 		}
+
 		if (ImGui::CollapsingHeader("Window"))
 		{
 			ImGui::SliderFloat("Brightness", &brightness, 0.f, 1.0f);
@@ -180,7 +176,7 @@ update_status ModuleGUI::Update()
 
 			ImGui::SliderInt("Height", &height, 480, 1080);
 			App->window->SetHeight(height);
-			
+
 			if (ImGui::Checkbox("Fullscreen", &fullscreen))
 				App->window->SetFullscreen(fullscreen);
 			ImGui::SameLine();
@@ -191,10 +187,11 @@ update_status ModuleGUI::Update()
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Full Desktop", &fulldesktop))
 				App->window->SetFullDesktop(fulldesktop);
+
 		}
 		if (ImGui::CollapsingHeader("Hardware"))
 		{
-
+		
 		}
 		ImGui::End();
 	}
@@ -203,6 +200,72 @@ update_status ModuleGUI::Update()
 	{
 		ImGui::Begin("Console", &ConsoleWindowActive);
 
+		ImGui::End();
+	}
+
+	if (AboutWindowActive)
+	{
+		if (ImGui::Begin("About", &AboutWindowActive)) {
+
+			ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f),"Atomic Engine");
+			ImGui::Separator();
+
+			ImGui::SameLine();
+			ImGui::TextWrapped("Atomic Engine is an 3d game engine made by:");
+			ImGui::SameLine();
+			if (ImGui::SmallButton("Pau Raurell Gomis")) {
+				ShellExecuteA(NULL, "open", "https://github.com/pauraurell", NULL, NULL, SW_SHOWNORMAL);
+			}
+			ImGui::SameLine();
+			ImGui::TextWrapped("and");
+			ImGui::SameLine();
+			if (ImGui::SmallButton("Pol Galan i Morales")) {
+				ShellExecuteA(NULL, "open", "https://github.com/pgalmor", NULL, NULL, SW_SHOWNORMAL);
+			}
+
+			ImGui::Separator();
+
+			GLint gl_major_version, gl_minor_version;
+			glGetIntegerv(GL_MAJOR_VERSION, &gl_major_version);
+			glGetIntegerv(GL_MINOR_VERSION, &gl_minor_version);
+			ImGui::Text("3rd party libraries used: ");
+			ImGui::BulletText("SDL"); ImGui::SameLine();
+			ImGui::Text("%d.%d.%d", SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL);
+			ImGui::BulletText("ImGui ");ImGui::SameLine();
+			ImGui::Text("%s", ImGui::GetVersion());
+			ImGui::BulletText("OpenGL "); ImGui::SameLine();
+			ImGui::Text("%d.%d", gl_major_version, gl_minor_version);
+			ImGui::BulletText("Glew ");	ImGui::SameLine();
+			ImGui::Text("%d.%d.%d", GLEW_VERSION_MAJOR, GLEW_VERSION_MINOR, GLEW_VERSION_MICRO);
+			ImGui::BulletText("MathGeoLib"); ImGui::SameLine();
+			ImGui::Text("1.5");
+
+			ImGui::Separator();
+
+			ImGui::Text("License: ");
+			ImGui::Spacing();
+			ImGui::TextWrapped("MIT License");
+			ImGui::Spacing();
+			ImGui::TextWrapped("Copyright(c) 2020 pauraurell & pgalmor");
+			ImGui::Spacing();
+			ImGui::TextWrapped("Permission is hereby granted, free of charge, to any person obtaining a copy"
+				"of this softwareand associated documentation files(the Software), to deal"
+				"in the Software without restriction, including without limitation the rights"
+				"to use, copy, modify, merge, publish, distribute, sublicense, and /or sell"
+				"copies of the Software, and to permit persons to whom the Software is"
+				"furnished to do so, subject to the following conditions :");
+			ImGui::Spacing();
+			ImGui::TextWrapped("The above copyright noticeand this permission notice shall be included in all"
+				"copies or substantial portions of the Software.");
+			ImGui::Spacing();
+			ImGui::TextWrapped("THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR"
+				"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,"
+				"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE"
+				"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER"
+				"LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,"
+				"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE"
+				"SOFTWARE.");
+		}
 		ImGui::End();
 	}
 

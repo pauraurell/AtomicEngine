@@ -25,14 +25,13 @@ public:
 
 private:
 	bool demowindow;
-	bool aboutwindow;
-	bool consolewindow;
 	bool fullscreen;
 	bool resizable;
 	bool borderless;
 	bool fulldesktop;
 	bool ConfigurationWindowActive;
 	bool ConsoleWindowActive;
+	bool AboutWindowActive;
 
 	vector<float> fps_log;
 	vector<float> ms_log;
