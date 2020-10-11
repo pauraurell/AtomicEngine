@@ -20,7 +20,13 @@ public:
 	bool CleanUp();
 
 private:
-
+	bool demowindow;
+	bool aboutwindow;
+	bool consolewindow;
+	bool fullscreen;
+	bool resizable;
+	bool borderless;
+	bool fulldesktop;
 
 };
 

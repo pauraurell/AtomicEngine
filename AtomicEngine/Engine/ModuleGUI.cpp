@@ -12,7 +12,14 @@
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	demowindow = false;
+	aboutwindow = false;
+	consolewindow = false;
 
+	fullscreen = false;
+	resizable = false;
+	borderless = true;
+	fulldesktop = false;
 }
 
 ModuleGUI::~ModuleGUI()
@@ -130,7 +137,7 @@ update_status ModuleGUI::Update()
 	}
 
 	//Demo Window
-	ImGui::ShowDemoWindow();
+	if (demowindow) { ImGui::ShowDemoWindow(&demowindow); }
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
