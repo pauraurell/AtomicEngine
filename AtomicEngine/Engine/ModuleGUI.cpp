@@ -22,6 +22,10 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	borderless = true;
 	fulldesktop = false;
 
+	width = 1280;
+	height = 920;
+	brightness = 1.0f;
+
 	fps_log = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	ms_log = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	fps = 0;
@@ -37,6 +41,9 @@ bool ModuleGUI::Init()
 	ImGui::CreateContext();
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init();
+
+	App->window->SetResizable(resizable);
+	App->window->SetBorderless(borderless);
 
 	return true;
 }
@@ -161,6 +168,32 @@ update_status ModuleGUI::Update()
 			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, size);
 			sprintf_s(title, 25, "Milliseconds %.1f", ms_log[ms_log.size() - 1]);
 			ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, size);
+
+		}
+		if (ImGui::CollapsingHeader("Window"))
+		{
+			ImGui::SliderFloat("Brightness", &brightness, 0.f, 1.0f);
+			App->window->SetBrightness(brightness);
+
+			ImGui::SliderInt("Width", &width, 640, 1920);
+			App->window->SetWidth(width);
+
+			ImGui::SliderInt("Height", &height, 480, 1080);
+			App->window->SetHeight(height);
+			
+			if (ImGui::Checkbox("Fullscreen", &fullscreen))
+				App->window->SetFullscreen(fullscreen);
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Resizable", &resizable))
+				App->window->SetResizable(resizable);
+			if (ImGui::Checkbox("Borderless", &borderless))
+				App->window->SetBorderless(borderless);
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Full Desktop", &fulldesktop))
+				App->window->SetFullDesktop(fulldesktop);
+		}
+		if (ImGui::CollapsingHeader("Hardware"))
+		{
 
 		}
 		ImGui::End();

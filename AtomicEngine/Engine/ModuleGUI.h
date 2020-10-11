@@ -19,6 +19,10 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	float brightness;
+	int width;
+	int height;
+
 private:
 	bool demowindow;
 	bool aboutwindow;
