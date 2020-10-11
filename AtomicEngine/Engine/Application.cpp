@@ -18,6 +18,9 @@ Application::Application()
 	// Scenes
 	AddModule(scene_intro);
 	AddModule(gui);
+
+	fps = 0;
+	ms_cap = 1000 / 120;
 }
 
 Application::~Application()
@@ -53,12 +56,20 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-
+	dt = (float)ms_timer.Read() / 1000.0f;
+	ms_timer.Start();
+	fps = 1.0f / dt;
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	int last_frame_ms = ms_timer.Read();
+
+	if (last_frame_ms < ms_cap)
+	{
+		SDL_Delay(ms_cap - last_frame_ms);
+	}
 
 }
 

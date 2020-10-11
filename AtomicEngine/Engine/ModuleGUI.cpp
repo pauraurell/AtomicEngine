@@ -12,7 +12,11 @@
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	ConfigurationWindowActive = false;
 
+	fps_log = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+	ms_log = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+	fps = 0;
 }
 
 ModuleGUI::~ModuleGUI()
@@ -80,19 +84,19 @@ update_status ModuleGUI::Update()
 		{
 			if (ImGui::MenuItem("Configuration"))
 			{
-				//Do something
+				ConfigurationWindowActive = true;
 			}
 			
 			if (ImGui::MenuItem("Console"))
 			{
-				//Do something
+				ConsoleWindowActive = true;
 			}
 			
 			if (ImGui::MenuItem("Wireframe Mode"))
 			{
 				App->renderer3D->wireframe_mode = !App->renderer3D->wireframe_mode;
 			}
-			ImGui::EndMenu();
+			ImGui::EndMenu(); 
 		}
 
 		if (ImGui::BeginMenu("Window"))
@@ -125,8 +129,40 @@ update_status ModuleGUI::Update()
 			ImGui::EndMenu();
 		}
 
-	
 		ImGui::EndMainMenuBar();
+	}
+
+	if (ConfigurationWindowActive) 
+	{
+		ImGui::Begin("Configuration", &ConfigurationWindowActive);
+		if (ImGui::CollapsingHeader("Application"))
+		{
+			int fps_cap = 1000 / App->ms_cap;
+			if (ImGui::SliderInt("Fps Limit", &fps_cap, 5, 100)) {
+				App->ms_cap = 1000 / fps_cap;
+			}
+
+			fps_log.erase(fps_log.begin());
+			fps_log.push_back(App->fps);
+			ms_log.erase(ms_log.begin());
+			ms_log.push_back(App->dt * 1000);
+
+			char title[25];
+			ImVec2 size(400, 100);
+			sprintf_s(title, 25, "Fps %.1f", fps_log[fps_log.size() - 1]);
+			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, size);
+			sprintf_s(title, 25, "Milliseconds %.1f", ms_log[ms_log.size() - 1]);
+			ImGui::PlotHistogram("##milliseconds", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, size);
+
+		}
+		ImGui::End();
+	}
+
+	if (ConsoleWindowActive)
+	{
+		ImGui::Begin("Console", &ConsoleWindowActive);
+
+		ImGui::End();
 	}
 
 	//Demo Window
@@ -148,6 +184,7 @@ update_status ModuleGUI::PostUpdate()
 bool ModuleGUI::CleanUp()
 {
 
-
+	fps_log.clear();
+	ms_log.clear();
 	return true;
 }

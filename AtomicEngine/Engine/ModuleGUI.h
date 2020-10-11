@@ -3,9 +3,9 @@
 
 #include "Globals.h"
 #include "Module.h"
-#include "ImGui/imgui.h"
 #include <vector>
 #include <string>
+using namespace std;
 
 class ModuleGUI : public Module
 {
@@ -21,7 +21,12 @@ public:
 
 private:
 
+	bool ConfigurationWindowActive;
+	bool ConsoleWindowActive;
 
+	vector<float> fps_log;
+	vector<float> ms_log;
+	int fps;
 };
 
 #endif // __ModuleGUI_H__
