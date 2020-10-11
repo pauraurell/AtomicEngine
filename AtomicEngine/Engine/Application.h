@@ -24,6 +24,7 @@ public:
 private:
 
 		std::vector<Module*> list_modules;
+		Timer	ms_timer;
 
 public:
 
@@ -39,4 +40,9 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+public:
+	float	ms_cap;
+	float	dt;
+	float	fps;
 };
