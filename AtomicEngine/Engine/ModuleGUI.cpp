@@ -203,7 +203,8 @@ update_status ModuleGUI::Update()
 			ImGui::Text("RAM:"); ImGui::SameLine();
 			ImGui::TextColored(tColor, "%i.0GB", ram = (SDL_GetSystemRAM() * 0.001));
 			ImGui::Text("Caps: "); ImGui::SameLine();
-			//ImGui::TextColored(tColor, "%s", )
+			ImGui::TextColored(tColor, "%s", GetCaps());
+
 		}
 		ImGui::End();
 	}
@@ -303,4 +304,23 @@ bool ModuleGUI::CleanUp()
 	fps_log.clear();
 	ms_log.clear();
 	return true;
+}
+
+const char* ModuleGUI::GetCaps()
+{
+	caps.clear();
+
+	if (SDL_Has3DNow()) { caps.append("3D Now, "); }
+	if (SDL_HasAVX()) { caps.append("AVX, "); }
+	if (SDL_HasAVX2()) { caps.append("AVX2, "); }
+	if (SDL_HasAltiVec()) { caps.append("AltiVec, "); }
+	if (SDL_HasMMX()) { caps.append("MMX, "); }
+	if (SDL_HasRDTSC()) { caps.append("RDTSC, "); }
+	if (SDL_HasSSE()) { caps.append("SSE, "); }
+	if (SDL_HasSSE2()) { caps.append("SSE2, "); }
+	if (SDL_HasSSE3()) { caps.append("SSE3, "); }
+	if (SDL_HasSSE41()) { caps.append("SSE41, "); }
+	if (SDL_HasSSE42()) { caps.append("SSE42"); }
+
+	return caps.data();
 }

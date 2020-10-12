@@ -19,6 +19,9 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	const char* GetCaps();
+	std::string caps;
+
 	float brightness;
 	int width;
 	int height;
