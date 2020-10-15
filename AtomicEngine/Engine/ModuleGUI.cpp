@@ -29,6 +29,7 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	width = 1280;
 	height = 920;
 	brightness = 1.0f;
+	wireframe_selected = false;
 }
 
 ModuleGUI::~ModuleGUI()
@@ -102,7 +103,7 @@ update_status ModuleGUI::Update()
 				ConsoleWindowActive = true;
 			}
 			
-			if (ImGui::MenuItem("Wireframe Mode"))
+			if (ImGui::MenuItem("Wireframe Mode", "F1", wireframe_selected))
 			{
 				App->renderer3D->wireframe_mode = !App->renderer3D->wireframe_mode;
 			}

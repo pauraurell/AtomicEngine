@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+#include <array>
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -10,6 +11,7 @@
 #include "ImGui/imgui_impl_opengl3.h"
 #pragma comment (lib, "Glew/libx86/glew32.lib") 
 
+using namespace std;
 #define MAX_LIGHTS 8
 
 class ModuleRenderer3D : public Module

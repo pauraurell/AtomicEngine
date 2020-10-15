@@ -25,6 +25,7 @@ public:
 	float brightness;
 	int width;
 	int height;
+	bool wireframe_selected;
 
 private:
 	bool demowindow;

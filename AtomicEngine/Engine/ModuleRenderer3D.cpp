@@ -137,6 +137,16 @@ update_status ModuleRenderer3D::PreUpdate()
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		wireframe_mode = !wireframe_mode;
 	
+	//--Toogle wireframe mode--//
+	if (wireframe_mode) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		App->gui->wireframe_selected = true;
+	}
+	else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		App->gui->wireframe_selected = false;
+	}
+	//-------------------------//
 
 	return UPDATE_CONTINUE;
 }
@@ -144,66 +154,66 @@ update_status ModuleRenderer3D::PreUpdate()
 update_status ModuleRenderer3D::Update()
 {
 	//LINE
-		//glLineWidth(2.0f);
-		//glBegin(GL_LINES);
-		//glVertex3f(0.f, 0.f, 0.f);
-		//glVertex3f(0.f, 10.f, 0.f);
-		//glEnd();
+	//glLineWidth(2.0f);
+	//glBegin(GL_LINES);
+	//glVertex3f(0.f, 0.f, 0.f);
+	//glVertex3f(0.f, 10.f, 0.f);
+	//glEnd();
 
 
-		//CUBE WITH DIRECT MODE
+	//CUBE WITH DIRECT MODE
 
-		/*glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
+	/*glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
 
-		glVertex3f(0.f, 2.f, 0.f);
-		glVertex3f(0.f, 0.f, 0.f);
-		glVertex3f(0.f, 0.f, 2.f);
-		glVertex3f(0.f, 0.f, 2.f);
-		glVertex3f(0.f, 2.f, 2.f);
-		glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(0.f, 2.f, 0.f);
 
-		glVertex3f(2.f, 2.f, 0.f);
-		glVertex3f(2.f, 0.f, 2.f);
-		glVertex3f(2.f, 0.f, 0.f);
-		glVertex3f(2.f, 0.f, 2.f);
-		glVertex3f(2.f, 2.f, 0.f);
-		glVertex3f(2.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(2.f, 2.f, 2.f);
 
-		glVertex3f(0.f, 2.f, 0.f);
-		glVertex3f(2.f, 2.f, 0.f);
-		glVertex3f(2.f, 0.f, 0.f);
-		glVertex3f(0.f, 2.f, 0.f);
-		glVertex3f(2.f, 0.f, 0.f);
-		glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
 
-		glVertex3f(0.f, 2.f, 2.f);
-		glVertex3f(2.f, 0.f, 2.f);
-		glVertex3f(2.f, 2.f, 2.f);
-		glVertex3f(0.f, 2.f, 2.f);
-		glVertex3f(0.f, 0.f, 2.f);
-		glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(2.f, 2.f, 2.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(2.f, 0.f, 2.f);
 
-		glVertex3f(0.f, 2.f, 2.f);
-		glVertex3f(2.f, 2.f, 2.f);
-		glVertex3f(2.f, 2.f, 0.f);
-		glVertex3f(0.f, 2.f, 2.f);
-		glVertex3f(2.f, 2.f, 0.f);
-		glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(0.f, 2.f, 0.f);
 
-		glVertex3f(0.f, 0.f, 2.f);
-		glVertex3f(2.f, 0.f, 0.f);
-		glVertex3f(2.f, 0.f, 2.f);
-		glVertex3f(0.f, 0.f, 2.f);
-		glVertex3f(0.f, 0.f, 0.f);
-		glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(2.f, 0.f, 0.f);
 
-		glEnd();*/
-		//glLineWidth(1.0f);
+	glEnd();*/
+	//glLineWidth(1.0f);
 
 
-		//CUBE WITH VERTEX ARRAYS
+	//CUBE WITH VERTEX ARRAYS
 
-	GLfloat vertices[] =
+	/*GLfloat vertices[] =
 	{
 		0.f, 2.f, 0.f,
 		0.f, 0.f, 0.f,
@@ -256,29 +266,39 @@ update_status ModuleRenderer3D::Update()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	//--Toogle wireframe mode--//
-	if (wireframe_mode)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//-------------------------//
-
+	
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDisableClientState(GL_VERTEX_ARRAY);
+	*/
 
 
+	//CUBE WITH INDICES
 
-	//CUBE WITH INDEX ARRAY (todo)
+	GLfloat vertices[] = { 2.f, 2.f, 0.f,
+		0.f, 2.f, 0.f,
+		0.f, 0.f, 0.f,
+		2.f, 0.f, 0.f,
+		2.f, 0.f, -2.f,
+		2.f, 2.f, -2.f,
+		0.f, 2.f, -2.f,
+		0.f, 0.f, -2.f, };          // 8 of vertex coords
 
-	//uint my_indices = 0;
-	//glGenBuffers(1, (GLuint*)&(my_indices));
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint)* num_indices, indices, GL_STATIC_DRAW);
+	GLubyte indices[] = { 0,1,2, 2,3,0,   // 36 of indices
+						 0,3,4, 4,5,0,
+						 0,5,6, 6,1,0,
+						 1,6,7, 7,2,1,
+						 7,4,3, 3,2,7,
+						 4,7,6, 6,5,4 };
 
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	//glDrawElements(GL_TRIANGLES, number_of_indices, GL_UNSIGNED_INT, NULL);
+	// activate and specify pointer to vertex array
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
 
+	// draw a cube
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+
+	// deactivate vertex arrays after drawing
+	glDisableClientState(GL_VERTEX_ARRAY);
 
 	return UPDATE_CONTINUE;
 }
@@ -286,7 +306,6 @@ update_status ModuleRenderer3D::Update()
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
-	
 
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
