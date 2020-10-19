@@ -37,6 +37,7 @@ private:
 	bool ConsoleWindowActive;
 	bool AboutWindowActive;
 
+
 	vector<float> fps_log;
 	vector<float> ms_log;
 	int fps;

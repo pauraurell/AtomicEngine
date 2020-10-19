@@ -8,12 +8,14 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	gui = new ModuleGUI(this);
+	importer = new ModuleImporter(this);
 
 	// Main Modules
 	AddModule(window);
 	AddModule(renderer3D);
 	AddModule(camera);
 	AddModule(input);
+	AddModule(importer);
 
 	// Scenes
 	AddModule(scene_intro);

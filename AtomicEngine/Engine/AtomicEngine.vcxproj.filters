@@ -61,6 +61,9 @@
     <ClCompile Include="ModuleGUI.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleImporter.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -130,6 +133,9 @@
       <Filter>Sources\Containers</Filter>
     </ClInclude>
     <ClInclude Include="ModuleGUI.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleImporter.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>

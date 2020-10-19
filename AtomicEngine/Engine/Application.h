@@ -8,6 +8,7 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGUI.h"
+#include "ModuleImporter.h"
 #include <vector>
 
 
@@ -20,6 +21,7 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModuleGUI* gui;
+	ModuleImporter* importer;
 
 private:
 
