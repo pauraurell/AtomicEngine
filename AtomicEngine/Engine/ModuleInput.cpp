@@ -85,6 +85,7 @@ update_status ModuleInput::PreUpdate()
 
 	bool quit = false;
 	SDL_Event e;
+
 	while(SDL_PollEvent(&e))
 	{
 		ImGui_ImplSDL2_ProcessEvent(&e);
@@ -106,11 +107,18 @@ update_status ModuleInput::PreUpdate()
 			quit = true;
 			break;
 
+			case SDL_DROPFILE:
+			{
+				LoadDraggedFile(e);
+				break;
+			}
+
 			case SDL_WINDOWEVENT:
 			{
 				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
 					App->renderer3D->OnResize(e.window.data1, e.window.data2);
 			}
+
 		}
 	}
 
@@ -126,4 +134,12 @@ bool ModuleInput::CleanUp()
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+void ModuleInput::LoadDraggedFile(SDL_Event e)
+{
+	file = e.drop.file;
+	App->importer->LoadMesh(file);
+	App->renderer3D->LoadMeshBuffer();
+	SDL_free(file);
 }

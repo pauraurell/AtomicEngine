@@ -18,7 +18,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(-3, 2, 1));
 	App->camera->LookAt(vec3(0.f, 0.f, 0.f));
 
-	App->importer->LoadMesh("BakerHouse.fbx");
+	//App->importer->LoadMesh("BakerHouse.fbx");
 
 	return ret;
 }

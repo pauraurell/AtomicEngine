@@ -30,6 +30,7 @@ public:
 	void OnResize(int width, int height);
 
 	void RenderMesh(mesh mesh);
+	void LoadMeshBuffer();
 
 public:
 

@@ -357,3 +357,19 @@ void ModuleRenderer3D::RenderMesh(mesh mesh) {
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 }
+
+void ModuleRenderer3D::LoadMeshBuffer() {
+	mesh *mesh= &App->importer->myMesh;
+
+	glGenBuffers(1, (GLuint*)mesh->id_vertex);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertex * 3, mesh->vertex, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)&mesh->id_index);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_index, mesh->index, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)&mesh->id_normals);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
+}
