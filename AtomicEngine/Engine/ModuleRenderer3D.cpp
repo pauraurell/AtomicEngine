@@ -274,31 +274,31 @@ update_status ModuleRenderer3D::Update()
 
 	//CUBE WITH INDICES
 
-	GLfloat vertices[] = { 2.f, 2.f, 0.f,
-		0.f, 2.f, 0.f,
-		0.f, 0.f, 0.f,
-		2.f, 0.f, 0.f,
-		2.f, 0.f, -2.f,
-		2.f, 2.f, -2.f,
-		0.f, 2.f, -2.f,
-		0.f, 0.f, -2.f, };          // 8 of vertex coords
+	//GLfloat vertices[] = { 2.f, 2.f, 0.f,
+	//	0.f, 2.f, 0.f,
+	//	0.f, 0.f, 0.f,
+	//	2.f, 0.f, 0.f,
+	//	2.f, 0.f, -2.f,
+	//	2.f, 2.f, -2.f,
+	//	0.f, 2.f, -2.f,
+	//	0.f, 0.f, -2.f, };          // 8 of vertex coords
 
-	GLubyte indices[] = { 0,1,2, 2,3,0,   // 36 of indices
-						 0,3,4, 4,5,0,
-						 0,5,6, 6,1,0,
-						 1,6,7, 7,2,1,
-						 7,4,3, 3,2,7,
-						 4,7,6, 6,5,4 };
+	//GLubyte indices[] = { 0,1,2, 2,3,0,   // 36 of indices
+	//					 0,3,4, 4,5,0,
+	//					 0,5,6, 6,1,0,
+	//					 1,6,7, 7,2,1,
+	//					 7,4,3, 3,2,7,
+	//					 4,7,6, 6,5,4 };
 
-	// activate and specify pointer to vertex array
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
+	//// activate and specify pointer to vertex array
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	//glVertexPointer(3, GL_FLOAT, 0, vertices);
 
-	// draw a cube
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+	//// draw a cube
+	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
 
-	// deactivate vertex arrays after drawing
-	glDisableClientState(GL_VERTEX_ARRAY);
+	//// deactivate vertex arrays after drawing
+	//glDisableClientState(GL_VERTEX_ARRAY);
 
 	return UPDATE_CONTINUE;
 }
@@ -333,4 +333,27 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void ModuleRenderer3D::RenderMesh(mesh mesh) {
+	uint vertex_buffer = 0;
+
+	glGenBuffers(1, (GLuint*)&(vertex_buffer));
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertex * 3, mesh.vertex, GL_STATIC_DRAW);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	uint index_buffer = 0;
+	glGenBuffers(1, (GLuint*)&(index_buffer));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_index, mesh.index, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+	glDrawElements(GL_TRIANGLES, mesh.num_index, GL_UNSIGNED_INT, NULL);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
 }

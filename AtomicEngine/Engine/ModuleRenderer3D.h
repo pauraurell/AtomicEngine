@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+#include "ModuleImporter.h"
 #include <array>
 
 #include "ImGui/imgui.h"
@@ -27,6 +28,8 @@ public:
 	bool CleanUp();
 
 	void OnResize(int width, int height);
+
+	void RenderMesh(mesh mesh);
 
 public:
 

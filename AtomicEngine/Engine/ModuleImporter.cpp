@@ -48,9 +48,9 @@ void ModuleImporter::LoadMesh(char* file_path)
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		for (int i = 0; i > scene->mNumMeshes; i++)
+		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
-			aiMesh *ourMesh = scene->mMeshes[i];
+			aiMesh* ourMesh = scene->mMeshes[i];
 			myMesh.num_vertex = ourMesh->mNumVertices;
 			myMesh.vertex = new float[myMesh.num_vertex * 3];
 			memcpy(myMesh.vertex, ourMesh->mVertices, sizeof(float) * myMesh.num_vertex * 3);
@@ -64,9 +64,13 @@ void ModuleImporter::LoadMesh(char* file_path)
 				for (uint i = 0; i < ourMesh->mNumFaces; ++i)
 				{
 					if (ourMesh->mFaces[i].mNumIndices != 3)
-					{ LOG("WARNING, geometry face with != 3 indices!"); }
+					{
+						LOG("WARNING, geometry face with != 3 indices!");
+					}
 					else
-					{ memcpy(&myMesh.index[i * 3], ourMesh->mFaces[i].mIndices, 3 * sizeof(uint)); }
+					{
+						memcpy(&myMesh.index[i * 3], ourMesh->mFaces[i].mIndices, 3 * sizeof(uint));
+					}
 				}
 			}
 		}
@@ -76,4 +80,5 @@ void ModuleImporter::LoadMesh(char* file_path)
 	else
 		LOG("Error loading scene %s", file_path);
 }
+
 

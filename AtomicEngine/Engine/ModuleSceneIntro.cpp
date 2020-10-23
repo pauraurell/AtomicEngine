@@ -18,6 +18,8 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(-3, 2, 1));
 	App->camera->LookAt(vec3(0.f, 0.f, 0.f));
 
+	App->importer->LoadMesh("BakerHouse.fbx");
+
 	return ret;
 }
 
@@ -34,6 +36,7 @@ update_status ModuleSceneIntro::Update()
 	plane.axis = true;
 	plane.Render();
 
+	App->renderer3D->RenderMesh(App->importer->myMesh);
 	return UPDATE_CONTINUE;
 }
 
