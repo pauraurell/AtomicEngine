@@ -346,6 +346,10 @@ void ModuleRenderer3D::RenderMesh(mesh mesh) {
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_normals);
+	glNormalPointer(GL_FLOAT, 0, NULL);
+
 	uint index_buffer = 0;
 	glGenBuffers(1, (GLuint*)&(index_buffer));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
@@ -355,6 +359,7 @@ void ModuleRenderer3D::RenderMesh(mesh mesh) {
 	glDrawElements(GL_TRIANGLES, mesh.num_index, GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
+
 
 }
 

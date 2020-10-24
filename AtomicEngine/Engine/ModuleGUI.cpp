@@ -14,8 +14,10 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 {
 	demowindow = false;
 	ConfigurationWindowActive = false;
-	ConsoleWindowActive = false;
+	ConsoleWindowActive = true;
 	AboutWindowActive = false;
+	HierarchyWindowActive = true;
+	InspectorWindowActive = true;
 
 	fullscreen = false;
 	resizable = false;
@@ -106,6 +108,16 @@ update_status ModuleGUI::Update()
 			if (ImGui::MenuItem("Wireframe Mode", "F1", wireframe_selected))
 			{
 				App->renderer3D->wireframe_mode = !App->renderer3D->wireframe_mode;
+			}
+
+			if (ImGui::MenuItem("View Hierarchy"))
+			{
+				HierarchyWindowActive = true;
+			}
+
+			if (ImGui::MenuItem("View Inspector"))
+			{
+				InspectorWindowActive = true;
 			}
 			ImGui::EndMenu(); 
 		}
@@ -213,6 +225,23 @@ update_status ModuleGUI::Update()
 	if (ConsoleWindowActive)
 	{
 		ImGui::Begin("Console", &ConsoleWindowActive);
+		for (int i = 0; i < logs.size(); i++)
+		{
+			ImGui::Text("%s", logs[i].c_str());
+		}
+		ImGui::End();
+	}
+
+	if (HierarchyWindowActive)
+	{
+		ImGui::Begin("Hierarchy", &HierarchyWindowActive);
+
+		ImGui::End();
+	}
+
+	if (InspectorWindowActive)
+	{
+		ImGui::Begin("Inspector", &InspectorWindowActive);
 
 		ImGui::End();
 	}

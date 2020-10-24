@@ -26,6 +26,7 @@ public:
 	int width;
 	int height;
 	bool wireframe_selected;
+	vector<string> logs;
 
 private:
 	bool demowindow;
@@ -36,7 +37,8 @@ private:
 	bool ConfigurationWindowActive;
 	bool ConsoleWindowActive;
 	bool AboutWindowActive;
-
+	bool HierarchyWindowActive;
+	bool InspectorWindowActive;
 
 	vector<float> fps_log;
 	vector<float> ms_log;
