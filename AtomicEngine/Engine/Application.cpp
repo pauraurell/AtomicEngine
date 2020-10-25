@@ -12,7 +12,6 @@ Application::Application()
 
 	// Main Modules
 	AddModule(window);
-	AddModule(renderer3D);
 	AddModule(camera);
 	AddModule(input);
 	AddModule(importer);
@@ -20,6 +19,8 @@ Application::Application()
 	// Scenes
 	AddModule(scene_intro);
 	AddModule(gui);
+
+	AddModule(renderer3D);
 
 	fps = 0;
 	ms_cap = 1000 / 120;

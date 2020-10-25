@@ -93,6 +93,36 @@ update_status ModuleGUI::Update()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Create"))
+		{
+			if (ImGui::BeginMenu("Primitives"))
+			{
+				if (ImGui::MenuItem("Cube"))
+				{
+					App->renderer3D->cube_render = true;
+					App->renderer3D->rectangle_render = false;
+					App->renderer3D->pyramid_render = false;
+				}
+
+				if (ImGui::MenuItem("Rectangle"))
+				{
+					App->renderer3D->cube_render = false;
+					App->renderer3D->rectangle_render = true;
+					App->renderer3D->pyramid_render = false;
+				}
+
+				if (ImGui::MenuItem("Pyramid"))
+				{
+					App->renderer3D->cube_render = false;
+					App->renderer3D->rectangle_render = false;
+					App->renderer3D->pyramid_render = true;
+				}
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::BeginMenu("View"))
 		{
 			if (ImGui::MenuItem("Configuration"))
@@ -323,7 +353,6 @@ update_status ModuleGUI::Update()
 
 update_status ModuleGUI::PostUpdate()
 {
-
 
 	return UPDATE_CONTINUE;
 }

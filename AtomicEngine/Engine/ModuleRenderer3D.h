@@ -15,6 +15,14 @@
 using namespace std;
 #define MAX_LIGHTS 8
 
+enum Primitives
+{
+	Cube,
+	Sphere,
+	pRectangle,
+	Pyramid
+};
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -31,6 +39,19 @@ public:
 
 	void RenderMesh(mesh mesh);
 	void LoadMeshBuffer();
+
+	void CheckWireframeMode();
+
+	void CreatePrimitive(Primitives type);
+
+	//Primitives
+	void CreateCube();
+	void CreateRectangle();
+	void CreatePyramid();
+
+	bool cube_render;
+	bool rectangle_render;
+	bool pyramid_render;
 
 public:
 

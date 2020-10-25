@@ -16,6 +16,9 @@
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	wireframe_mode = false;
+	cube_render = false;
+	rectangle_render = false;
+	pyramid_render = false;
 }
 
 // Destructor
@@ -111,11 +114,13 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+	
+		//LoadMeshBuffer();
 	}
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
-
+	
 	return ret;
 }
 
@@ -134,19 +139,7 @@ update_status ModuleRenderer3D::PreUpdate()
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		wireframe_mode = !wireframe_mode;
 	
-	//--Toogle wireframe mode--//
-	if (wireframe_mode) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		App->gui->wireframe_selected = true;
-	}
-	else {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		App->gui->wireframe_selected = false;
-	}
-	//-------------------------//
 
 	return UPDATE_CONTINUE;
 }
@@ -159,60 +152,47 @@ update_status ModuleRenderer3D::Update()
 	//glVertex3f(0.f, 0.f, 0.f);
 	//glVertex3f(0.f, 10.f, 0.f);
 	//glEnd();
-
-
 	//CUBE WITH DIRECT MODE
-
 	/*glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
-
 	glVertex3f(0.f, 2.f, 0.f);
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(0.f, 0.f, 2.f);
 	glVertex3f(0.f, 0.f, 2.f);
 	glVertex3f(0.f, 2.f, 2.f);
 	glVertex3f(0.f, 2.f, 0.f);
-
 	glVertex3f(2.f, 2.f, 0.f);
 	glVertex3f(2.f, 0.f, 2.f);
 	glVertex3f(2.f, 0.f, 0.f);
 	glVertex3f(2.f, 0.f, 2.f);
 	glVertex3f(2.f, 2.f, 0.f);
 	glVertex3f(2.f, 2.f, 2.f);
-
 	glVertex3f(0.f, 2.f, 0.f);
 	glVertex3f(2.f, 2.f, 0.f);
 	glVertex3f(2.f, 0.f, 0.f);
 	glVertex3f(0.f, 2.f, 0.f);
 	glVertex3f(2.f, 0.f, 0.f);
 	glVertex3f(0.f, 0.f, 0.f);
-
 	glVertex3f(0.f, 2.f, 2.f);
 	glVertex3f(2.f, 0.f, 2.f);
 	glVertex3f(2.f, 2.f, 2.f);
 	glVertex3f(0.f, 2.f, 2.f);
 	glVertex3f(0.f, 0.f, 2.f);
 	glVertex3f(2.f, 0.f, 2.f);
-
 	glVertex3f(0.f, 2.f, 2.f);
 	glVertex3f(2.f, 2.f, 2.f);
 	glVertex3f(2.f, 2.f, 0.f);
 	glVertex3f(0.f, 2.f, 2.f);
 	glVertex3f(2.f, 2.f, 0.f);
 	glVertex3f(0.f, 2.f, 0.f);
-
 	glVertex3f(0.f, 0.f, 2.f);
 	glVertex3f(2.f, 0.f, 0.f);
 	glVertex3f(2.f, 0.f, 2.f);
 	glVertex3f(0.f, 0.f, 2.f);
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(2.f, 0.f, 0.f);
-
 	glEnd();*/
 	//glLineWidth(1.0f);
-
-
 	//CUBE WITH VERTEX ARRAYS
-
 	/*GLfloat vertices[] =
 	{
 		0.f, 2.f, 0.f,
@@ -221,35 +201,30 @@ update_status ModuleRenderer3D::Update()
 		0.f, 0.f, 2.f,
 		0.f, 2.f, 2.f,
 		0.f, 2.f, 0.f,
-
 		2.f, 2.f, 0.f,
 		2.f, 0.f, 2.f,
 		2.f, 0.f, 0.f,
 		2.f, 0.f, 2.f,
 		2.f, 2.f, 0.f,
 		2.f, 2.f, 2.f,
-
 		0.f, 2.f, 0.f,
 		2.f, 2.f, 0.f,
 		2.f, 0.f, 0.f,
 		0.f, 2.f, 0.f,
 		2.f, 0.f, 0.f,
 		0.f, 0.f, 0.f,
-
 		0.f, 2.f, 2.f,
 		2.f, 0.f, 2.f,
 		2.f, 2.f, 2.f,
 		0.f, 2.f, 2.f,
 		0.f, 0.f, 2.f,
 		2.f, 0.f, 2.f,
-
 		0.f, 2.f, 2.f,
 		2.f, 2.f, 2.f,
 		2.f, 2.f, 0.f,
 		0.f, 2.f, 2.f,
 		2.f, 2.f, 0.f,
 		0.f, 2.f, 0.f,
-
 		0.f, 0.f, 2.f,
 		2.f, 0.f, 0.f,
 		2.f, 0.f, 2.f,
@@ -257,56 +232,32 @@ update_status ModuleRenderer3D::Update()
 		0.f, 0.f, 0.f,
 		2.f, 0.f, 0.f
 	};
-
 	uint my_id = 0;
 	glGenBuffers(1, (GLuint*)&(my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 108, vertices, GL_STATIC_DRAW);
-
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
-
-
-	//CUBE WITH INDICES
-
-	//GLfloat vertices[] = { 2.f, 2.f, 0.f,
-	//	0.f, 2.f, 0.f,
-	//	0.f, 0.f, 0.f,
-	//	2.f, 0.f, 0.f,
-	//	2.f, 0.f, -2.f,
-	//	2.f, 2.f, -2.f,
-	//	0.f, 2.f, -2.f,
-	//	0.f, 0.f, -2.f, };          // 8 of vertex coords
-
-	//GLubyte indices[] = { 0,1,2, 2,3,0,   // 36 of indices
-	//					 0,3,4, 4,5,0,
-	//					 0,5,6, 6,1,0,
-	//					 1,6,7, 7,2,1,
-	//					 7,4,3, 3,2,7,
-	//					 4,7,6, 6,5,4 };
-
-	//// activate and specify pointer to vertex array
-	//glEnableClientState(GL_VERTEX_ARRAY);
-	//glVertexPointer(3, GL_FLOAT, 0, vertices);
-
-	//// draw a cube
-	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
-
-	//// deactivate vertex arrays after drawing
-	//glDisableClientState(GL_VERTEX_ARRAY);
-
+	
 	return UPDATE_CONTINUE;
 }
 
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
+	
+	CheckWireframeMode();
+	//RenderMesh(App->importer->myMesh);
 
+	if (cube_render) { CreatePrimitive(Cube); }
+	if (rectangle_render) { CreatePrimitive(pRectangle); }
+	if (pyramid_render) { CreatePrimitive(Pyramid); }
+
+	
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -378,3 +329,116 @@ void ModuleRenderer3D::LoadMeshBuffer() {
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
 }
+
+void ModuleRenderer3D::CreatePrimitive(Primitives type) {
+
+	switch (type)
+	{
+	case Cube: CreateCube();
+		break;
+
+	case pRectangle: CreateRectangle();
+		break;
+
+	case Pyramid: CreatePyramid();
+		break;
+
+	}
+}
+
+void ModuleRenderer3D::CreateCube() {
+	GLfloat vertices[] = { 2.f, 2.f, 0.f,
+			0.f, 2.f, 0.f,
+			0.f, 0.f, 0.f,
+			2.f, 0.f, 0.f,
+			2.f, 0.f, -2.f,
+			2.f, 2.f, -2.f,
+			0.f, 2.f, -2.f,
+			0.f, 0.f, -2.f, };          // 8 of vertex coords
+
+	GLubyte indices[] = { 0,1,2, 2,3,0,   // 36 of indices
+				 0,3,4, 4,5,0,
+				 0,5,6, 6,1,0,
+				 1,6,7, 7,2,1,
+				 7,4,3, 3,2,7,
+				 4,7,6, 6,5,4 };
+
+	// activate and specify pointer to vertex array
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+	// draw a cube
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+
+	// deactivate vertex arrays after drawing
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+}
+
+void ModuleRenderer3D::CreateRectangle() {
+	GLfloat vertices[] = { 2.f, 2.f, 0.f,
+				-2.f, 2.f, 0.f,
+				-2.f, 0.f, 0.f,
+				2.f, 0.f, 0.f,
+				2.f, 0.f, -2.f,
+				2.f, 2.f, -2.f,
+				-2.f, 2.f, -2.f,
+				-2.f, 0.f, -2.f, };          // 8 of vertex coords
+
+	GLubyte indices[] = { 0,1,2, 2,3,0,   // 36 of indices
+				 0,3,4, 4,5,0,
+				 0,5,6, 6,1,0,
+				 1,6,7, 7,2,1,
+				 7,4,3, 3,2,7,
+				 4,7,6, 6,5,4 };
+
+	// activate and specify pointer to vertex array
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+	// draw a cube
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+
+	// deactivate vertex arrays after drawing
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void ModuleRenderer3D::CreatePyramid() {
+	float pyramid_vertices[] = { -1.0f,0.0f,-1.0f,
+			1.0f ,0.0f, -1.0f,
+			1.0f ,0.0f, 1.0f,
+			-1.0f ,0.0f, 1.0f,
+			-0.0f ,1.5f, -0.0f
+	};
+
+	uint pyramid_indices[]{ 0,1,2,
+		2,3,0,3,2,4,
+		0,3,4,2,1,4,
+		1,0,4
+	};
+
+	// activate and specify pointer to vertex array
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, pyramid_vertices);
+
+	// draw a pyramid
+	glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, pyramid_indices);
+
+	// deactivate vertex arrays after drawing
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void ModuleRenderer3D::CheckWireframeMode() {
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		wireframe_mode = !wireframe_mode;
+
+	if (wireframe_mode) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		App->gui->wireframe_selected = true;
+	}
+	else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		App->gui->wireframe_selected = false;
+	}
+}
+

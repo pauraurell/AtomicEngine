@@ -13,7 +13,7 @@ public:
 	ModuleSceneIntro(Application* app, bool start_enabled = true);
 	~ModuleSceneIntro();
 
-	bool Start();
+	bool Init();
 	update_status Update();
 	bool CleanUp();
 
