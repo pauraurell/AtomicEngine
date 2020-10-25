@@ -10,8 +10,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 ModuleSceneIntro::~ModuleSceneIntro()
 {}
 
-// Load assets
-bool ModuleSceneIntro::Start()
+bool ModuleSceneIntro::Init()
 {
 	bool ret = true;
 
@@ -23,7 +22,6 @@ bool ModuleSceneIntro::Start()
 	return ret;
 }
 
-// Load assets
 bool ModuleSceneIntro::CleanUp()
 {
 	return true;
@@ -36,7 +34,6 @@ update_status ModuleSceneIntro::Update()
 	plane.axis = true;
 	plane.Render();
 
-	App->renderer3D->RenderMesh(App->importer->myMesh);
 	return UPDATE_CONTINUE;
 }
 
