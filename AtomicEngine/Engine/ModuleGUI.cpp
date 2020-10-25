@@ -232,6 +232,8 @@ update_status ModuleGUI::Update()
 		ImGui::End();
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) { LOG("Press F to pay respects"); }
+
 	if (HierarchyWindowActive)
 	{
 		ImGui::Begin("Hierarchy", &HierarchyWindowActive);
@@ -333,6 +335,7 @@ bool ModuleGUI::CleanUp()
 
 	fps_log.clear();
 	ms_log.clear();
+	logs.clear();
 	return true;
 }
 

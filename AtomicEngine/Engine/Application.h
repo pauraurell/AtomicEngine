@@ -48,3 +48,5 @@ public:
 	float	dt;
 	float	fps;
 };
+
+extern Application* App;

@@ -26,7 +26,7 @@ public:
 	int width;
 	int height;
 	bool wireframe_selected;
-	vector<string> logs;
+	std::vector<std::string> logs;
 
 private:
 	bool demowindow;
