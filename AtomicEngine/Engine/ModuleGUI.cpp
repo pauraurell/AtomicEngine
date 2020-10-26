@@ -38,10 +38,10 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	faceCullingChecker = false;
 	gridChecker = true;
 
-	r = 0.05f;
-	g = 0.05f;
-	b = 0.05f;
-	gridColor = 0.9f;
+	r = 0.05;
+	g = 0.05;
+	b = 0.05;
+	gridSize = 100;
 }
 
 ModuleGUI::~ModuleGUI()
@@ -293,6 +293,8 @@ update_status ModuleGUI::Update()
 		{
 			ImGui::Text("Mouse Position:"); ImGui::SameLine();
 			ImGui::Text ("%i, %i", App->input->GetMouseX(), App->input->GetMouseY());
+
+			ImGui::SliderInt("Camera Sensitivity", &App->camera->sensitivity, 1, 10);
 		}
 
 		if (ImGui::CollapsingHeader("Renderer"))
@@ -312,7 +314,7 @@ update_status ModuleGUI::Update()
 			if (ImGui::Checkbox("Show grid", &gridChecker)) {
 				App->scene_intro->grid = gridChecker;
 			}
-			ImGui::SliderFloat("Grid color", &gridColor, 0, 1);
+			ImGui::SliderInt("Grid size", &gridSize, 0, 200);
 			
 			ImGui::Separator();
 			ImGui::Text("Background Color");

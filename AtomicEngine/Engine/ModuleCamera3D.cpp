@@ -12,6 +12,8 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 	Position = vec3(0.0f, 0.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
+
+	sensitivity = 5;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -37,14 +39,8 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update()
 {
-	float camera_speed = 0.05f;
+	float camera_speed = 0.35f;
 	// OnKeys WASD keys -----------------------------------
-
-	// TODO 3: Make the camera go up/down when pressing R (up) F(down)
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) {
-		Position.y += camera_speed;
-		Reference.y += camera_speed;
-	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
 		
@@ -86,20 +82,20 @@ update_status ModuleCamera3D::Update()
 		// TODO (Homework): Rotate the camera with the mouse
 		vec3 Forward = -Z;
 
-		Forward = rotate(Forward, dx, Y);
-		Forward = rotate(Forward, dy, X);
+		Forward = rotate(Forward, (float)dx * (float)( 0.10f * (float)sensitivity), Y);
+		Forward = rotate(Forward, (float)dy * (float)( 0.10f * (float)sensitivity), X);
 
 		LookAt(Forward + Position);
 	}
 
 	if (App->input->GetMouseZ() > 0)
 	{
-		Position -= Z * camera_speed * 4;
+		Position -= Z * camera_speed;
 	}
 
 	if (App->input->GetMouseZ() < 0)
 	{
-		Position += Z * camera_speed * 4;
+		Position += Z * camera_speed;
 	}
 
 	// Recalculate matrix -------------

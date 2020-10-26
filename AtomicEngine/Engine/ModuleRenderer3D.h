@@ -47,6 +47,8 @@ public:
 
 	//Primitives
 	void DrawCube();
+	void DrawCubeDirectMode();
+	void DrawCubeVerticeArray();
 	void DrawRectangle();
 	void DrawPyramid();
 

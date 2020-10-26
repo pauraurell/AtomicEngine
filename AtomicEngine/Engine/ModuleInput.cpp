@@ -138,8 +138,5 @@ bool ModuleInput::CleanUp()
 
 void ModuleInput::LoadDraggedFile(SDL_Event e)
 {
-	file = e.drop.file;
-	App->importer->LoadMesh(file);
-	App->renderer3D->LoadMeshBuffer();
-	SDL_free(file);
+	App->importer->LoadMesh(e.drop.file);
 }

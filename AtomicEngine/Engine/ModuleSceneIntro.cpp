@@ -30,11 +30,9 @@ update_status ModuleSceneIntro::Update()
 {
 	Plane plane(0.f, 1.f, 0.f, 1.f);
 	plane.axis = true;
-	Color plane_color(App->gui->gridColor, App->gui->gridColor, App->gui->gridColor, 1.0f);
-	plane.color = plane_color;
 
 	if (grid)
-		plane.Render();
+		plane.Render(App->gui->gridSize);
 
 	return UPDATE_CONTINUE;
 }
