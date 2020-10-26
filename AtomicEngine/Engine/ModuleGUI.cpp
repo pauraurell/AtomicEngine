@@ -319,9 +319,7 @@ update_status ModuleGUI::Update()
 			ImGui::SliderFloat("Red", &r, 0, 1);
 			ImGui::SliderFloat("Green", &g, 0, 1);
 			ImGui::SliderFloat("Blue", &b, 0, 1);
-
 		}
-
 
 		ImGui::End();
 	}
@@ -348,7 +346,16 @@ update_status ModuleGUI::Update()
 	if (InspectorWindowActive)
 	{
 		ImGui::Begin("Inspector", &InspectorWindowActive);
-
+		bool enabled = true;
+		ImGui::Text("Game Object"); ImGui::SameLine(); ImGui::Checkbox("Enabled", &enabled);
+		ImGui::Separator();
+		ImGui::Text("Transform");
+		ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
+		ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
+		ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
+		ImGui::Separator();
+		ImGui::Button("Add Component...");
+		
 		ImGui::End();
 	}
 

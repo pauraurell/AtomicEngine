@@ -37,7 +37,6 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update()
 {
-
 	float camera_speed = 0.05f;
 	// OnKeys WASD keys -----------------------------------
 
@@ -48,8 +47,9 @@ update_status ModuleCamera3D::Update()
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
-		Position.y -= camera_speed;
-		Reference.y -= camera_speed;
+		
+		LookAt(vec3(0.f, 0.f, 0.f));
+		Position = vec3(5.0f, 5.5f, 5.0f);
 	}
 	// TODO 4: Make the camera go forward (w) and backward with (s)
 	// Note that the vectors X/Y/Z contain the current axis of the camera
@@ -90,6 +90,16 @@ update_status ModuleCamera3D::Update()
 		Forward = rotate(Forward, dy, X);
 
 		LookAt(Forward + Position);
+	}
+
+	if (App->input->GetMouseZ() > 0)
+	{
+		Position -= Z * camera_speed * 4;
+	}
+
+	if (App->input->GetMouseZ() < 0)
+	{
+		Position += Z * camera_speed * 4;
 	}
 
 	// Recalculate matrix -------------
