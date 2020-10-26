@@ -21,6 +21,8 @@ public:
 	bool CleanUp();
 
 	const char* GetCaps();
+	void DrawUi();
+
 	std::string caps;
 
 	float brightness;
@@ -34,6 +36,7 @@ public:
 	bool faceCullingChecker;
 
 	bool gridChecker;
+	float gridColor;
 
 	float r;
 	float g;

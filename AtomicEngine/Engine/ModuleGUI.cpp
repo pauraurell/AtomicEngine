@@ -41,6 +41,7 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	r = 0.05f;
 	g = 0.05f;
 	b = 0.05f;
+	gridColor = 0.9f;
 }
 
 ModuleGUI::~ModuleGUI()
@@ -311,6 +312,7 @@ update_status ModuleGUI::Update()
 			if (ImGui::Checkbox("Show grid", &gridChecker)) {
 				App->scene_intro->grid = gridChecker;
 			}
+			ImGui::SliderFloat("Grid color", &gridColor, 0, 1);
 			
 			ImGui::Separator();
 			ImGui::Text("Background Color");
@@ -320,8 +322,6 @@ update_status ModuleGUI::Update()
 
 		}
 
-
-			
 
 		ImGui::End();
 	}
@@ -421,8 +421,7 @@ update_status ModuleGUI::Update()
 	//Demo Window
 	if (demowindow) { ImGui::ShowDemoWindow(&demowindow); }
 
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	
 
 	return UPDATE_CONTINUE;
 }
@@ -460,3 +459,10 @@ const char* ModuleGUI::GetCaps()
 
 	return caps.data();
 }
+
+void ModuleGUI::DrawUi()
+{
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+

@@ -257,7 +257,7 @@ update_status ModuleRenderer3D::PostUpdate()
 	if (rectangle_render) { RenderPrimitive(pRectangle); }
 	if (pyramid_render) { RenderPrimitive(Pyramid); }
 
-	
+	App->gui->DrawUi();
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
