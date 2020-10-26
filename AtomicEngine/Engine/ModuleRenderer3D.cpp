@@ -253,9 +253,9 @@ update_status ModuleRenderer3D::PostUpdate()
 	CheckWireframeMode();
 	//RenderMesh(App->importer->myMesh);
 
-	if (cube_render) { CreatePrimitive(Cube); }
-	if (rectangle_render) { CreatePrimitive(pRectangle); }
-	if (pyramid_render) { CreatePrimitive(Pyramid); }
+	if (cube_render) { RenderPrimitive(Cube); }
+	if (rectangle_render) { RenderPrimitive(pRectangle); }
+	if (pyramid_render) { RenderPrimitive(Pyramid); }
 
 	
 	SDL_GL_SwapWindow(App->window->window);
@@ -330,23 +330,23 @@ void ModuleRenderer3D::LoadMeshBuffer() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
 }
 
-void ModuleRenderer3D::CreatePrimitive(Primitives type) {
+void ModuleRenderer3D::RenderPrimitive(Primitives type) {
 
 	switch (type)
 	{
-	case Cube: CreateCube();
+	case Cube: DrawCube();
 		break;
 
-	case pRectangle: CreateRectangle();
+	case pRectangle: DrawRectangle();
 		break;
 
-	case Pyramid: CreatePyramid();
+	case Pyramid: DrawPyramid();
 		break;
 
 	}
 }
 
-void ModuleRenderer3D::CreateCube() {
+void ModuleRenderer3D::DrawCube() {
 	GLfloat vertices[] = { 2.f, 2.f, 0.f,
 			0.f, 2.f, 0.f,
 			0.f, 0.f, 0.f,
@@ -375,7 +375,7 @@ void ModuleRenderer3D::CreateCube() {
 
 }
 
-void ModuleRenderer3D::CreateRectangle() {
+void ModuleRenderer3D::DrawRectangle() {
 	GLfloat vertices[] = { 2.f, 2.f, 0.f,
 				-2.f, 2.f, 0.f,
 				-2.f, 0.f, 0.f,
@@ -403,7 +403,7 @@ void ModuleRenderer3D::CreateRectangle() {
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void ModuleRenderer3D::CreatePyramid() {
+void ModuleRenderer3D::DrawPyramid() {
 	float pyramid_vertices[] = { -1.0f,0.0f,-1.0f,
 			1.0f ,0.0f, -1.0f,
 			1.0f ,0.0f, 1.0f,
@@ -440,5 +440,20 @@ void ModuleRenderer3D::CheckWireframeMode() {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		App->gui->wireframe_selected = false;
 	}
+}
+
+void ModuleRenderer3D::SetLight(bool enabled) {
+	if (enabled) glDisable(GL_LIGHTING);
+	else glEnable(GL_LIGHTING);
+}
+
+void ModuleRenderer3D::SetFaceCulling(bool enabled) {
+	if (enabled) glDisable(GL_CULL_FACE);
+	else glEnable(GL_CULL_FACE);
+}
+
+void ModuleRenderer3D::SetPolygonSmooth(bool enabled) {
+	if (enabled) glDisable(GL_POLYGON_SMOOTH);
+	else glEnable(GL_POLYGON_SMOOTH);	
 }
 

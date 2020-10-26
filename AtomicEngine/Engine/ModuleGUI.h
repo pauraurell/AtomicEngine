@@ -5,6 +5,7 @@
 #include "Module.h"
 #include <vector>
 #include <string>
+
 using namespace std;
 
 class ModuleGUI : public Module
@@ -27,6 +28,10 @@ public:
 	int height;
 	bool wireframe_selected;
 	std::vector<std::string> logs;
+
+	bool lightChecker;
+	bool smoothChecker;
+	bool faceCullingChecker;
 
 private:
 	bool demowindow;

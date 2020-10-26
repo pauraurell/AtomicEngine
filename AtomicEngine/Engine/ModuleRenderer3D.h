@@ -4,6 +4,7 @@
 #include "glmath.h"
 #include "Light.h"
 #include "ModuleImporter.h"
+#include "ModuleGUI.h"
 #include <array>
 
 #include "ImGui/imgui.h"
@@ -42,16 +43,16 @@ public:
 
 	void CheckWireframeMode();
 
-	void CreatePrimitive(Primitives type);
+	void RenderPrimitive(Primitives type);
 
 	//Primitives
-	void CreateCube();
-	void CreateRectangle();
-	void CreatePyramid();
+	void DrawCube();
+	void DrawRectangle();
+	void DrawPyramid();
 
-	bool cube_render;
-	bool rectangle_render;
-	bool pyramid_render;
+	void SetLight(bool enabled);
+	void SetFaceCulling(bool enabled);
+	void SetPolygonSmooth(bool enabled);
 
 public:
 
@@ -60,4 +61,8 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 	bool wireframe_mode;
+
+	bool cube_render;
+	bool rectangle_render;
+	bool pyramid_render;
 };

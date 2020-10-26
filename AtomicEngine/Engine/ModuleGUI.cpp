@@ -32,6 +32,10 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	height = 920;
 	brightness = 1.0f;
 	wireframe_selected = false;
+
+	lightChecker = false;
+	smoothChecker = false;
+	faceCullingChecker = false;
 }
 
 ModuleGUI::~ModuleGUI()
@@ -44,7 +48,7 @@ bool ModuleGUI::Init()
 	ImGui::CreateContext();
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init();
-
+	
 	App->window->SetResizable(resizable);
 	App->window->SetBorderless(borderless);
 
@@ -62,6 +66,7 @@ update_status ModuleGUI::PreUpdate()
 
 update_status ModuleGUI::Update()
 {
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
@@ -149,7 +154,28 @@ update_status ModuleGUI::Update()
 			{
 				InspectorWindowActive = true;
 			}
-			ImGui::EndMenu(); 
+			 
+
+			if (ImGui::BeginMenu("Style"))
+			{
+				if (ImGui::MenuItem("Classic"))
+				{
+					ImGui::StyleColorsClassic();
+				}
+
+				if (ImGui::MenuItem("Dark"))
+				{
+					ImGui::StyleColorsDark();
+				}
+
+				if (ImGui::MenuItem("Light"))
+				{
+					ImGui::StyleColorsLight();
+				}
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("Window"))
@@ -247,7 +273,24 @@ update_status ModuleGUI::Update()
 			ImGui::TextColored(tColor, "%i.0GB", ram = (SDL_GetSystemRAM() * 0.001));
 			ImGui::Text("Caps: "); ImGui::SameLine();
 			ImGui::TextColored(tColor, "%s", GetCaps());
+		}
 
+		if (ImGui::CollapsingHeader("Renderer"))
+		{
+			
+			if (ImGui::Checkbox("Lightning", &lightChecker)) {
+				App->renderer3D->SetLight(lightChecker);
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Face culling", &faceCullingChecker)) {
+				App->renderer3D->SetFaceCulling(faceCullingChecker);
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Polygon Smooth", &smoothChecker)) {
+				App->renderer3D->SetPolygonSmooth(smoothChecker);
+			}
 		}
 		ImGui::End();
 	}
