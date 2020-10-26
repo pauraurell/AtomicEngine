@@ -114,7 +114,7 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
-	
+
 		//LoadMeshBuffer();
 	}
 
@@ -139,7 +139,7 @@ update_status ModuleRenderer3D::PreUpdate()
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-	
+	glClearColor(App->gui->r, App->gui->g, App->gui->b, 1.0f);
 
 	return UPDATE_CONTINUE;
 }

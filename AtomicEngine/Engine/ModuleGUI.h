@@ -33,6 +33,12 @@ public:
 	bool smoothChecker;
 	bool faceCullingChecker;
 
+	bool gridChecker;
+
+	float r;
+	float g;
+	float b;
+
 private:
 	bool demowindow;
 	bool fullscreen;

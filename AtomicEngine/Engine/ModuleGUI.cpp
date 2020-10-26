@@ -36,6 +36,11 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	lightChecker = false;
 	smoothChecker = false;
 	faceCullingChecker = false;
+	gridChecker = true;
+
+	r = 0.05f;
+	g = 0.05f;
+	b = 0.05f;
 }
 
 ModuleGUI::~ModuleGUI()
@@ -72,20 +77,14 @@ update_status ModuleGUI::Update()
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("New Project"))
-			{
-				
-			}
-
+			{}
+			
 			if (ImGui::MenuItem("Open"))
-			{
-				
-			}
+			{}
 
 			if (ImGui::MenuItem("Save"))
-			{
-				
-			}
-
+			{}
+		
 			if (ImGui::MenuItem("Exit"))
 			{
 				return UPDATE_STOP;
@@ -121,6 +120,20 @@ update_status ModuleGUI::Update()
 					App->renderer3D->cube_render = false;
 					App->renderer3D->rectangle_render = false;
 					App->renderer3D->pyramid_render = true;
+				}
+
+				if (ImGui::MenuItem("Sphere"))
+				{
+					App->renderer3D->cube_render = false;
+					App->renderer3D->rectangle_render = false;
+					App->renderer3D->pyramid_render = false;
+				}
+
+				if (ImGui::MenuItem("Cylinder"))
+				{
+					App->renderer3D->cube_render = false;
+					App->renderer3D->rectangle_render = false;
+					App->renderer3D->pyramid_render = false;
 				}
 
 				ImGui::EndMenu();
@@ -275,23 +288,41 @@ update_status ModuleGUI::Update()
 			ImGui::TextColored(tColor, "%s", GetCaps());
 		}
 
+		if (ImGui::CollapsingHeader("Input"))
+		{
+			ImGui::Text("Mouse Position:"); ImGui::SameLine();
+			ImGui::Text ("%i, %i", App->input->GetMouseX(), App->input->GetMouseY());
+		}
+
 		if (ImGui::CollapsingHeader("Renderer"))
 		{
-			
 			if (ImGui::Checkbox("Lightning", &lightChecker)) {
 				App->renderer3D->SetLight(lightChecker);
 			}
 
-			ImGui::SameLine();
 			if (ImGui::Checkbox("Face culling", &faceCullingChecker)) {
 				App->renderer3D->SetFaceCulling(faceCullingChecker);
 			}
 
-			ImGui::SameLine();
 			if (ImGui::Checkbox("Polygon Smooth", &smoothChecker)) {
 				App->renderer3D->SetPolygonSmooth(smoothChecker);
 			}
+	
+			if (ImGui::Checkbox("Show grid", &gridChecker)) {
+				App->scene_intro->grid = gridChecker;
+			}
+			
+			ImGui::Separator();
+			ImGui::Text("Background Color");
+			ImGui::SliderFloat("Red", &r, 0, 1);
+			ImGui::SliderFloat("Green", &g, 0, 1);
+			ImGui::SliderFloat("Blue", &b, 0, 1);
+
 		}
+
+
+			
+
 		ImGui::End();
 	}
 

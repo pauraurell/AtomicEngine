@@ -13,7 +13,7 @@ ModuleSceneIntro::~ModuleSceneIntro()
 bool ModuleSceneIntro::Init()
 {
 	bool ret = true;
-
+	grid = true;
 	App->camera->Move(vec3(-3, 2, 1));
 	App->camera->LookAt(vec3(0.f, 0.f, 0.f));
 
@@ -32,7 +32,9 @@ update_status ModuleSceneIntro::Update()
 {
 	Plane plane(0.f, 1.f, 0.f, 1.f);
 	plane.axis = true;
-	plane.Render();
+
+	if (grid)
+		plane.Render();
 
 	return UPDATE_CONTINUE;
 }

@@ -18,4 +18,6 @@ public:
 	bool CleanUp();
 
 public:
+
+	bool grid;
 };
