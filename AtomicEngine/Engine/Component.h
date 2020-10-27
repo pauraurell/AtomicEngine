@@ -3,7 +3,7 @@
 
 #include "GameObject.h"
 
-enum ComponentType
+enum class ComponentType
 {
 	Transform,
 	Mesh,

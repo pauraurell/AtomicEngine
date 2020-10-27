@@ -3,7 +3,7 @@
 Component::Component()
 {
 	active = true;
-	type = NoType;
+	type = ComponentType::NoType;
 }
 
 Component::~Component()

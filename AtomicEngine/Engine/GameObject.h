@@ -3,7 +3,9 @@
 
 #include <vector>
 #include <string>
-#include "Component.h"
+
+class Component;
+enum class ComponentType;
 
 using namespace std;
 

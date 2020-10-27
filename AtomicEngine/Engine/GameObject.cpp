@@ -25,5 +25,6 @@ void GameObject::Update()
 
 Component* CreateComponent(ComponentType type)
 {
-
+	
+	return nullptr;
 }
