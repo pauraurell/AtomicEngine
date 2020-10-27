@@ -293,7 +293,13 @@ update_status ModuleGUI::Update()
 		{
 			ImGui::Text("Mouse Position:"); ImGui::SameLine();
 			ImGui::Text ("%i, %i", App->input->GetMouseX(), App->input->GetMouseY());
+		}
 
+		if (ImGui::CollapsingHeader("Camera"))
+		{
+			if (ImGui::Button("Go to origin")) { App->camera->GoToOrigin(); }
+			ImGui::SliderFloat("Camera Speed", &App->camera->cam_speed, 0.05f, 1.0f);
+			ImGui::SliderFloat("Shift multiplier", &App->camera->speed_multiplier, 1.01, 3);
 			ImGui::SliderInt("Camera Sensitivity", &App->camera->sensitivity, 1, 10);
 		}
 

@@ -17,6 +17,7 @@ public:
 	void LookAt(const vec3 &Spot);
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
+	void GoToOrigin();
 
 private:
 
@@ -26,6 +27,8 @@ public:
 	
 	vec3 X, Y, Z, Position, Reference;
 	int sensitivity;
+	float cam_speed;
+	float speed_multiplier;
 
 private:
 
