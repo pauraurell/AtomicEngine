@@ -150,6 +150,15 @@
     <ClInclude Include="Component.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentTransform.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMesh.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMaterial.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">

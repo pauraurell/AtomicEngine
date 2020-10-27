@@ -13,6 +13,9 @@ public:
 	GameObject();
 	~GameObject();
 
+	void Update();
+	Component* CreateComponent(ComponentType type);
+
 	void Draw();
 
 	string name;
@@ -23,4 +26,4 @@ private:
 
 };
 
-#endif
+#endif //__GAMEOBJECT_H__
