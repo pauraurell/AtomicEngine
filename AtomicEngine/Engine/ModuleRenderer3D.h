@@ -16,7 +16,7 @@
 using namespace std;
 #define MAX_LIGHTS 8
 
-enum Primitives
+enum class Primitives
 {
 	Cube,
 	Sphere,

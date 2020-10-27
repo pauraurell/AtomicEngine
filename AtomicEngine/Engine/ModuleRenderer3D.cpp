@@ -156,9 +156,9 @@ update_status ModuleRenderer3D::PostUpdate()
 	CheckWireframeMode();
 	//RenderMesh(App->importer->myMesh); //MEMORY LEAK
 
-	if (cube_render) { RenderPrimitive(Cube); }
-	if (rectangle_render) { RenderPrimitive(pRectangle); }
-	if (pyramid_render) { RenderPrimitive(Pyramid); }
+	if (cube_render) { RenderPrimitive(Primitives::Cube); }
+	if (rectangle_render) { RenderPrimitive(Primitives::pRectangle); }
+	if (pyramid_render) { RenderPrimitive(Primitives::Pyramid); }
 
 	App->gui->DrawUi();
 	SDL_GL_SwapWindow(App->window->window);
@@ -237,13 +237,13 @@ void ModuleRenderer3D::RenderPrimitive(Primitives type) {
 
 	switch (type)
 	{
-	case Cube: DrawCube();
+	case Primitives::Cube: DrawCube();
 		break;
 
-	case pRectangle: DrawRectangle();
+	case Primitives::pRectangle: DrawRectangle();
 		break;
 
-	case Pyramid: DrawPyramid();
+	case Primitives::Pyramid: DrawPyramid();
 		break;
 
 	}
