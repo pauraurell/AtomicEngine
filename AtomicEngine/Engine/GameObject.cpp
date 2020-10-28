@@ -63,17 +63,26 @@ void GameObject::DeleteComponents()
 		switch (components[i]->type)
 		{
 		case ComponentType::Mesh:
-
+			DeleteComponent(components[i]);
 			break;
 		case ComponentType::Transform:
-
+			DeleteComponent(components[i]);
 			break;
 		case ComponentType::Material:
-
+			DeleteComponent(components[i]);
 			break;
 		}
 	}
 	components.clear();
+}
+
+void GameObject::DeleteComponent(Component* comp)
+{
+	if (comp->type == ComponentType::Mesh)
+	{
+		ComponentMesh* dComp = (ComponentMesh*)comp;
+		delete dComp->m;
+	}
 }
 
 ComponentMesh* GameObject::GetCMesh()
