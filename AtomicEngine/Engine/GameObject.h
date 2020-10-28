@@ -18,8 +18,6 @@ public:
 	void Update();
 	Component* CreateComponent(ComponentType type);
 
-	void Draw();
-
 	string name;
 	bool active;
 

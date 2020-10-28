@@ -41,3 +41,10 @@ update_status ModuleSceneIntro::Update()
 	return UPDATE_CONTINUE;
 }
 
+GameObject* ModuleSceneIntro::CreateGameObject()
+{
+	GameObject* newGameObject = new GameObject();
+	game_objects.push_back(newGameObject);
+	return newGameObject;
+}
+

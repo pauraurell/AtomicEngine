@@ -114,8 +114,6 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
-
-		//LoadMeshBuffer();
 	}
 
 	// Projection matrix for
@@ -146,103 +144,6 @@ update_status ModuleRenderer3D::PreUpdate()
 
 update_status ModuleRenderer3D::Update()
 {
-	//LINE
-	//glLineWidth(2.0f);
-	//glBegin(GL_LINES);
-	//glVertex3f(0.f, 0.f, 0.f);
-	//glVertex3f(0.f, 10.f, 0.f);
-	//glEnd();
-	//CUBE WITH DIRECT MODE
-	/*glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
-	glVertex3f(0.f, 2.f, 0.f);
-	glVertex3f(0.f, 0.f, 0.f);
-	glVertex3f(0.f, 0.f, 2.f);
-	glVertex3f(0.f, 0.f, 2.f);
-	glVertex3f(0.f, 2.f, 2.f);
-	glVertex3f(0.f, 2.f, 0.f);
-	glVertex3f(2.f, 2.f, 0.f);
-	glVertex3f(2.f, 0.f, 2.f);
-	glVertex3f(2.f, 0.f, 0.f);
-	glVertex3f(2.f, 0.f, 2.f);
-	glVertex3f(2.f, 2.f, 0.f);
-	glVertex3f(2.f, 2.f, 2.f);
-	glVertex3f(0.f, 2.f, 0.f);
-	glVertex3f(2.f, 2.f, 0.f);
-	glVertex3f(2.f, 0.f, 0.f);
-	glVertex3f(0.f, 2.f, 0.f);
-	glVertex3f(2.f, 0.f, 0.f);
-	glVertex3f(0.f, 0.f, 0.f);
-	glVertex3f(0.f, 2.f, 2.f);
-	glVertex3f(2.f, 0.f, 2.f);
-	glVertex3f(2.f, 2.f, 2.f);
-	glVertex3f(0.f, 2.f, 2.f);
-	glVertex3f(0.f, 0.f, 2.f);
-	glVertex3f(2.f, 0.f, 2.f);
-	glVertex3f(0.f, 2.f, 2.f);
-	glVertex3f(2.f, 2.f, 2.f);
-	glVertex3f(2.f, 2.f, 0.f);
-	glVertex3f(0.f, 2.f, 2.f);
-	glVertex3f(2.f, 2.f, 0.f);
-	glVertex3f(0.f, 2.f, 0.f);
-	glVertex3f(0.f, 0.f, 2.f);
-	glVertex3f(2.f, 0.f, 0.f);
-	glVertex3f(2.f, 0.f, 2.f);
-	glVertex3f(0.f, 0.f, 2.f);
-	glVertex3f(0.f, 0.f, 0.f);
-	glVertex3f(2.f, 0.f, 0.f);
-	glEnd();*/
-	//glLineWidth(1.0f);
-	//CUBE WITH VERTEX ARRAYS
-	/*GLfloat vertices[] =
-	{
-		0.f, 2.f, 0.f,
-		0.f, 0.f, 0.f,
-		0.f, 0.f, 2.f,
-		0.f, 0.f, 2.f,
-		0.f, 2.f, 2.f,
-		0.f, 2.f, 0.f,
-		2.f, 2.f, 0.f,
-		2.f, 0.f, 2.f,
-		2.f, 0.f, 0.f,
-		2.f, 0.f, 2.f,
-		2.f, 2.f, 0.f,
-		2.f, 2.f, 2.f,
-		0.f, 2.f, 0.f,
-		2.f, 2.f, 0.f,
-		2.f, 0.f, 0.f,
-		0.f, 2.f, 0.f,
-		2.f, 0.f, 0.f,
-		0.f, 0.f, 0.f,
-		0.f, 2.f, 2.f,
-		2.f, 0.f, 2.f,
-		2.f, 2.f, 2.f,
-		0.f, 2.f, 2.f,
-		0.f, 0.f, 2.f,
-		2.f, 0.f, 2.f,
-		0.f, 2.f, 2.f,
-		2.f, 2.f, 2.f,
-		2.f, 2.f, 0.f,
-		0.f, 2.f, 2.f,
-		2.f, 2.f, 0.f,
-		0.f, 2.f, 0.f,
-		0.f, 0.f, 2.f,
-		2.f, 0.f, 0.f,
-		2.f, 0.f, 2.f,
-		0.f, 0.f, 2.f,
-		0.f, 0.f, 0.f,
-		2.f, 0.f, 0.f
-	};
-	uint my_id = 0;
-	glGenBuffers(1, (GLuint*)&(my_id));
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 108, vertices, GL_STATIC_DRAW);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
-	
 	return UPDATE_CONTINUE;
 }
 
@@ -251,7 +152,6 @@ update_status ModuleRenderer3D::PostUpdate()
 {
 	
 	CheckWireframeMode();
-	//RenderMesh(App->importer->myMesh);
 
 	if (cube_render) { RenderPrimitive(Cube); }
 	if (rectangle_render) { RenderPrimitive(pRectangle); }
@@ -286,32 +186,22 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::RenderMesh(mesh mesh) {
-	uint vertex_buffer = 0;
-
-	glGenBuffers(1, (GLuint*)&(vertex_buffer));
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertex * 3, mesh.vertex, GL_STATIC_DRAW);
-
+void ModuleRenderer3D::RenderMesh(mesh *m) {
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+
+	//Bind buffers
+	glBindBuffer(GL_ARRAY_BUFFER, m->id_vertex);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->id_index);
 
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_normals);
-	glNormalPointer(GL_FLOAT, 0, NULL);
+	//Draw
+	glDrawElements(GL_TRIANGLES, m->num_index, GL_UNSIGNED_INT, nullptr);
 
-	uint index_buffer = 0;
-	glGenBuffers(1, (GLuint*)&(index_buffer));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_index, mesh.index, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-	glDrawElements(GL_TRIANGLES, mesh.num_index, GL_UNSIGNED_INT, NULL);
+	//Unbind buffers
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-
-
 }
 
 void ModuleRenderer3D::LoadMeshBuffer() {

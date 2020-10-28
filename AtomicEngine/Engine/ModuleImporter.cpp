@@ -113,7 +113,6 @@ void ModuleImporter::LoadMesh(char* file_path)
 				}
 			}
 		}
-
 		aiReleaseImport(scene);
 	}
 	else
