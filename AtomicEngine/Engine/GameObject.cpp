@@ -1,8 +1,10 @@
 #include "GameObject.h"
+#include "Application.h"
 #include "Component.h"
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ModuleSceneIntro.h"
 
 GameObject::GameObject()
 {
@@ -10,6 +12,11 @@ GameObject::GameObject()
 	name = "GameObject";
 }
 
+GameObject::GameObject(const char* GOname)
+{
+	active = true;
+	name = GOname;
+}
 
 GameObject::~GameObject()
 {

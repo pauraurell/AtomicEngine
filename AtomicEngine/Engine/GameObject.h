@@ -13,12 +13,13 @@ class GameObject
 {
 public:
 	GameObject();
+	GameObject(const char* GOname);
 	~GameObject();
 
 	void Update();
 	Component* CreateComponent(ComponentType type);
 
-	string name;
+	const char* name;
 	bool active;
 
 private:

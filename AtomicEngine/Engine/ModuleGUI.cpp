@@ -139,6 +139,11 @@ update_status ModuleGUI::Update()
 
 				ImGui::EndMenu();
 			}
+
+			if (ImGui::MenuItem("Empty Game Object"))
+			{
+				App->scene_intro->CreateGameObject();
+			}
 			ImGui::EndMenu();
 		}
 
@@ -342,6 +347,14 @@ update_status ModuleGUI::Update()
 	{
 		ImGui::Begin("Hierarchy", &HierarchyWindowActive);
 
+		if (App->scene_intro->game_objects.size() > 0) 
+		{
+			for (int j = 0; j < App->scene_intro->game_objects.size(); j++) 
+			{
+				const char* name = App->scene_intro->game_objects[j]->name;
+				ImGui::Text(name);
+			}
+		}
 		ImGui::End();
 	}
 
