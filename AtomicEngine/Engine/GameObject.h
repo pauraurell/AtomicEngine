@@ -5,6 +5,7 @@
 #include <string>
 
 class Component;
+class ComponentMesh;
 enum class ComponentType;
 
 using namespace std;
@@ -18,6 +19,7 @@ public:
 
 	void Update();
 	Component* CreateComponent(ComponentType type);
+	ComponentMesh* GetCMesh();
 
 	const char* name;
 	bool active;

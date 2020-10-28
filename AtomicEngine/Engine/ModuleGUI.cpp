@@ -342,7 +342,7 @@ update_status ModuleGUI::Update()
 		ImGui::Begin("Console", &ConsoleWindowActive);
 		for (int i = 0; i < logs.size(); i++)
 		{
-			ImGui::Text("%s", logs[i].c_str());
+			ImGui::Text("%s", logs[i].c_str()); 
 		}
 		ImGui::End();
 	}
@@ -358,7 +358,10 @@ update_status ModuleGUI::Update()
 			for (int j = 0; j < App->scene_intro->game_objects.size(); j++) 
 			{
 				const char* name = App->scene_intro->game_objects[j]->name;
-				ImGui::Text(name);
+				ImGui::Text(name); ImGui::SameLine();
+				if (ImGui::Button("X")) {
+					App->scene_intro->DeleteGameObject(App->scene_intro->game_objects[j]);
+				}
 			}
 		}
 		ImGui::End();

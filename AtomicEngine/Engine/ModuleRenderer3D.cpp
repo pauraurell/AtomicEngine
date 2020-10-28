@@ -115,7 +115,7 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 
-		//LoadMeshBuffer();
+		LoadMeshBuffer();
 	}
 
 	// Projection matrix for
@@ -154,7 +154,7 @@ update_status ModuleRenderer3D::PostUpdate()
 {
 	CheckWireframeMode();
 
-	//RenderMesh(App->importer->myMesh); //MEMORY LEAK
+	RenderMesh(&App->importer->myMesh); //MEMORY LEAK
 
 	if (cube_render) { RenderPrimitive(Primitives::Cube); }
 	if (rectangle_render) { RenderPrimitive(Primitives::pRectangle); }
@@ -190,19 +190,27 @@ void ModuleRenderer3D::OnResize(int width, int height)
 }
 
 void ModuleRenderer3D::RenderMesh(mesh *m) {
+	uint vertex_buffer = 0;
+
+	glGenBuffers(1, (GLuint*)&(vertex_buffer));
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m->num_vertex * 3, m->vertex, GL_STATIC_DRAW);
+
 	glEnableClientState(GL_VERTEX_ARRAY);
-
-	//Bind buffers
-	glBindBuffer(GL_ARRAY_BUFFER, m->id_vertex);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->id_index);
 
-	//Draw
-	glDrawElements(GL_TRIANGLES, m->num_index, GL_UNSIGNED_INT, nullptr);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, m->id_normals);
+	glNormalPointer(GL_FLOAT, 0, NULL);
 
-	//Unbind buffers
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	uint index_buffer = 0;
+	glGenBuffers(1, (GLuint*)&(index_buffer));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * m->num_index, m->index, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+	glDrawElements(GL_TRIANGLES, m->num_index, GL_UNSIGNED_INT, NULL);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 }

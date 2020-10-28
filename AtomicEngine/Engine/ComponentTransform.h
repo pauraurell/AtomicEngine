@@ -7,7 +7,7 @@
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform();
+	ComponentTransform(GameObject* owner);
 	~ComponentTransform();
 
 	void Enable();

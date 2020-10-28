@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleImporter.h"
+#include "Component.h"
+#include "ComponentMesh.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -113,6 +115,10 @@ void ModuleImporter::LoadMesh(char* file_path)
 				}
 			}
 		}
+
+		App->scene_intro->CreateGameObject(&myMesh);
+		App->renderer3D->LoadMeshBuffer();
+
 		aiReleaseImport(scene);
 	}
 	else

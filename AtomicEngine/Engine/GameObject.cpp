@@ -39,19 +39,30 @@ Component* GameObject::CreateComponent(ComponentType type)
 	switch (type)
 	{
 	case ComponentType::Transform:
-		newComponent = new ComponentTransform();
+		newComponent = new ComponentTransform(this);
 		break;
 	case ComponentType::Mesh:
-		newComponent = new ComponentMesh();
+		newComponent = new ComponentMesh(this);
 		break;
 	case ComponentType::Material:
-		newComponent = new ComponentMaterial();
-		break;
-	default:
+		newComponent = new ComponentMaterial(this);
 		break;
 	}
 
 	components.push_back(newComponent);
 
 	return newComponent;
+}
+
+ComponentMesh* GameObject::GetCMesh()
+{
+	ComponentMesh* cMesh;
+
+	for (int i = 0; i < components.size(); i++) {
+		if (components[i]->type == ComponentType::Mesh) {
+			cMesh = (ComponentMesh*)components[i];
+		}
+	}
+
+	return cMesh;
 }

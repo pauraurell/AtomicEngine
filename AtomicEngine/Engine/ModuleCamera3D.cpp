@@ -106,6 +106,20 @@ update_status ModuleCamera3D::Update()
 		Forward = rotate(Forward, (float)dy * (float)( 0.05f * (float)sensitivity), X);
 
 		LookAt(Forward + Position);
+
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
+		{
+			if (App->input->GetMouseXMotion() > 0) {
+				Position -= X * speed;
+				Reference -= X * speed;
+			}
+
+			if (App->input->GetMouseXMotion() < 0) {
+				Position += X * speed;
+				Reference += X * speed;
+			}
+			LookAt(vec3(0, 0, 0));
+		}
 	}
 
 	if (App->input->GetMouseZ() > 0)
