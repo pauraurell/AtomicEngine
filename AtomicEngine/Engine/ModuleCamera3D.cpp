@@ -79,35 +79,32 @@ update_status ModuleCamera3D::Update()
 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT){
 		float mid_button_speed = 0.1f;
-		if (App->input->GetMouseXMotion() < 0) {
+		if (App->input->GetMouseXMotion() < 0 && App->input->GetMouseXMotion() > 0.5) {
+			Position += X * mid_button_speed/2;
+		}
+		if (App->input->GetMouseXMotion() < 0.5) {
 			Position += X * mid_button_speed;
 		}
-		if (App->input->GetMouseYMotion() > 0) {
+		if (App->input->GetMouseYMotion() > 0 && App->input->GetMouseYMotion() > 0.5) {
 			Position += Y * mid_button_speed;
 		}
-		if (App->input->GetMouseXMotion() > 0) {
+		if (App->input->GetMouseYMotion() > -0.5) {
+			Position += Y * mid_button_speed;
+		}
+		if (App->input->GetMouseXMotion() > 0 && App->input->GetMouseXMotion() > -0.5) {
 			Position -= X * mid_button_speed;
+		}
+		if (App->input->GetMouseXMotion() > -0.5) {
+			Position -= X * mid_button_speed;
+		}
+		if (App->input->GetMouseYMotion() < 0) {
+			Position -= Y * mid_button_speed;
 		}
 		if (App->input->GetMouseYMotion() < 0) {
 			Position -= Y * mid_button_speed;
 		}
 	}
 	
-	// Mouse motion ----------------
-	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	{
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
-
-		// TODO (Homework): Rotate the camera with the mouse
-		vec3 Forward = -Z;
-
-		Forward = rotate(Forward, (float)dx * (float)( 0.05f * (float)sensitivity), Y);
-		Forward = rotate(Forward, (float)dy * (float)( 0.05f * (float)sensitivity), X);
-
-		LookAt(Forward + Position);
-	}
-
 	if (App->input->GetMouseZ() > 0)
 	{
 		Position -= Z * camera_speed_weel;
@@ -118,6 +115,46 @@ update_status ModuleCamera3D::Update()
 		Position += Z * camera_speed_weel;
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+	{
+		if (App->input->GetMouseXMotion() > 0) {
+			Position -= X * speed * 3;
+			Reference -= X * speed * 3;
+		}
+
+		if (App->input->GetMouseXMotion() < 0) {
+			Position += X * speed * 3;
+			Reference += X * speed * 3;
+		}
+		LookAt(vec3(0, 0, 0));
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+		if (App->input->GetMouseYMotion() > 0) {
+			Position += Z * camera_speed_weel;
+		}
+
+		if (App->input->GetMouseYMotion() < 0) {
+			Position -= Z * camera_speed_weel;
+		}
+		LookAt(vec3(0, 0, 0));
+	}
+
+	else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	{
+		int dx = -App->input->GetMouseXMotion();
+		int dy = -App->input->GetMouseYMotion();
+
+		// TODO (Homework): Rotate the camera with the mouse
+		vec3 Forward = -Z;
+
+		Forward = rotate(Forward, (float)dx * (float)(0.05f * (float)sensitivity), Y);
+		Forward = rotate(Forward, (float)dy * (float)(0.05f * (float)sensitivity), X);
+
+		LookAt(Forward + Position);
+
+	}
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
