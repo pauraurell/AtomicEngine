@@ -153,8 +153,6 @@ update_status ModuleRenderer3D::Update()
 update_status ModuleRenderer3D::PostUpdate()
 {
 	CheckWireframeMode();
-
-	RenderMesh(&App->importer->myMesh); //MEMORY LEAK
 	
 	if (cube_render) { RenderPrimitive(Primitives::Cube); }
 	if (rectangle_render) { RenderPrimitive(Primitives::pRectangle); }
