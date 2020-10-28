@@ -35,6 +35,14 @@ update_status ModuleSceneIntro::Update()
 	if (grid)
 		plane.Render(App->gui->gridSize);
 
+	if (game_objects.size() > 0) 
+	{
+		for (int i = 0; i < game_objects.size(); ++i)
+		{
+			game_objects[i]->Update();
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 

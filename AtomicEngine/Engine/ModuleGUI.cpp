@@ -362,11 +362,14 @@ update_status ModuleGUI::Update()
 			for (int j = 0; j < App->scene_intro->game_objects.size(); j++) 
 			{
 				const char* name = App->scene_intro->game_objects[j]->name;
-				if (ImGui::Selectable(name, App->scene_intro->game_objects[j]->is_selected)) 
+				if (ImGui::TreeNodeEx((void*)(intptr_t)j, ImGuiTreeNodeFlags_DefaultOpen, name))
 				{
-					printInspector = !printInspector;
+					printInspector = true;
 					selectedObj = App->scene_intro->game_objects[j];
-				} ImGui::SameLine();
+					ImGui::TreePop();
+				} 
+				else { printInspector = false; }
+				ImGui::SameLine();
 				if (ImGui::Button("X")) {
 					App->scene_intro->DeleteGameObject(App->scene_intro->game_objects[j]);
 				}
