@@ -23,6 +23,7 @@ public:
 
 	const char* name;
 	bool active;
+	bool is_selected;
 
 private:
 	vector<Component*> components;

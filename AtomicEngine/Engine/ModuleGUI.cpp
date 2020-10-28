@@ -37,6 +37,7 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	smoothChecker = false;
 	faceCullingChecker = false;
 	gridChecker = true;
+	printInspector = false;
 
 	r = 0.05;
 	g = 0.05;
@@ -358,7 +359,10 @@ update_status ModuleGUI::Update()
 			for (int j = 0; j < App->scene_intro->game_objects.size(); j++) 
 			{
 				const char* name = App->scene_intro->game_objects[j]->name;
-				ImGui::Text(name); ImGui::SameLine();
+				if (ImGui::Selectable(name, App->scene_intro->game_objects[j]->is_selected)) 
+				{
+					printInspector = !printInspector;
+				} ImGui::SameLine();
 				if (ImGui::Button("X")) {
 					App->scene_intro->DeleteGameObject(App->scene_intro->game_objects[j]);
 				}
@@ -369,17 +373,19 @@ update_status ModuleGUI::Update()
 
 	if (InspectorWindowActive)
 	{
-		ImGui::Begin("Inspector", &InspectorWindowActive);
-		bool enabled = true;
-		ImGui::Text("Game Object"); ImGui::SameLine(); ImGui::Checkbox("Enabled", &enabled);
-		ImGui::Separator();
-		ImGui::Text("Transform");
-		ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
-		ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
-		ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
-		ImGui::Separator();
-		ImGui::Button("Add Component...");
 		
+		ImGui::Begin("Inspector", &InspectorWindowActive);
+		if (printInspector) {
+			bool enabled = true;
+			ImGui::Text("Game Object"); ImGui::SameLine(); ImGui::Checkbox("Enabled", &enabled);
+			ImGui::Separator();
+			ImGui::Text("Transform");
+			ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
+			ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
+			ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
+			ImGui::Separator();
+			ImGui::Button("Add Component...");
+		}
 		ImGui::End();
 	}
 

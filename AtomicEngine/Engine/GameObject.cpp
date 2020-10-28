@@ -10,12 +10,14 @@ GameObject::GameObject()
 {
 	active = true;
 	name = "GameObject";
+	is_selected = false;
 }
 
 GameObject::GameObject(const char* GOname)
 {
 	active = true;
 	name = GOname;
+	is_selected = false;
 }
 
 GameObject::~GameObject()
