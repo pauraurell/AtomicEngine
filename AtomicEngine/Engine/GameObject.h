@@ -21,6 +21,7 @@ public:
 
 	void Update();
 	Component* CreateComponent(ComponentType type);
+	void DeleteComponent(Component* comp);
 	void DeleteComponents();
 	ComponentMesh* GetCMesh();
 	ComponentTransform* GetCTransform();
