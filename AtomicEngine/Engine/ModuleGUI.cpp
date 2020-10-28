@@ -356,13 +356,14 @@ update_status ModuleGUI::Update()
 	if (HierarchyWindowActive)
 	{
 		ImGui::Begin("Hierarchy", &HierarchyWindowActive);
+		
 
 		if (App->scene_intro->game_objects.size() > 0) 
 		{
 			for (int j = 0; j < App->scene_intro->game_objects.size(); j++) 
 			{
-				const char* name = App->scene_intro->game_objects[j]->name;
-				if (ImGui::TreeNodeEx((void*)(intptr_t)j, ImGuiTreeNodeFlags_DefaultOpen, name))
+				const char* name = App->scene_intro->game_objects[j]->name.c_str();
+				if (ImGui::TreeNodeEx(name))
 				{
 					printInspector = true;
 					selectedObj = App->scene_intro->game_objects[j];
@@ -380,10 +381,11 @@ update_status ModuleGUI::Update()
 
 	if (InspectorWindowActive)
 	{
-		
 		ImGui::Begin("Inspector", &InspectorWindowActive);
 		if (printInspector) {
-			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); ImGui::Text("GameObject");
+			strcpy(buff, selectedObj->name.c_str());
+			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); ImGui::InputText("GameObject", buff, IM_ARRAYSIZE(buff));
+			
 			ImGui::Separator();
 			if(ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 			{
@@ -426,6 +428,8 @@ update_status ModuleGUI::Update()
 			}
 			ImGui::Separator();
 			ImGui::Button("Add Component...");
+
+			selectedObj->name.assign(buff);
 		}
 		ImGui::End();
 	}
