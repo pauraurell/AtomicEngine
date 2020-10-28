@@ -78,11 +78,7 @@ void GameObject::DeleteComponents()
 
 void GameObject::DeleteComponent(Component* comp)
 {
-	if (comp->type == ComponentType::Mesh)
-	{
-		ComponentMesh* dComp = (ComponentMesh*)comp;
-		delete dComp->m;
-	}
+	delete comp;
 }
 
 ComponentMesh* GameObject::GetCMesh()

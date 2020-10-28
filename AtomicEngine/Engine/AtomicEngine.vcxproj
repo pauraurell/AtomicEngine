@@ -40,7 +40,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Users\Toni\Documents\GitHub\AtomicEngine\AtomicEngine\Engine;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Toni\Documents\GitHub\AtomicEngine\AtomicEngine\Engine;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -48,13 +51,13 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Users\Pol\Documents\GitHub\AtomicEngine\AtomicEngine\Engine;C:\Users\Pau\Documents\GitHub\Motor-Engine\AtomicEngine\Engine</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Pol\Documents\GitHub\AtomicEngine\AtomicEngine\Engine;C:\Users\Pau\Documents\GitHub\Motor-Engine\AtomicEngine\Engine;C:\Users\Toni\Documents\GitHub\AtomicEngine\AtomicEngine\Engine</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <AdditionalLibraryDirectories>C:\Users\Pol\Documents\GitHub\AtomicEngine\AtomicEngine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Pol\Documents\GitHub\AtomicEngine\AtomicEngine;C:\Users\Toni\Documents\GitHub\AtomicEngine\AtomicEngine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

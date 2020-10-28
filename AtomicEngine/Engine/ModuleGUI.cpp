@@ -380,7 +380,7 @@ update_status ModuleGUI::Update()
 		
 		ImGui::Begin("Inspector", &InspectorWindowActive);
 		if (printInspector) {
-			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); ImGui::Text("Game Object");
+			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); ImGui::Text("GameObject");
 			ImGui::Separator();
 			if(ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 			{
@@ -396,17 +396,20 @@ update_status ModuleGUI::Update()
 				{
 					ImGui::Checkbox("Active", &selectedObj->GetCMesh()->active); ImGui::SameLine();
 					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCMesh()); }
-					ImGui::Text("File:"); ImGui::SameLine();
-					ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMesh()->m->filename);
-					ImGui::Separator(); ImGui::NextColumn();
-					ImGui::Text("Draw:");
-					ImGui::Checkbox("Vertex Normals", &selectedObj->GetCMesh()->m->vNormals);
-					ImGui::Checkbox("Face Normals", &selectedObj->GetCMesh()->m->fNormals);
-					ImGui::Separator();
-					ImGui::Text("Indexes: %i", selectedObj->GetCMesh()->m->num_index);
-					ImGui::Text("Normals: %i", selectedObj->GetCMesh()->m->num_normals);
-					ImGui::Text("Vertex: %i", selectedObj->GetCMesh()->m->num_vertex);
-					ImGui::Text("Tex Coords: %i", selectedObj->GetCMesh()->m->num_texcoords);
+					if (selectedObj->GetCMesh() != nullptr) 
+					{
+						ImGui::Text("File:"); ImGui::SameLine();
+						ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMesh()->m->filename);
+						ImGui::Separator(); ImGui::NextColumn();
+						ImGui::Text("Draw:");
+						ImGui::Checkbox("Vertex Normals", &selectedObj->GetCMesh()->m->vNormals);
+						ImGui::Checkbox("Face Normals", &selectedObj->GetCMesh()->m->fNormals);
+						ImGui::Separator();
+						ImGui::Text("Indexes: %i", selectedObj->GetCMesh()->m->num_index);
+						ImGui::Text("Normals: %i", selectedObj->GetCMesh()->m->num_normals);
+						ImGui::Text("Vertex: %i", selectedObj->GetCMesh()->m->num_vertex);
+						ImGui::Text("Tex Coords: %i", selectedObj->GetCMesh()->m->num_texcoords);
+					}
 				}
 			}
 			if (selectedObj->GetCMaterial() != nullptr)
