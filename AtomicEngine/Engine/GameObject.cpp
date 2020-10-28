@@ -83,10 +83,10 @@ ComponentMesh* GameObject::GetCMesh()
 	for (int i = 0; i < components.size(); i++) {
 		if (components[i]->type == ComponentType::Mesh) {
 			cMesh = (ComponentMesh*)components[i];
+			return cMesh;
 		}
 	}
-
-	return cMesh;
+	return nullptr;
 }
 
 ComponentTransform* GameObject::GetCTransform()
@@ -96,10 +96,10 @@ ComponentTransform* GameObject::GetCTransform()
 	for (int i = 0; i < components.size(); i++) {
 		if (components[i]->type == ComponentType::Transform) {
 			cTransform = (ComponentTransform*)components[i];
+			return cTransform;
 		}
 	}
-
-	return cTransform;
+	return nullptr;
 }
 
 ComponentMaterial* GameObject::GetCMaterial()
@@ -109,8 +109,8 @@ ComponentMaterial* GameObject::GetCMaterial()
 	for (int i = 0; i < components.size(); i++) {
 		if (components[i]->type == ComponentType::Material) {
 			cMaterial = (ComponentMaterial*)components[i];
+			return cMaterial;
 		}
 	}
-
-	return cMaterial;
+	return nullptr;
 }

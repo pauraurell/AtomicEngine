@@ -1,6 +1,9 @@
 #include "Globals.h"
 #include "ModuleGUI.h"
 #include "Application.h"
+#include "ComponentMaterial.h"
+#include "ComponentMesh.h"
+#include "ComponentTransform.h"
 
 #include "Glew/include/glew.h"
 
@@ -362,6 +365,7 @@ update_status ModuleGUI::Update()
 				if (ImGui::Selectable(name, App->scene_intro->game_objects[j]->is_selected)) 
 				{
 					printInspector = !printInspector;
+					selectedObj = App->scene_intro->game_objects[j];
 				} ImGui::SameLine();
 				if (ImGui::Button("X")) {
 					App->scene_intro->DeleteGameObject(App->scene_intro->game_objects[j]);
@@ -376,13 +380,41 @@ update_status ModuleGUI::Update()
 		
 		ImGui::Begin("Inspector", &InspectorWindowActive);
 		if (printInspector) {
-			bool enabled = true;
-			ImGui::Text("Game Object"); ImGui::SameLine(); ImGui::Checkbox("Enabled", &enabled);
+			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); ImGui::Text("Game Object");
 			ImGui::Separator();
-			ImGui::Text("Transform");
-			ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
-			ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
-			ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
+			if(ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->pos.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->pos.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->pos.z);
+				ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->rot.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->rot.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->rot.z);
+				ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->scale.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->scale.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->scale.z);
+			}
+			if (selectedObj->GetCMesh() != nullptr)
+			{
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Checkbox("Active", &selectedObj->GetCMesh()->active); ImGui::NextColumn();
+					ImGui::Text("File:"); ImGui::SameLine();
+					ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMesh()->m->filename);
+					ImGui::Separator(); ImGui::NextColumn();
+					ImGui::Text("Draw:");
+					ImGui::Checkbox("Vertex Normals", &selectedObj->GetCMesh()->m->vNormals);
+					ImGui::Checkbox("Face Normals", &selectedObj->GetCMesh()->m->fNormals);
+					ImGui::Separator();
+					ImGui::Text("Indexes: %i", selectedObj->GetCMesh()->m->num_index);
+					ImGui::Text("Normals: %i", selectedObj->GetCMesh()->m->num_normals);
+					ImGui::Text("Vertex: %i", selectedObj->GetCMesh()->m->num_vertex);
+					ImGui::Text("Tex Coords: %i", selectedObj->GetCMesh()->m->num_texcoords);
+				}
+			}
+			if (selectedObj->GetCMaterial() != nullptr)
+			{
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					
+				}
+			}
 			ImGui::Separator();
 			ImGui::Button("Add Component...");
 		}

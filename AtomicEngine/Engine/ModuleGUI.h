@@ -5,6 +5,7 @@
 #include "Module.h"
 #include <vector>
 #include <string>
+#include "GameObject.h"
 
 using namespace std;
 
@@ -42,6 +43,9 @@ public:
 	float g;
 	float b;
 
+	bool printInspector;
+	GameObject* selectedObj;
+
 private:
 	bool demowindow;
 	bool fullscreen;
@@ -54,7 +58,7 @@ private:
 	bool HierarchyWindowActive;
 	bool InspectorWindowActive;
 
-	bool printInspector;
+	
 	vector<float> fps_log;
 	vector<float> ms_log;
 	int fps;

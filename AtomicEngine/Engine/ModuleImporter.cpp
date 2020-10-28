@@ -47,6 +47,7 @@ bool ModuleImporter::CleanUp() {
 void ModuleImporter::LoadMesh(char* file_path)
 {
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	myMesh.filename = file_path;
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		for (int i = 0; i < scene->mNumMeshes; i++)

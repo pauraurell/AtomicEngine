@@ -23,6 +23,10 @@ struct mesh
 	uint	id_texcoords = 0; // unique texcoords in VRAM
 	uint	num_texcoords = 0;
 	float* texcoords = nullptr;
+
+	char* filename;
+	bool vNormals = false;
+	bool fNormals = false;
 };
 
 class ModuleImporter : public Module

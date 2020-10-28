@@ -41,6 +41,7 @@ update_status ModuleSceneIntro::Update()
 GameObject* ModuleSceneIntro::CreateGameObject()
 {
 	GameObject* newGameObject = new GameObject();
+	newGameObject->CreateComponent(ComponentType::Transform);
 	game_objects.push_back(newGameObject);
 	return newGameObject;
 }
@@ -48,6 +49,7 @@ GameObject* ModuleSceneIntro::CreateGameObject()
 GameObject* ModuleSceneIntro::CreateGameObject(mesh* mesh)
 {
 	GameObject* newGameObject = new GameObject;
+	newGameObject->CreateComponent(ComponentType::Transform);
 	newGameObject->CreateComponent(ComponentType::Mesh);
 	newGameObject->GetCMesh()->m = mesh;
 	App->scene_intro->game_objects.push_back(newGameObject);
@@ -60,7 +62,8 @@ void ModuleSceneIntro::DeleteGameObject(GameObject* to_delete)
 	{
 		if (game_objects[i] == to_delete)
 		{
-			game_objects[i].DeleteComponents();
+			App->gui->printInspector = false;
+			game_objects[i]->DeleteComponents();
 			game_objects.erase(game_objects.begin() + i);
 			delete to_delete;
 			break;
