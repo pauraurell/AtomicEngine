@@ -70,6 +70,15 @@
     <ClCompile Include="Component.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentMesh.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMaterial.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTransform.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -148,6 +157,15 @@
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTransform.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMesh.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMaterial.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
   </ItemGroup>

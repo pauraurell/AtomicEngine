@@ -115,8 +115,7 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 
-		/*App->importer->LoadMesh("BakerHouse.fbx");
-		LoadMeshBuffer();*/
+		//LoadMeshBuffer();
 	}
 
 	// Projection matrix for
@@ -154,6 +153,7 @@ update_status ModuleRenderer3D::Update()
 update_status ModuleRenderer3D::PostUpdate()
 {
 	CheckWireframeMode();
+
 	//RenderMesh(App->importer->myMesh); //MEMORY LEAK
 
 	if (cube_render) { RenderPrimitive(Primitives::Cube); }
@@ -189,32 +189,22 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::RenderMesh(mesh mesh) {
-	uint vertex_buffer = 0;
-
-	glGenBuffers(1, (GLuint*)&(vertex_buffer));
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.num_vertex * 3, mesh.vertex, GL_STATIC_DRAW);
-
+void ModuleRenderer3D::RenderMesh(mesh *m) {
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+
+	//Bind buffers
+	glBindBuffer(GL_ARRAY_BUFFER, m->id_vertex);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->id_index);
 
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.id_normals);
-	glNormalPointer(GL_FLOAT, 0, NULL);
+	//Draw
+	glDrawElements(GL_TRIANGLES, m->num_index, GL_UNSIGNED_INT, nullptr);
 
-	uint index_buffer = 0;
-	glGenBuffers(1, (GLuint*)&(index_buffer));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.num_index, mesh.index, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-	glDrawElements(GL_TRIANGLES, mesh.num_index, GL_UNSIGNED_INT, NULL);
+	//Unbind buffers
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-
-
 }
 
 void ModuleRenderer3D::LoadMeshBuffer() {

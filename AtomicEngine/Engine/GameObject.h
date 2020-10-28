@@ -3,7 +3,9 @@
 
 #include <vector>
 #include <string>
-#include "Component.h"
+
+class Component;
+enum class ComponentType;
 
 using namespace std;
 
@@ -13,7 +15,8 @@ public:
 	GameObject();
 	~GameObject();
 
-	void Draw();
+	void Update();
+	Component* CreateComponent(ComponentType type);
 
 	string name;
 	bool active;
@@ -23,4 +26,4 @@ private:
 
 };
 
-#endif
+#endif //__GAMEOBJECT_H__

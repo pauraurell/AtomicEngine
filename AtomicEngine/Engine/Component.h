@@ -1,21 +1,30 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
+#include "GameObject.h"
+
+enum class ComponentType
+{
+	Transform,
+	Mesh,
+	Material,
+	NoType
+};
+
 class Component
 {
-public:
-	enum ComponentType
-	{
-		Transform,
-		Mesh,
-		Material,
-		NoType
-	};
-
 public:
 	Component();
 	~Component();
 
+	virtual void Enable()
+	{}
+	virtual void Update()
+	{}
+	virtual void Disable()
+	{}
+
+	GameObject* owner;
 	ComponentType type;
 	bool active;
 };

@@ -113,7 +113,6 @@ void ModuleImporter::LoadMesh(char* file_path)
 				}
 			}
 		}
-		App->renderer3D->LoadMeshBuffer();
 		aiReleaseImport(scene);
 	}
 	else

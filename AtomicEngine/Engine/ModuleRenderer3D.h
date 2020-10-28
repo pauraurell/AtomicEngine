@@ -38,7 +38,7 @@ public:
 
 	void OnResize(int width, int height);
 
-	void RenderMesh(mesh mesh);
+	void RenderMesh(mesh* m);
 	void LoadMeshBuffer();
 
 	void CheckWireframeMode();
