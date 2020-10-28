@@ -69,5 +69,4 @@ private:
 	int mouse_x_motion;
 	int mouse_y_motion;
 	//int mouse_z_motion;
-	char* file;
 };

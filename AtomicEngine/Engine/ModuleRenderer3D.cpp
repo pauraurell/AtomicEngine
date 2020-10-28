@@ -114,6 +114,8 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+
+		//LoadMeshBuffer();
 	}
 
 	// Projection matrix for
@@ -150,12 +152,13 @@ update_status ModuleRenderer3D::Update()
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
-	
 	CheckWireframeMode();
 
-	if (cube_render) { RenderPrimitive(Cube); }
-	if (rectangle_render) { RenderPrimitive(pRectangle); }
-	if (pyramid_render) { RenderPrimitive(Pyramid); }
+	//RenderMesh(App->importer->myMesh); //MEMORY LEAK
+
+	if (cube_render) { RenderPrimitive(Primitives::Cube); }
+	if (rectangle_render) { RenderPrimitive(Primitives::pRectangle); }
+	if (pyramid_render) { RenderPrimitive(Primitives::Pyramid); }
 
 	App->gui->DrawUi();
 	SDL_GL_SwapWindow(App->window->window);
@@ -224,13 +227,13 @@ void ModuleRenderer3D::RenderPrimitive(Primitives type) {
 
 	switch (type)
 	{
-	case Cube: DrawCube();
+	case Primitives::Cube: DrawCube();
 		break;
 
-	case pRectangle: DrawRectangle();
+	case Primitives::pRectangle: DrawRectangle();
 		break;
 
-	case Pyramid: DrawPyramid();
+	case Primitives::Pyramid: DrawPyramid();
 		break;
 
 	}
@@ -262,7 +265,101 @@ void ModuleRenderer3D::DrawCube() {
 
 	// deactivate vertex arrays after drawing
 	glDisableClientState(GL_VERTEX_ARRAY);
+}
 
+void ModuleRenderer3D::DrawCubeDirectMode() {
+	//CUBE WITH DIRECT MODE
+	glBegin(GL_TRIANGLES);  // draw a cube with 12 triangles
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(2.f, 2.f, 2.f);
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(2.f, 2.f, 2.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(0.f, 2.f, 2.f);
+	glVertex3f(2.f, 2.f, 0.f);
+	glVertex3f(0.f, 2.f, 0.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glVertex3f(2.f, 0.f, 2.f);
+	glVertex3f(0.f, 0.f, 2.f);
+	glVertex3f(0.f, 0.f, 0.f);
+	glVertex3f(2.f, 0.f, 0.f);
+	glEnd();
+	glLineWidth(1.0f);
+}
+
+void ModuleRenderer3D::DrawCubeVerticeArray() {
+	//CUBE WITH VERTEX ARRAYS
+	GLfloat vertices[] =
+	{
+		0.f, 2.f, 0.f,
+		0.f, 0.f, 0.f,
+		0.f, 0.f, 2.f,
+		0.f, 0.f, 2.f,
+		0.f, 2.f, 2.f,
+		0.f, 2.f, 0.f,
+		2.f, 2.f, 0.f,
+		2.f, 0.f, 2.f,
+		2.f, 0.f, 0.f,
+		2.f, 0.f, 2.f,
+		2.f, 2.f, 0.f,
+		2.f, 2.f, 2.f,
+		0.f, 2.f, 0.f,
+		2.f, 2.f, 0.f,
+		2.f, 0.f, 0.f,
+		0.f, 2.f, 0.f,
+		2.f, 0.f, 0.f,
+		0.f, 0.f, 0.f,
+		0.f, 2.f, 2.f,
+		2.f, 0.f, 2.f,
+		2.f, 2.f, 2.f,
+		0.f, 2.f, 2.f,
+		0.f, 0.f, 2.f,
+		2.f, 0.f, 2.f,
+		0.f, 2.f, 2.f,
+		2.f, 2.f, 2.f,
+		2.f, 2.f, 0.f,
+		0.f, 2.f, 2.f,
+		2.f, 2.f, 0.f,
+		0.f, 2.f, 0.f,
+		0.f, 0.f, 2.f,
+		2.f, 0.f, 0.f,
+		2.f, 0.f, 2.f,
+		0.f, 0.f, 2.f,
+		0.f, 0.f, 0.f,
+		2.f, 0.f, 0.f
+	};
+	uint my_id = 0;
+	glGenBuffers(1, (GLuint*)&(my_id));
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 108, vertices, GL_STATIC_DRAW);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void ModuleRenderer3D::DrawRectangle() {

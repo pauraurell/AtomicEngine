@@ -12,6 +12,10 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 	Position = vec3(0.0f, 0.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
+
+	cam_speed = 0.15;
+	sensitivity = 5;
+	speed_multiplier = 1.75f;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -37,46 +41,58 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update()
 {
-
-	float camera_speed = 0.05f;
+	float camera_speed_weel = 0.35f;
+	float speed = cam_speed;
 	// OnKeys WASD keys -----------------------------------
 
-	// TODO 3: Make the camera go up/down when pressing R (up) F(down)
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) {
-		Position.y += camera_speed;
-		Reference.y += camera_speed;
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
+		
+		GoToOrigin();
+	}
+	
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+		speed = cam_speed * speed_multiplier;
+	}
+	else {
+		speed = cam_speed;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
-		Position.y -= camera_speed;
-		Reference.y -= camera_speed;
-	}
-	// TODO 4: Make the camera go forward (w) and backward with (s)
-	// Note that the vectors X/Y/Z contain the current axis of the camera
-	// you can read them to modify Position
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		Position -= Z * 0.125f;
-		Reference -= Z * 0.125f;
+		Position -= Z * speed;
+		Reference -= Z * speed;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-		Position += Z * 0.125f;
-		Reference += Z * 0.125f;
+		Position += Z * speed;
+		Reference += Z * speed;
 	}
 
-
-	// TODO 5: Make the camera go left (a) and right with (d)
-	// Note that the vectors X/Y/Z contain the current axis of the camera
-	// you can read them to modify Position
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		Position -= X * 0.125f;
-		Reference -= X * 0.125f;
+		Position -= X * speed;
+		Reference -= X * speed;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		Position += X * 0.125f;
-		Reference += X * 0.125f;
+		Position += X * speed;
+		Reference += X * speed;
 	}
+
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT){
+		float mid_button_speed = 0.1f;
+		if (App->input->GetMouseXMotion() < 0) {
+			Position += X * mid_button_speed;
+		}
+		if (App->input->GetMouseYMotion() > 0) {
+			Position += Y * mid_button_speed;
+		}
+		if (App->input->GetMouseXMotion() > 0) {
+			Position -= X * mid_button_speed;
+		}
+		if (App->input->GetMouseYMotion() < 0) {
+			Position -= Y * mid_button_speed;
+		}
+	}
+	
 	// Mouse motion ----------------
 	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
@@ -86,10 +102,20 @@ update_status ModuleCamera3D::Update()
 		// TODO (Homework): Rotate the camera with the mouse
 		vec3 Forward = -Z;
 
-		Forward = rotate(Forward, dx, Y);
-		Forward = rotate(Forward, dy, X);
+		Forward = rotate(Forward, (float)dx * (float)( 0.05f * (float)sensitivity), Y);
+		Forward = rotate(Forward, (float)dy * (float)( 0.05f * (float)sensitivity), X);
 
 		LookAt(Forward + Position);
+	}
+
+	if (App->input->GetMouseZ() > 0)
+	{
+		Position -= Z * camera_speed_weel;
+	}
+
+	if (App->input->GetMouseZ() < 0)
+	{
+		Position += Z * camera_speed_weel;
 	}
 
 	// Recalculate matrix -------------
@@ -150,4 +176,11 @@ void ModuleCamera3D::CalculateViewMatrix()
 {
 	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
 	ViewMatrixInverse = inverse(ViewMatrix);
+}
+
+// -----------------------------------------------------------------
+void ModuleCamera3D::GoToOrigin()
+{
+	LookAt(vec3(0.f, 0.f, 0.f));
+	Position = vec3(5.0f, 5.5f, 5.0f);
 }

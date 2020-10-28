@@ -16,7 +16,7 @@
 using namespace std;
 #define MAX_LIGHTS 8
 
-enum Primitives
+enum class Primitives
 {
 	Cube,
 	Sphere,
@@ -47,6 +47,8 @@ public:
 
 	//Primitives
 	void DrawCube();
+	void DrawCubeDirectMode();
+	void DrawCubeVerticeArray();
 	void DrawRectangle();
 	void DrawPyramid();
 
