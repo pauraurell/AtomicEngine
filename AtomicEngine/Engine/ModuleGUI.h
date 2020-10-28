@@ -54,6 +54,7 @@ private:
 	bool HierarchyWindowActive;
 	bool InspectorWindowActive;
 
+	bool printInspector;
 	vector<float> fps_log;
 	vector<float> ms_log;
 	int fps;
