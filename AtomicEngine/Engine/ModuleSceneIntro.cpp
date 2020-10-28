@@ -60,6 +60,7 @@ void ModuleSceneIntro::DeleteGameObject(GameObject* to_delete)
 	{
 		if (game_objects[i] == to_delete)
 		{
+			game_objects[i].DeleteComponents();
 			game_objects.erase(game_objects.begin() + i);
 			delete to_delete;
 			break;

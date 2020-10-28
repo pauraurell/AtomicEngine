@@ -6,6 +6,8 @@
 
 class Component;
 class ComponentMesh;
+class ComponentTransform;
+class ComponentMaterial;
 enum class ComponentType;
 
 using namespace std;
@@ -19,7 +21,10 @@ public:
 
 	void Update();
 	Component* CreateComponent(ComponentType type);
+	void DeleteComponents();
 	ComponentMesh* GetCMesh();
+	ComponentTransform* GetCTransform();
+	ComponentMaterial* GetCMaterial();
 
 	const char* name;
 	bool active;

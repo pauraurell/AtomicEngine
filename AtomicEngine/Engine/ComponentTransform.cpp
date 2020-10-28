@@ -1,9 +1,8 @@
 #include "ComponentTransform.h"
 
-ComponentTransform::ComponentTransform(GameObject* c_owner) : Component()
+ComponentTransform::ComponentTransform() : Component()
 {
 	type = ComponentType::Transform;
-	owner = c_owner;
 
 	pos.x = 0.0f;	pos.y = 0.0f;	pos.z = 0.0f;
 	rot.x = 0.0f;	rot.y = 0.0f;	rot.z = 0.0f;

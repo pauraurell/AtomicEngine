@@ -8,7 +8,7 @@
 class ComponentMesh : public Component
 {
 public:
-	ComponentMesh(GameObject* owner);
+	ComponentMesh();
 	~ComponentMesh();
 
 	void Enable();

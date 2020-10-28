@@ -1,9 +1,8 @@
 #include "ComponentMaterial.h"
 
-ComponentMaterial::ComponentMaterial(GameObject* c_owner) : Component()
+ComponentMaterial::ComponentMaterial() : Component()
 {
 	type = ComponentType::Material;
-	owner = c_owner;
 }
 
 ComponentMaterial::~ComponentMaterial()

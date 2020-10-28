@@ -39,19 +39,39 @@ Component* GameObject::CreateComponent(ComponentType type)
 	switch (type)
 	{
 	case ComponentType::Transform:
-		newComponent = new ComponentTransform(this);
+		newComponent = new ComponentTransform();
 		break;
 	case ComponentType::Mesh:
-		newComponent = new ComponentMesh(this);
+		newComponent = new ComponentMesh();
 		break;
 	case ComponentType::Material:
-		newComponent = new ComponentMaterial(this);
+		newComponent = new ComponentMaterial();
 		break;
 	}
-
+	newComponent->owner = this;
 	components.push_back(newComponent);
 
 	return newComponent;
+}
+
+void GameObject::DeleteComponents()
+{
+	for (int i = 0; i < components.size(); i++)
+	{
+		switch (components[i]->type)
+		{
+		case ComponentType::Mesh:
+
+			break;
+		case ComponentType::Transform:
+
+			break;
+		case ComponentType::Material:
+
+			break;
+		}
+	}
+	components.clear();
 }
 
 ComponentMesh* GameObject::GetCMesh()
@@ -65,4 +85,30 @@ ComponentMesh* GameObject::GetCMesh()
 	}
 
 	return cMesh;
+}
+
+ComponentTransform* GameObject::GetCTransform()
+{
+	ComponentTransform* cTransform;
+
+	for (int i = 0; i < components.size(); i++) {
+		if (components[i]->type == ComponentType::Transform) {
+			cTransform = (ComponentTransform*)components[i];
+		}
+	}
+
+	return cTransform;
+}
+
+ComponentMaterial* GameObject::GetCMaterial()
+{
+	ComponentMaterial* cMaterial;
+
+	for (int i = 0; i < components.size(); i++) {
+		if (components[i]->type == ComponentType::Material) {
+			cMaterial = (ComponentMaterial*)components[i];
+		}
+	}
+
+	return cMaterial;
 }

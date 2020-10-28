@@ -7,7 +7,7 @@
 class ComponentMaterial : public Component
 {
 public:
-	ComponentMaterial(GameObject* owner);
+	ComponentMaterial();
 	~ComponentMaterial();
 
 	void Enable();
