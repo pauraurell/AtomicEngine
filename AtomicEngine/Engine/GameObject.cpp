@@ -78,7 +78,14 @@ void GameObject::DeleteComponents()
 
 void GameObject::DeleteComponent(Component* comp)
 {
+	bool deleted = false;
+	for (int i = 0; i < components.size() && deleted == false; i++)
+	{
+		if (components[i] == comp) { components.erase(components.begin() + i); deleted = true; }
+	}
 	delete comp;
+
+	LOG("Component deleted");
 }
 
 ComponentMesh* GameObject::GetCMesh()
