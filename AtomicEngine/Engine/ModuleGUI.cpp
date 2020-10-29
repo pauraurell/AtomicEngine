@@ -7,11 +7,6 @@
 
 #include "Glew/include/glew.h"
 
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_internal.h"
-#include "ImGui/imgui_impl_sdl.h"
-#include "ImGui/imgui_impl_opengl3.h"
-
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -363,6 +358,7 @@ update_status ModuleGUI::Update()
 			for (int j = 0; j < App->scene_intro->game_objects.size(); j++) 
 			{
 				const char* name = App->scene_intro->game_objects[j]->name.c_str();
+				
 				if (ImGui::TreeNodeEx(name))
 				{
 					printInspector = true;
@@ -371,7 +367,7 @@ update_status ModuleGUI::Update()
 				} 
 				else { printInspector = false; }
 				ImGui::SameLine();
-				if (ImGui::Button("X")) {
+				if (ImGui::SmallButton("x")) {
 					App->scene_intro->DeleteGameObject(App->scene_intro->game_objects[j]);
 				}
 			}
@@ -384,7 +380,11 @@ update_status ModuleGUI::Update()
 		ImGui::Begin("Inspector", &InspectorWindowActive);
 		if (printInspector) {
 			strcpy(buff, selectedObj->name.c_str());
-			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); ImGui::InputText("GameObject", buff, IM_ARRAYSIZE(buff));
+			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); 
+			if (ImGui::InputText("GameObject", buff, IM_ARRAYSIZE(buff), ImGuiInputTextFlags_EnterReturnsTrue)) {
+				selectedObj->name.assign(buff);
+			}
+			printInspector = true;
 			
 			ImGui::Separator();
 			if(ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
@@ -428,8 +428,6 @@ update_status ModuleGUI::Update()
 			}
 			ImGui::Separator();
 			ImGui::Button("Add Component...");
-
-			selectedObj->name.assign(buff);
 		}
 		ImGui::End();
 	}

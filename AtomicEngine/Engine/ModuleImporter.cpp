@@ -116,10 +116,9 @@ void ModuleImporter::LoadMesh(char* file_path)
 				}
 			}
 		}
-
-		App->scene_intro->CreateGameObject(&myMesh);
 		App->renderer3D->LoadMeshBuffer();
-
+		App->scene_intro->CreateGameObject(&myMesh);
+		
 		aiReleaseImport(scene);
 	}
 	else
