@@ -1,13 +1,11 @@
 #include "Globals.h"
 #include "ModuleGUI.h"
 #include "Application.h"
+#include "ComponentMaterial.h"
+#include "ComponentMesh.h"
+#include "ComponentTransform.h"
 
 #include "Glew/include/glew.h"
-
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_internal.h"
-#include "ImGui/imgui_impl_sdl.h"
-#include "ImGui/imgui_impl_opengl3.h"
 
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -37,6 +35,7 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	smoothChecker = false;
 	faceCullingChecker = false;
 	gridChecker = true;
+	printInspector = false;
 
 	r = 0.05;
 	g = 0.05;
@@ -138,6 +137,11 @@ update_status ModuleGUI::Update()
 				}
 
 				ImGui::EndMenu();
+			}
+
+			if (ImGui::MenuItem("Empty Game Object"))
+			{
+				App->scene_intro->CreateGameObject();
 			}
 			ImGui::EndMenu();
 		}
@@ -337,7 +341,7 @@ update_status ModuleGUI::Update()
 		ImGui::Begin("Console", &ConsoleWindowActive);
 		for (int i = 0; i < logs.size(); i++)
 		{
-			ImGui::Text("%s", logs[i].c_str());
+			ImGui::Text("%s", logs[i].c_str()); 
 		}
 		ImGui::End();
 	}
@@ -347,23 +351,84 @@ update_status ModuleGUI::Update()
 	if (HierarchyWindowActive)
 	{
 		ImGui::Begin("Hierarchy", &HierarchyWindowActive);
+		
 
+		if (App->scene_intro->game_objects.size() > 0) 
+		{
+			for (int j = 0; j < App->scene_intro->game_objects.size(); j++) 
+			{
+				const char* name = App->scene_intro->game_objects[j]->name.c_str();
+				
+				if (ImGui::TreeNodeEx(name))
+				{
+					printInspector = true;
+					selectedObj = App->scene_intro->game_objects[j];
+					ImGui::TreePop();
+				} 
+				else { printInspector = false; }
+				ImGui::SameLine();
+				if (ImGui::SmallButton("x")) {
+					App->scene_intro->DeleteGameObject(App->scene_intro->game_objects[j]);
+				}
+			}
+		}
 		ImGui::End();
 	}
 
 	if (InspectorWindowActive)
 	{
 		ImGui::Begin("Inspector", &InspectorWindowActive);
-		bool enabled = true;
-		ImGui::Text("Game Object"); ImGui::SameLine(); ImGui::Checkbox("Enabled", &enabled);
-		ImGui::Separator();
-		ImGui::Text("Transform");
-		ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
-		ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
-		ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x:"); ImGui::SameLine(); ImGui::Text("y:"); ImGui::SameLine(); ImGui::Text("z:");
-		ImGui::Separator();
-		ImGui::Button("Add Component...");
-		
+		if (printInspector) {
+			strcpy(buff, selectedObj->name.c_str());
+			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); 
+			if (ImGui::InputText("GameObject", buff, IM_ARRAYSIZE(buff), ImGuiInputTextFlags_EnterReturnsTrue)) {
+				selectedObj->name.assign(buff);
+			}
+			printInspector = true;
+			
+			ImGui::Separator();
+			if(ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				ImGui::Checkbox("Active", &selectedObj->GetCTransform()->active);
+				ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->pos.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->pos.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->pos.z);
+				ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->rot.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->rot.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->rot.z);
+				ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->scale.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->scale.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->scale.z);
+			}
+			if (selectedObj->GetCMesh() != nullptr)
+			{
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Checkbox("Active", &selectedObj->GetCMesh()->active); ImGui::SameLine();
+					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCMesh()); }
+					if (selectedObj->GetCMesh() != nullptr) 
+					{
+						ImGui::Text("File:"); ImGui::SameLine();
+						ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMesh()->m->filename);
+						ImGui::Separator(); ImGui::NextColumn();
+						ImGui::Text("Draw:");
+						ImGui::Checkbox("Vertex Normals", &selectedObj->GetCMesh()->m->vNormals);
+						ImGui::Checkbox("Face Normals", &selectedObj->GetCMesh()->m->fNormals);
+						ImGui::Separator();
+						ImGui::Text("Indexes: %i", selectedObj->GetCMesh()->m->num_index);
+						ImGui::Text("Normals: %i", selectedObj->GetCMesh()->m->num_normals);
+						ImGui::Text("Vertex: %i", selectedObj->GetCMesh()->m->num_vertex);
+						ImGui::Text("Tex Coords: %i", selectedObj->GetCMesh()->m->num_texcoords);
+					}
+				}
+			}
+			if (selectedObj->GetCMaterial() != nullptr)
+			{
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Checkbox("Active", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
+					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
+				}
+			}
+			ImGui::Separator();
+			ImGui::Button("Add Component...");
+		}
 		ImGui::End();
 	}
 

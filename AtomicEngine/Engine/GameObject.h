@@ -5,6 +5,9 @@
 #include <string>
 
 class Component;
+class ComponentMesh;
+class ComponentTransform;
+class ComponentMaterial;
 enum class ComponentType;
 
 using namespace std;
@@ -13,13 +16,20 @@ class GameObject
 {
 public:
 	GameObject();
+	GameObject(const char* GOname);
 	~GameObject();
 
 	void Update();
 	Component* CreateComponent(ComponentType type);
+	void DeleteComponent(Component* comp);
+	void DeleteComponents();
+	ComponentMesh* GetCMesh();
+	ComponentTransform* GetCTransform();
+	ComponentMaterial* GetCMaterial();
 
 	string name;
 	bool active;
+	bool is_selected;
 
 private:
 	vector<Component*> components;

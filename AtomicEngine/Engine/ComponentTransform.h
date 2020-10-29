@@ -13,6 +13,11 @@ public:
 	void Enable();
 	void Update();
 	void Disable();
+
+public:
+	float3 pos;
+	float3 rot;
+	float3 scale;
 };
 
 #endif //__COMPONENTTRANSFORM_H__

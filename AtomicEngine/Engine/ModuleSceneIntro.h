@@ -2,11 +2,10 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GameObject.h"
+#include "ModuleImporter.h"
+
 
 #define BOUNCER_TIME 200
-
-struct PhysBody3D;
-class Cube;
 
 class ModuleSceneIntro : public Module
 {
@@ -14,11 +13,13 @@ public:
 	ModuleSceneIntro(Application* app, bool start_enabled = true);
 	~ModuleSceneIntro();
 
-	bool Init();
+	bool Start();
 	update_status Update();
 	bool CleanUp();
 
 	GameObject* CreateGameObject();
+	GameObject* CreateGameObject(mesh* m);
+	void DeleteGameObject(GameObject* to_delete);
 	vector<GameObject*> game_objects;
 
 public:

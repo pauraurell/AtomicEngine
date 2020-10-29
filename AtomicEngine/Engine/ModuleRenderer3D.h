@@ -56,6 +56,9 @@ public:
 	void SetFaceCulling(bool enabled);
 	void SetPolygonSmooth(bool enabled);
 
+	void RenderVertexNormals(mesh* m);
+	void RenderFaceNormals(mesh* m);
+
 public:
 
 	Light lights[MAX_LIGHTS];

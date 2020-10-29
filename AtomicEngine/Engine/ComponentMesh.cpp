@@ -20,7 +20,7 @@ void ComponentMesh::Enable()
 
 void ComponentMesh::Update()
 {
-	//App->renderer3D->RenderMesh(m);
+	App->renderer3D->RenderMesh(m); 
 }
 
 void ComponentMesh::Disable()

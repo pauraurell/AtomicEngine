@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleImporter.h"
+#include "Component.h"
+#include "ComponentMesh.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -45,6 +47,7 @@ bool ModuleImporter::CleanUp() {
 void ModuleImporter::LoadMesh(char* file_path)
 {
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	myMesh.filename = file_path;
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		for (int i = 0; i < scene->mNumMeshes; i++)
@@ -113,6 +116,9 @@ void ModuleImporter::LoadMesh(char* file_path)
 				}
 			}
 		}
+		App->renderer3D->LoadMeshBuffer();
+		App->scene_intro->CreateGameObject(&myMesh);
+		
 		aiReleaseImport(scene);
 	}
 	else
