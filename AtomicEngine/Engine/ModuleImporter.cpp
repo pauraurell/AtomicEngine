@@ -3,6 +3,7 @@
 #include "ModuleImporter.h"
 #include "Component.h"
 #include "ComponentMesh.h"
+#include "Mesh.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -30,7 +31,6 @@ bool ModuleImporter::Init() {
 }
 
 update_status ModuleImporter::Update() {
-
 
 	return UPDATE_CONTINUE;
 }
@@ -123,6 +123,11 @@ void ModuleImporter::LoadMesh(char* file_path)
 	}
 	else
 		LOG("Error loading scene %s", file_path);
+}
+
+void ModuleImporter::LoadTexture(char* file_path)
+{
+	
 }
 
 

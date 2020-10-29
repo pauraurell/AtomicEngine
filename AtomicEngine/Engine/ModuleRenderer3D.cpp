@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "Primitive.h"
+#include "Mesh.h"
 
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"

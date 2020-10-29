@@ -79,6 +79,9 @@
     <ClCompile Include="ComponentTransform.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Sources\Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -167,6 +170,12 @@
     </ClInclude>
     <ClInclude Include="ComponentMaterial.h">
       <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Sources\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
