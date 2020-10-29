@@ -46,6 +46,8 @@ public:
 	bool printInspector;
 	GameObject* selectedObj;
 
+	char buff[256];
+
 private:
 	bool demowindow;
 	bool fullscreen;

@@ -27,7 +27,7 @@ public:
 	ComponentTransform* GetCTransform();
 	ComponentMaterial* GetCMaterial();
 
-	const char* name;
+	string name;
 	bool active;
 	bool is_selected;
 
