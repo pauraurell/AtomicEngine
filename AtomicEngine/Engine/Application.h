@@ -9,6 +9,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleGUI.h"
 #include "ModuleImporter.h"
+#include "ModuleFileSystem.h"
 #include <vector>
 
 
@@ -22,6 +23,8 @@ public:
 	ModuleCamera3D* camera;
 	ModuleGUI* gui;
 	ModuleImporter* importer;
+	ModuleFileSystem* fileSystem;
+
 
 private:
 
@@ -37,6 +40,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+
 private:
 
 	void AddModule(Module* mod);
@@ -47,6 +51,12 @@ public:
 	float	ms_cap;
 	float	dt;
 	float	fps;
+
+	std::string title;
+	std::string organization;
+
+	const char* GetTitleName() const;
+	const char* GetOrganizationName() const;
 };
 
 extern Application* App;

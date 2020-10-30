@@ -408,7 +408,7 @@ update_status ModuleGUI::Update()
 			selectedObj->flag = ImGuiTreeNodeFlags_Selected;
 			strcpy(buff, selectedObj->name.c_str());
 			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); 
-			if (ImGui::InputText("", buff, IM_ARRAYSIZE(buff), ImGuiInputTextFlags_EnterReturnsTrue)) {
+			if (ImGui::InputText(" ", buff, IM_ARRAYSIZE(buff), ImGuiInputTextFlags_EnterReturnsTrue)) {
 				selectedObj->name.assign(buff);
 			}
 			printInspector = true;
