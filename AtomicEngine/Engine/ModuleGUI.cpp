@@ -109,37 +109,27 @@ update_status ModuleGUI::Update()
 			{
 				if (ImGui::MenuItem("Cube"))
 				{
-					App->renderer3D->cube_render = true;
-					App->renderer3D->rectangle_render = false;
-					App->renderer3D->pyramid_render = false;
-				}
-
-				if (ImGui::MenuItem("Rectangle"))
-				{
-					App->renderer3D->cube_render = false;
-					App->renderer3D->rectangle_render = true;
-					App->renderer3D->pyramid_render = false;
-				}
-
-				if (ImGui::MenuItem("Pyramid"))
-				{
-					App->renderer3D->cube_render = false;
-					App->renderer3D->rectangle_render = false;
-					App->renderer3D->pyramid_render = true;
+					App->importer->LoadMesh("Primitives/CubePrimitive.fbx");
 				}
 
 				if (ImGui::MenuItem("Sphere"))
 				{
-					App->renderer3D->cube_render = false;
-					App->renderer3D->rectangle_render = false;
-					App->renderer3D->pyramid_render = false;
+					App->importer->LoadMesh("Primitives/SpherePrimitive.fbx");
+				}
+
+				if (ImGui::MenuItem("Pyramid"))
+				{
+					App->importer->LoadMesh("Primitives/PyramidPrimitive.fbx");
 				}
 
 				if (ImGui::MenuItem("Cylinder"))
 				{
-					App->renderer3D->cube_render = false;
-					App->renderer3D->rectangle_render = false;
-					App->renderer3D->pyramid_render = false;
+					App->importer->LoadMesh("Primitives/CylinderPrimitive.fbx");
+				}
+
+				if (ImGui::MenuItem("Cone"))
+				{
+					App->importer->LoadMesh("Primitives/ConePrimitive.fbx");
 				}
 
 				ImGui::EndMenu();
@@ -367,7 +357,7 @@ update_status ModuleGUI::Update()
 				
 				if (ImGui::TreeNodeEx(name, App->scene_intro->game_objects[j]->flag))
 				{
-					
+
 				} 
 				if (ImGui::IsItemClicked(0))
 				{

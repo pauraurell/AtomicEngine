@@ -152,10 +152,6 @@ update_status ModuleRenderer3D::Update()
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
-	if (cube_render) { RenderPrimitive(Primitives::Cube); }
-	if (rectangle_render) { RenderPrimitive(Primitives::pRectangle); }
-	if (pyramid_render) { RenderPrimitive(Primitives::Pyramid); }
-
 	App->gui->DrawUi();
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
@@ -223,22 +219,6 @@ void ModuleRenderer3D::RenderMesh(mesh *m) {
 		glColor3f(0.6f, 0.4f, 0.1f);
 		RenderFaceNormals(m);
 		glEnd();
-	}
-}
-
-void ModuleRenderer3D::RenderPrimitive(Primitives type) {
-
-	switch (type)
-	{
-	case Primitives::Cube: DrawCube();
-		break;
-
-	case Primitives::pRectangle: DrawRectangle();
-		break;
-
-	case Primitives::Pyramid: DrawPyramid();
-		break;
-
 	}
 }
 
@@ -417,6 +397,8 @@ void ModuleRenderer3D::DrawPyramid() {
 	// deactivate vertex arrays after drawing
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
+
+
 
 void ModuleRenderer3D::CheckWireframeMode() {
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)

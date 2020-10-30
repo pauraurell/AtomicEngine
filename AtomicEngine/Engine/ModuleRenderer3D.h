@@ -18,14 +18,6 @@ using namespace std;
 
 class mesh;
 
-enum class Primitives
-{
-	Cube,
-	Sphere,
-	pRectangle,
-	Pyramid
-};
-
 class ModuleRenderer3D : public Module
 {
 public:
@@ -43,8 +35,6 @@ public:
 	void RenderMesh(mesh* m);
 
 	void CheckWireframeMode();
-
-	void RenderPrimitive(Primitives type);
 
 	//Primitives
 	void DrawCube();
