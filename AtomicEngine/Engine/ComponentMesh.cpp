@@ -20,13 +20,14 @@ void ComponentMesh::Enable()
 
 void ComponentMesh::Update()
 {
-	App->renderer3D->RenderMesh(m); 
+	if (m != nullptr)
+	{
+		App->renderer3D->RenderMesh(m);
+	}
 }
 
 void ComponentMesh::Disable()
 {
 	active = false;
 }
-
-
 	

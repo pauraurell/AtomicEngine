@@ -21,7 +21,4 @@ public:
 	void LoadTexture(char* file_path);
 		
 	void GenerateBuffers(mesh* m);
-
-	mesh myMesh;
-	vector<mesh*> meshes;
 };

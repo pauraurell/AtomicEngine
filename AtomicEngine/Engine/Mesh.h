@@ -2,8 +2,12 @@
 #include "Globals.h"
 #include "Module.h"
 
-struct mesh
+class mesh
 {
+public:
+	mesh() {};
+	~mesh() {};
+
 	uint id_index = 0; // index in VRAM
 	uint num_index = 0;
 	uint* index = nullptr;
