@@ -19,6 +19,7 @@ public:
 
 	void LoadMesh(char* file_path, string name = "none");
 	void LoadTexture(char* file_path);
+	void LoadCheckerTexture(char* file_path);
 		
 	void GenerateBuffers(mesh* m);
 

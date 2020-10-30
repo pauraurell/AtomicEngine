@@ -13,11 +13,22 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include "Devil\Include\il.h"
+#include "Devil\Include\ilu.h"
+#include "Devil\Include\ilut.h"
+
 #pragma comment (lib, "glu32.lib")   
 #pragma comment (lib, "opengl32.lib")
 #pragma comment (lib, "Glew/libx86/glew32.lib") 
 
+#pragma comment (lib, "Devil/lib/ILU.lib") 
+#pragma comment (lib, "Devil/lib/ILUT.lib") 
+#pragma comment (lib, "Devil/lib/DevIL.lib") 
+
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
+
+#define CHECKERS_HEIGHT 64
+#define CHECKERS_WIDTH 64
 
 ModuleImporter::ModuleImporter(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -34,7 +45,12 @@ bool ModuleImporter::Init() {
 	// Stream log messages to Debug window
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
-	
+
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);	
+
 	return true;
 }
 
@@ -142,6 +158,12 @@ void ModuleImporter::LoadTexture(char* file_path)
 {
 	
 }
+
+void ModuleImporter::LoadCheckerTexture(char* file_path)
+{
+
+}
+
 
 void ModuleImporter::GenerateBuffers(mesh* m)
 {
