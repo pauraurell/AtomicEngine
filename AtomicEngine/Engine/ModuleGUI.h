@@ -22,7 +22,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	update_status DockSpace(bool* open);
+	update_status DockingSpace(bool* open);
 
 	const char* GetCaps();
 	void DrawUi();
