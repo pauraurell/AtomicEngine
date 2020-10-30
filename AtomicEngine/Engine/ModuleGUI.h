@@ -21,6 +21,8 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	update_status DockSpace(bool* open);
+
 	const char* GetCaps();
 	void DrawUi();
 
@@ -59,6 +61,7 @@ private:
 	bool AboutWindowActive;
 	bool HierarchyWindowActive;
 	bool InspectorWindowActive;
+	bool* dockingWin;
 
 	
 	vector<float> fps_log;
