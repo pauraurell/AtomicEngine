@@ -9,12 +9,14 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	gui = new ModuleGUI(this);
 	importer = new ModuleImporter(this);
+	fileSystem = new ModuleFileSystem(this);
 
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
 	AddModule(importer);
+	AddModule(fileSystem);
 
 	// Scenes
 	AddModule(scene_intro);
@@ -120,4 +122,14 @@ bool Application::CleanUp()
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
+}
+
+const char* Application::GetTitleName() const
+{
+	return title.c_str();
+}
+
+const char* Application::GetOrganizationName() const
+{
+	return organization.c_str();
 }
