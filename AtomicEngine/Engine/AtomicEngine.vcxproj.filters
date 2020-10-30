@@ -79,9 +79,6 @@
     <ClCompile Include="ComponentTransform.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">

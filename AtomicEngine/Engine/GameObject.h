@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "ImGui/imgui.h"
 
 class Component;
 class ComponentMesh;
@@ -30,6 +31,8 @@ public:
 	string name;
 	bool active;
 	bool is_selected;
+
+	ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
 
 private:
 	vector<Component*> components;
