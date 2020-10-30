@@ -365,17 +365,37 @@ update_status ModuleGUI::Update()
 			{
 				const char* name = App->scene_intro->game_objects[j]->name.c_str();
 				
-				if (ImGui::TreeNodeEx(name))
+				if (ImGui::TreeNodeEx(name, App->scene_intro->game_objects[j]->flag))
 				{
-					printInspector = true;
-					selectedObj = App->scene_intro->game_objects[j];
-					ImGui::TreePop();
+					
 				} 
-				else { printInspector = false; }
+				if (ImGui::IsItemClicked(0))
+				{
+					for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
+					{
+						if (App->scene_intro->game_objects[i] != App->scene_intro->game_objects[j])
+						{
+							App->scene_intro->game_objects[i]->flag = ImGuiTreeNodeFlags_None;
+						}
+					}
+
+					if (App->scene_intro->game_objects[j] == selectedObj) {
+						selectedObj = nullptr;
+						App->scene_intro->game_objects[j]->flag = ImGuiTreeNodeFlags_None;
+						printInspector = false;
+					}
+
+					else {
+						selectedObj = App->scene_intro->game_objects[j];
+						printInspector = true;
+					}
+				}
+				
 				ImGui::SameLine();
 				if (ImGui::SmallButton("x")) {
 					App->scene_intro->DeleteGameObject(App->scene_intro->game_objects[j]);
 				}
+
 			}
 		}
 		ImGui::End();
@@ -385,9 +405,10 @@ update_status ModuleGUI::Update()
 	{
 		ImGui::Begin("Inspector", &InspectorWindowActive);
 		if (printInspector) {
+			selectedObj->flag = ImGuiTreeNodeFlags_Selected;
 			strcpy(buff, selectedObj->name.c_str());
 			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); 
-			if (ImGui::InputText("GameObject", buff, IM_ARRAYSIZE(buff), ImGuiInputTextFlags_EnterReturnsTrue)) {
+			if (ImGui::InputText("", buff, IM_ARRAYSIZE(buff), ImGuiInputTextFlags_EnterReturnsTrue)) {
 				selectedObj->name.assign(buff);
 			}
 			printInspector = true;
@@ -435,6 +456,7 @@ update_status ModuleGUI::Update()
 			ImGui::Separator();
 			ImGui::Button("Add Component...");
 		}
+		
 		ImGui::End();
 	}
 
