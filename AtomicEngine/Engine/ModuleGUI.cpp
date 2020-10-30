@@ -76,7 +76,7 @@ update_status ModuleGUI::PreUpdate()
 
 update_status ModuleGUI::Update()
 {
-	DockSpace(dockingWin);
+	DockingSpace(dockingWin);
 
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -357,7 +357,7 @@ update_status ModuleGUI::Update()
 				
 				if (ImGui::TreeNodeEx(name, App->scene_intro->game_objects[j]->flag))
 				{
-
+					ImGui::TreePop();
 				} 
 				if (ImGui::IsItemClicked(0))
 				{
@@ -564,7 +564,7 @@ void ModuleGUI::DrawUi()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-update_status ModuleGUI::DockSpace(bool* open)
+update_status ModuleGUI::DockingSpace(bool* open)
 {
 	update_status ret = UPDATE_CONTINUE;
 
