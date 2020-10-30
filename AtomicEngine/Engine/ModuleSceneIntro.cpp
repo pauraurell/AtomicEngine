@@ -58,7 +58,10 @@ GameObject* ModuleSceneIntro::CreateGameObject()
 
 GameObject* ModuleSceneIntro::CreateGameObject(mesh* mesh)
 {
-	GameObject* newGameObject = new GameObject;
+	string name = mesh->filename;
+	name = name.substr(0, name.length() - 4);
+
+	GameObject* newGameObject = new GameObject(name.c_str());
 	newGameObject->CreateComponent(ComponentType::Transform);
 	newGameObject->CreateComponent(ComponentType::Mesh);
 	newGameObject->GetCMesh()->m = mesh;

@@ -10,7 +10,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
-	Position = vec3(0.0f, 0.0f, 5.0f);
+	Position = vec3(4.0f, 3.5f, -8.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 
 	cam_speed = 0.15;
@@ -211,5 +211,5 @@ void ModuleCamera3D::CalculateViewMatrix()
 void ModuleCamera3D::GoToOrigin()
 {
 	LookAt(vec3(0.f, 0.f, 0.f));
-	Position = vec3(5.0f, 5.5f, 5.0f);
+	Position = vec3(2.0f, 3.8f, -5.0f);
 }

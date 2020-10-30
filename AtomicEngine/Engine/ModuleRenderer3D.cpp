@@ -152,8 +152,6 @@ update_status ModuleRenderer3D::Update()
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
-	CheckWireframeMode();
-	
 	if (cube_render) { RenderPrimitive(Primitives::Cube); }
 	if (rectangle_render) { RenderPrimitive(Primitives::pRectangle); }
 	if (pyramid_render) { RenderPrimitive(Primitives::Pyramid); }
@@ -188,6 +186,8 @@ void ModuleRenderer3D::OnResize(int width, int height)
 }
 
 void ModuleRenderer3D::RenderMesh(mesh *m) {
+
+	CheckWireframeMode();
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
