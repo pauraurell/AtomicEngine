@@ -5,8 +5,6 @@
 #include "ModuleImporter.h"
 
 
-#define BOUNCER_TIME 200
-
 class ModuleSceneIntro : public Module
 {
 public:
@@ -22,6 +20,7 @@ public:
 	GameObject* CreateGameObject(mesh* m, string name);
 	void DeleteGameObject(GameObject* to_delete);
 	vector<GameObject*> game_objects;
+	vector<mesh*> meshes;
 
 public:
 
