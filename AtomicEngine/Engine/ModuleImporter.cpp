@@ -9,6 +9,14 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 
+#include "Glew\include\glew.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
+
+#pragma comment (lib, "glu32.lib")   
+#pragma comment (lib, "opengl32.lib")
+#pragma comment (lib, "Glew/libx86/glew32.lib") 
+
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 ModuleImporter::ModuleImporter(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -116,7 +124,8 @@ void ModuleImporter::LoadMesh(char* file_path)
 				}
 			}
 		}
-		App->renderer3D->LoadMeshBuffer();
+
+		GenerateBuffers(&myMesh);
 		App->scene_intro->CreateGameObject(&myMesh);
 		
 		aiReleaseImport(scene);
@@ -130,4 +139,26 @@ void ModuleImporter::LoadTexture(char* file_path)
 	
 }
 
+void ModuleImporter::GenerateBuffers(mesh* m)
+{
+	m->id_vertex = 0;
+	glGenBuffers(1, (GLuint*)&(m->id_vertex));
+	glBindBuffer(GL_ARRAY_BUFFER, m->id_vertex);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m->num_vertex * 3, m->vertex, GL_STATIC_DRAW);
+
+	m->id_normals = 0;
+	glGenBuffers(1, (GLuint*)&(m->id_normals));
+	glBindBuffer(GL_ARRAY_BUFFER, m->id_normals);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m->num_normals * 3, &m->normals[0], GL_STATIC_DRAW);
+
+	m->id_texcoords = 0;
+	glGenBuffers(1, (GLuint*)&(m->id_texcoords));
+	glBindBuffer(GL_ARRAY_BUFFER, m->id_texcoords);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m->num_vertex * 2, m->texcoords, GL_STATIC_DRAW);
+
+	m->id_index = 0;
+	glGenBuffers(1, ((GLuint*)&(m->id_index)));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->id_index);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * m->num_index, m->index, GL_STATIC_DRAW);
+}
 

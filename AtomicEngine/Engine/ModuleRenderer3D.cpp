@@ -116,7 +116,6 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 
-		LoadMeshBuffer();
 	}
 
 	// Projection matrix for
@@ -189,29 +188,28 @@ void ModuleRenderer3D::OnResize(int width, int height)
 }
 
 void ModuleRenderer3D::RenderMesh(mesh *m) {
-	uint vertex_buffer = 0;
-
-	glGenBuffers(1, (GLuint*)&(vertex_buffer));
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m->num_vertex * 3, m->vertex, GL_STATIC_DRAW);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
 	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m->id_vertex);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, m->id_normals);
 	glNormalPointer(GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, m->id_texcoords);
 
-	uint index_buffer = 0;
-	glGenBuffers(1, (GLuint*)&(index_buffer));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * m->num_index, m->index, GL_STATIC_DRAW);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->id_index);
+
 	glDrawElements(GL_TRIANGLES, m->num_index, GL_UNSIGNED_INT, NULL);
-
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	
+	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	if (m->vNormals) {
 		glBegin(GL_LINES);
@@ -226,23 +224,6 @@ void ModuleRenderer3D::RenderMesh(mesh *m) {
 		RenderFaceNormals(m);
 		glEnd();
 	}
-		
-}
-
-void ModuleRenderer3D::LoadMeshBuffer() {
-	mesh *mesh= &App->importer->myMesh;
-
-	glGenBuffers(1, (GLuint*)mesh->id_vertex);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_vertex);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->num_vertex * 3, mesh->vertex, GL_STATIC_DRAW);
-
-	glGenBuffers(1, (GLuint*)&mesh->id_index);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->id_index);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->num_index, mesh->index, GL_STATIC_DRAW);
-
-	glGenBuffers(1, (GLuint*)&mesh->id_normals);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->id_normals);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->num_normals * 3, mesh->normals, GL_STATIC_DRAW);
 }
 
 void ModuleRenderer3D::RenderPrimitive(Primitives type) {
