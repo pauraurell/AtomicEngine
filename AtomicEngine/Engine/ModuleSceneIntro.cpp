@@ -69,6 +69,16 @@ GameObject* ModuleSceneIntro::CreateGameObject(mesh* mesh)
 	return newGameObject;
 }
 
+GameObject* ModuleSceneIntro::CreateGameObject(mesh* mesh, string name)
+{
+	GameObject* newGameObject = new GameObject(name.c_str());
+	newGameObject->CreateComponent(ComponentType::Transform);
+	newGameObject->CreateComponent(ComponentType::Mesh);
+	newGameObject->GetCMesh()->m = mesh;
+	App->scene_intro->game_objects.push_back(newGameObject);
+	return newGameObject;
+}
+
 void ModuleSceneIntro::DeleteGameObject(GameObject* to_delete)
 {
 	for (int i = 0; i < game_objects.size(); ++i)

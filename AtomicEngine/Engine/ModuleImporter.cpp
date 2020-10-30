@@ -52,7 +52,7 @@ bool ModuleImporter::CleanUp() {
 	return true;
 }
 
-void ModuleImporter::LoadMesh(char* file_path)
+void ModuleImporter::LoadMesh(char* file_path, string name)
 {
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	myMesh.filename = file_path;
@@ -125,8 +125,12 @@ void ModuleImporter::LoadMesh(char* file_path)
 			}
 		}
 
+		meshes.push_back(&myMesh);
 		GenerateBuffers(&myMesh);
-		App->scene_intro->CreateGameObject(&myMesh);
+		if (name != "none") { App->scene_intro->CreateGameObject(&myMesh, name); }
+		else { 
+			App->scene_intro->CreateGameObject(&myMesh);
+		}
 		
 		aiReleaseImport(scene);
 	}

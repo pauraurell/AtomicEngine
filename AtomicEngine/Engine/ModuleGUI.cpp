@@ -109,27 +109,27 @@ update_status ModuleGUI::Update()
 			{
 				if (ImGui::MenuItem("Cube"))
 				{
-					App->importer->LoadMesh("Primitives/CubePrimitive.fbx");
+					App->importer->LoadMesh("Primitives/CubePrimitive.fbx", "Cube");
 				}
 
 				if (ImGui::MenuItem("Sphere"))
 				{
-					App->importer->LoadMesh("Primitives/SpherePrimitive.fbx");
+					App->importer->LoadMesh("Primitives/SpherePrimitive.fbx","Sphere");
 				}
 
 				if (ImGui::MenuItem("Pyramid"))
 				{
-					App->importer->LoadMesh("Primitives/PyramidPrimitive.fbx");
+					App->importer->LoadMesh("Primitives/PyramidPrimitive.fbx", "Pyramid");
 				}
 
 				if (ImGui::MenuItem("Cylinder"))
 				{
-					App->importer->LoadMesh("Primitives/CylinderPrimitive.fbx");
+					App->importer->LoadMesh("Primitives/CylinderPrimitive.fbx", "Cylinder");
 				}
 
 				if (ImGui::MenuItem("Cone"))
 				{
-					App->importer->LoadMesh("Primitives/ConePrimitive.fbx");
+					App->importer->LoadMesh("Primitives/ConePrimitive.fbx", "Cone");
 				}
 
 				ImGui::EndMenu();
@@ -379,13 +379,23 @@ update_status ModuleGUI::Update()
 						selectedObj = App->scene_intro->game_objects[j];
 						printInspector = true;
 					}
+				}		
+
+				if (ImGui::IsItemClicked(1))
+				{
+					ImGui::OpenPopup("DeletePopUp");
 				}
-				
-				ImGui::SameLine();
-				if (ImGui::SmallButton("x")) {
-					App->scene_intro->DeleteGameObject(App->scene_intro->game_objects[j]);
+			}
+
+			if (ImGui::BeginPopup("DeletePopUp"))
+			{
+				if (ImGui::MenuItem("Delete"))
+				{
+					App->scene_intro->DeleteGameObject(selectedObj);
+					ImGui::CloseCurrentPopup();
 				}
 
+				ImGui::EndPopup();
 			}
 		}
 		ImGui::End();
@@ -526,7 +536,6 @@ update_status ModuleGUI::Update()
 
 update_status ModuleGUI::PostUpdate()
 {
-
 	return UPDATE_CONTINUE;
 }
 

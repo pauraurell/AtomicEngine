@@ -19,6 +19,7 @@ public:
 
 	GameObject* CreateGameObject();
 	GameObject* CreateGameObject(mesh* m);
+	GameObject* CreateGameObject(mesh* m, string name);
 	void DeleteGameObject(GameObject* to_delete);
 	vector<GameObject*> game_objects;
 
