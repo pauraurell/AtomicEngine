@@ -18,6 +18,7 @@ public:
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
 	void GoToOrigin();
+	void LookAtSelectedObject(bool go_to_gameObj = false);
 
 private:
 

@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera3D.h"
+#include "ComponentTransform.h"
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -45,9 +46,12 @@ update_status ModuleCamera3D::Update()
 	float speed = cam_speed;
 	// OnKeys WASD keys -----------------------------------
 
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
-		
-		GoToOrigin();
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) 
+	{
+		if (App->gui->selectedObj != nullptr)
+		{
+			LookAtSelectedObject(true);
+		}
 	}
 	
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
@@ -109,28 +113,34 @@ update_status ModuleCamera3D::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 	{
-		if (App->input->GetMouseXMotion() > 0) {
-			Position -= X * speed * 4;
-			Reference -= X * speed * 4;
-		}
+		if (App->gui->selectedObj != nullptr)
+		{
+			if (App->input->GetMouseXMotion() > 0) {
+				Position -= X * speed * 4;
+				Reference -= X * speed * 4;
+			}
 
-		if (App->input->GetMouseXMotion() < 0) {
-			Position += X * speed * 4;
-			Reference += X * speed * 4;
+			if (App->input->GetMouseXMotion() < 0) {
+				Position += X * speed * 4;
+				Reference += X * speed * 4;
+			}
+			LookAtSelectedObject();
 		}
-		LookAt(vec3(0, 0, 0));
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		if (App->input->GetMouseYMotion() > 0) {
-			Position += Z * camera_speed_weel;
-		}
+		if (App->gui->selectedObj != nullptr)
+		{
+			if (App->input->GetMouseYMotion() > 0) {
+				Position += Z * camera_speed_weel;
+			}
 
-		if (App->input->GetMouseYMotion() < 0) {
-			Position -= Z * camera_speed_weel;
+			if (App->input->GetMouseYMotion() < 0) {
+				Position -= Z * camera_speed_weel;
+			}
+			LookAtSelectedObject();
 		}
-		LookAt(vec3(0, 0, 0));
 	}
 
 	else if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
@@ -212,4 +222,11 @@ void ModuleCamera3D::GoToOrigin()
 {
 	LookAt(vec3(0.f, 0.f, 0.f));
 	Position = vec3(2.0f, 3.8f, -5.0f);
+}
+
+void ModuleCamera3D::LookAtSelectedObject(bool go_to_gameObj)
+{
+	float3 position = App->gui->selectedObj->GetCTransform()->pos;
+	LookAt(vec3(position.x, position.y, position.z));
+	if (go_to_gameObj) Position = vec3(position.x + 2.0f, position.y + 3.8f, position.z - 5.0f);
 }
