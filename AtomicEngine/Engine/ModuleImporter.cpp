@@ -3,13 +3,13 @@
 #include "ModuleImporter.h"
 #include "Component.h"
 #include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 #include "Mesh.h"
+#include "Texture.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
-
-
 
 #define CHECKERS_HEIGHT 64
 #define CHECKERS_WIDTH 64
@@ -38,6 +38,13 @@ bool ModuleImporter::Init() {
 	return true;
 }
 
+bool ModuleImporter::Start() {
+
+	LoadCheckerTexture();
+
+	return true;
+}
+
 update_status ModuleImporter::Update() {
 
 	return UPDATE_CONTINUE;
@@ -54,7 +61,7 @@ bool ModuleImporter::CleanUp() {
 
 void ModuleImporter::LoadMesh(char* file_path, string name)
 {
-	mesh* myMesh = new mesh();
+	Mesh* myMesh = new Mesh();
 	
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	myMesh->filename = file_path;
@@ -157,20 +164,62 @@ void ModuleImporter::LoadTexture(char* file_path)
 
 	if (texture != NULL)
 	{
-		LOG("Texture: %s loaded", file_path);
+		if (App->gui->selectedObj != nullptr)
+		{
+			At_Tex* tex = new At_Tex(file_path, Gl_Tex);
+			App->scene_intro->texs.push_back(tex);
+			for (int i = 0; i < App->scene_intro->texs.size(); i++)
+			{
+				if (App->scene_intro->texs[i] == tex) {
+					App->gui->selectedObj->CreateComponent(ComponentType::Material);
+					App->gui->selectedObj->GetCMaterial()->tex = tex;
+					App->gui->selectedObj->GetCMaterial()->tex->loaded = true;
+				}
+			}
+
+			LOG("Texture: %s loaded", file_path);
+		}
+		else
+		{
+			LOG("Texture: %s loaded", file_path);
+			LOG("No GameObject was selected!")
+		}
 	}
 	else {
 		LOG("Error loading the texture!");
 	}
 }
 
-void ModuleImporter::LoadCheckerTexture(char* file_path)
+void ModuleImporter::LoadCheckerTexture()
 {
+	GLbyte checkerTex[64][64][4];
+	GLuint GL_Tex_Checker;
 
+	for (int i = 0; i < CHECKERS_WIDTH; i++) {
+		for (int j = 0; j < CHECKERS_HEIGHT; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerTex[i][j][0] = (GLubyte)c;
+			checkerTex[i][j][1] = (GLubyte)c;
+			checkerTex[i][j][2] = (GLubyte)c;
+			checkerTex[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &GL_Tex_Checker);
+	glBindTexture(GL_TEXTURE_2D, GL_Tex_Checker);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, checkerTex);
+
+	At_Tex* tex = new At_Tex(GL_Tex_Checker);
+	App->scene_intro->texs.push_back(tex);
 }
 
-
-void ModuleImporter::GenerateBuffers(mesh* m)
+void ModuleImporter::GenerateBuffers(Mesh* m)
 {
 	m->id_vertex = 0;
 	glGenBuffers(1, (GLuint*)&(m->id_vertex));

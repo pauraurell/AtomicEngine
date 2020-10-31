@@ -32,12 +32,22 @@ void GameObject::Update()
 		Component* component = components[i];
 		component->Update();	
 	}
+	if (active == true)
+	{
+		if (GetCMesh() != nullptr && GetCMesh()->m != nullptr && GetCMesh()->active == true)
+		{
+			if (GetCMaterial() != nullptr && GetCMaterial()->tex != nullptr && GetCMaterial()->active == true)
+			{
+				App->renderer3D->RenderGameObject(GetCMesh()->m, GetCMaterial()->tex);
+			}
+			else { App->renderer3D->RenderGameObject(GetCMesh()->m); }
+		}
+	}
 }
 
 Component* GameObject::CreateComponent(ComponentType type)
 {
 	Component* newComponent = nullptr;
-
 	switch (type)
 	{
 	case ComponentType::Transform:
@@ -81,7 +91,32 @@ void GameObject::DeleteComponent(Component* comp)
 	bool deleted = false;
 	for (int i = 0; i < components.size() && deleted == false; i++)
 	{
-		if (components[i] == comp) { components.erase(components.begin() + i); deleted = true; }
+		if (components[i] == comp)
+		{ 
+			switch (components[i]->type)
+			{
+			case ComponentType::Mesh:
+				for (int j = 0; j < App->scene_intro->meshes.size(); j++)
+				{
+					if(App->scene_intro->meshes[j] == components[i]->owner->GetCMesh()->m)
+					{
+						App->scene_intro->meshes.erase(App->scene_intro->meshes.begin() + j);
+					}
+				}
+				break;
+			case ComponentType::Material:
+				for (int j = 0; j < App->scene_intro->texs.size(); j++)
+				{
+					if (App->scene_intro->texs[j] == components[i]->owner->GetCMaterial()->tex)
+					{
+						App->scene_intro->texs.erase(App->scene_intro->texs.begin() + j);
+					}
+				}
+				break;
+			}
+
+			components.erase(components.begin() + i); deleted = true;
+		}
 	}
 	delete comp;
 

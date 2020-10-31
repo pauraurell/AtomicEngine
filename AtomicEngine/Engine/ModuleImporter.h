@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Module.h"
 #include "Mesh.h"
+#include "Texture.h"
 #include <vector>
 #include <string>
 
@@ -32,14 +33,16 @@ public:
 	~ModuleImporter();
 
 	bool Init();
+	bool Start();
 	update_status Update();
 	bool CleanUp();
 
 	void LoadMesh(char* file_path, string name = "none");
 	void LoadTexture(char* file_path);
-	void LoadCheckerTexture(char* file_path);
+	void LoadCheckerTexture();
 		
-	void GenerateBuffers(mesh* m);
+	void GenerateBuffers(Mesh* m);
 
 	GLuint Gl_Tex;
+
 };

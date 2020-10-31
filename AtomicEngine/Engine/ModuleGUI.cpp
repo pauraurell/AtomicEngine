@@ -37,6 +37,8 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	gridChecker = true;
 	printInspector = false;
 
+	selectedObj = nullptr;
+
 	r = 0.05;
 	g = 0.05;
 	b = 0.05;
@@ -416,7 +418,7 @@ update_status ModuleGUI::Update()
 			ImGui::Separator();
 			if(ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				ImGui::Checkbox("Active", &selectedObj->GetCTransform()->active);
+				ImGui::Checkbox("Freeze", &selectedObj->GetCTransform()->active);
 				ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->pos.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->pos.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->pos.z);
 				ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->rot.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->rot.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->rot.z);
 				ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->scale.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->scale.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->scale.z);
@@ -449,8 +451,16 @@ update_status ModuleGUI::Update()
 				ImGui::Separator();
 				if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					ImGui::Checkbox("Active", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
-					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
+					ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
+					if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
+					if (selectedObj->GetCMaterial() != nullptr)
+					{
+					ImGui::Text("Texture path:"); ImGui::SameLine();
+					ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMaterial()->tex->texName);
+					ImGui::Separator();
+					ImGui::Text("Size: %i x %i px", selectedObj->GetCMaterial()->tex->w, selectedObj->GetCMaterial()->tex->h);
+					ImGui::Checkbox("Checkers Texture", &selectedObj->GetCMaterial()->tex->checkers);
+					}
 				}
 			}
 			ImGui::Separator();
