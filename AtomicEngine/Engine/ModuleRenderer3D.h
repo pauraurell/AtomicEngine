@@ -16,7 +16,8 @@
 using namespace std;
 #define MAX_LIGHTS 8
 
-class mesh;
+class Mesh;
+class At_Tex;
 
 class ModuleRenderer3D : public Module
 {
@@ -32,7 +33,7 @@ public:
 
 	void OnResize(int width, int height);
 
-	void RenderMesh(mesh* m, char* texture = NULL);
+	void RenderGameObject(Mesh* m, At_Tex* tex = NULL);
 
 	void CheckWireframeMode();
 
@@ -45,8 +46,8 @@ public:
 	void SetFaceCulling(bool enabled);
 	void SetPolygonSmooth(bool enabled);
 
-	void RenderVertexNormals(mesh* m);
-	void RenderFaceNormals(mesh* m);
+	void RenderVertexNormals(Mesh* m);
+	void RenderFaceNormals(Mesh* m);
 
 public:
 
@@ -55,5 +56,4 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 	bool wireframe_mode;
-	bool loaded;
 };

@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "GameObject.h"
 #include "ModuleImporter.h"
+#include "Texture.h"
 
 
 class ModuleSceneIntro : public Module
@@ -16,11 +17,12 @@ public:
 	bool CleanUp();
 
 	GameObject* CreateGameObject();
-	GameObject* CreateGameObject(mesh* m);
-	GameObject* CreateGameObject(mesh* m, string name);
+	GameObject* CreateGameObject(Mesh* m);
+	GameObject* CreateGameObject(Mesh* m, string name);
 	void DeleteGameObject(GameObject* to_delete);
 	vector<GameObject*> game_objects;
-	vector<mesh*> meshes;
+	vector<Mesh*> meshes;
+	vector<At_Tex*> texs;
 
 public:
 

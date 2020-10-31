@@ -15,7 +15,7 @@ public:
 	void Update();
 	void Disable();
 
-	mesh* m;
+	Mesh* m;
 };
 
 #endif //__COMPONENTMESH_H__

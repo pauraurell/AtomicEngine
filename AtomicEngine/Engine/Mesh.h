@@ -2,11 +2,11 @@
 #include "Globals.h"
 #include "Module.h"
 
-class mesh
+class Mesh
 {
 public:
-	mesh() {};
-	~mesh() {};
+	Mesh() {};
+	~Mesh() {};
 
 	uint id_index = 0; // index in VRAM
 	uint num_index = 0;

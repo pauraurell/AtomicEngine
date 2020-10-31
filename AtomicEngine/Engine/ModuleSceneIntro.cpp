@@ -56,7 +56,7 @@ GameObject* ModuleSceneIntro::CreateGameObject()
 	return newGameObject;
 }
 
-GameObject* ModuleSceneIntro::CreateGameObject(mesh* mesh)
+GameObject* ModuleSceneIntro::CreateGameObject(Mesh* mesh)
 {
 	string name = mesh->filename;
 	name = name.substr(0, name.length() - 4);
@@ -69,7 +69,7 @@ GameObject* ModuleSceneIntro::CreateGameObject(mesh* mesh)
 	return newGameObject;
 }
 
-GameObject* ModuleSceneIntro::CreateGameObject(mesh* mesh, string name)
+GameObject* ModuleSceneIntro::CreateGameObject(Mesh* mesh, string name)
 {
 	GameObject* newGameObject = new GameObject(name.c_str());
 	newGameObject->CreateComponent(ComponentType::Transform);

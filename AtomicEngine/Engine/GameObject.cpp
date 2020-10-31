@@ -32,6 +32,17 @@ void GameObject::Update()
 		Component* component = components[i];
 		component->Update();	
 	}
+	if (active == true)
+	{
+		if (GetCMesh() != nullptr && GetCMesh()->m != nullptr && GetCMesh()->active == true)
+		{
+			if (GetCMaterial() != nullptr && GetCMaterial()->tex != nullptr && GetCMaterial()->active == true)
+			{
+				App->renderer3D->RenderGameObject(GetCMesh()->m, GetCMaterial()->tex);
+			}
+			else { App->renderer3D->RenderGameObject(GetCMesh()->m); }
+		}
+	}
 }
 
 Component* GameObject::CreateComponent(ComponentType type)

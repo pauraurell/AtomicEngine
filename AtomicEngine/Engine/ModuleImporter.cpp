@@ -3,7 +3,9 @@
 #include "ModuleImporter.h"
 #include "Component.h"
 #include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 #include "Mesh.h"
+#include "Texture.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -54,7 +56,7 @@ bool ModuleImporter::CleanUp() {
 
 void ModuleImporter::LoadMesh(char* file_path, string name)
 {
-	mesh* myMesh = new mesh();
+	Mesh* myMesh = new Mesh();
 	
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	myMesh->filename = file_path;
@@ -157,7 +159,25 @@ void ModuleImporter::LoadTexture(char* file_path)
 
 	if (texture != NULL)
 	{
-		LOG("Texture: %s loaded", file_path);
+		if (App->gui->selectedObj != nullptr)
+		{
+			At_Tex* tex = new At_Tex(file_path, Gl_Tex);
+			App->scene_intro->texs.push_back(tex);
+			for (int i = 0; i < App->scene_intro->texs.size(); i++)
+			{
+				if (App->scene_intro->texs[i] == tex) {
+					App->gui->selectedObj->CreateComponent(ComponentType::Material);
+					App->gui->selectedObj->GetCMaterial()->tex = tex;
+				}
+			}
+
+			LOG("Texture: %s loaded", file_path);
+		}
+		else
+		{
+			LOG("Texture: %s loaded", file_path);
+			LOG("No GameObject was selected!")
+		}
 	}
 	else {
 		LOG("Error loading the texture!");
@@ -170,7 +190,7 @@ void ModuleImporter::LoadCheckerTexture(char* file_path)
 }
 
 
-void ModuleImporter::GenerateBuffers(mesh* m)
+void ModuleImporter::GenerateBuffers(Mesh* m)
 {
 	m->id_vertex = 0;
 	glGenBuffers(1, (GLuint*)&(m->id_vertex));

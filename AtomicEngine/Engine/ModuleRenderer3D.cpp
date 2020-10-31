@@ -3,6 +3,7 @@
 #include "ModuleRenderer3D.h"
 #include "Primitive.h"
 #include "Mesh.h"
+#include "Texture.h"
 
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
@@ -17,7 +18,6 @@
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	wireframe_mode = false;
-	loaded = false;
 }
 
 // Destructor
@@ -179,18 +179,18 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::RenderMesh(mesh *m, char* texture) {
+void ModuleRenderer3D::RenderGameObject(Mesh *m, At_Tex* tex) {
 
 	CheckWireframeMode();
 
-	if (texture != NULL && loaded == false)
+	if (tex->texName != NULL && tex->loaded == false)
 	{
-		App->importer->LoadTexture(texture);
-		loaded = true;
+		App->importer->LoadTexture(tex->texName);
+		tex->loaded = true;
 	}
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, App->importer->Gl_Tex);
+	glBindTexture(GL_TEXTURE_2D, tex->Gl_Tex);
 	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -435,7 +435,7 @@ void ModuleRenderer3D::SetPolygonSmooth(bool enabled) {
 	else glEnable(GL_POLYGON_SMOOTH);	
 }
 
-void ModuleRenderer3D::RenderVertexNormals(mesh* m)
+void ModuleRenderer3D::RenderVertexNormals(Mesh* m)
 {
 	for (size_t i = 0; i < m->num_vertex * 3; i += 3)
 	{
@@ -451,7 +451,7 @@ void ModuleRenderer3D::RenderVertexNormals(mesh* m)
 	}
 }
 
-void ModuleRenderer3D::RenderFaceNormals(mesh* m)
+void ModuleRenderer3D::RenderFaceNormals(Mesh* m)
 {
 	for (size_t i = 0; i < m->num_vertex * 3; i += 3)
 	{
