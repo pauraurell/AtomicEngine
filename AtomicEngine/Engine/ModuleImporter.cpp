@@ -11,8 +11,6 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 
-
-
 #define CHECKERS_HEIGHT 64
 #define CHECKERS_WIDTH 64
 
@@ -36,6 +34,13 @@ bool ModuleImporter::Init() {
 	iluInit();
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);	
+
+	return true;
+}
+
+bool ModuleImporter::Start() {
+
+	LoadCheckerTexture();
 
 	return true;
 }
@@ -185,11 +190,34 @@ void ModuleImporter::LoadTexture(char* file_path)
 	}
 }
 
-void ModuleImporter::LoadCheckerTexture(char* file_path)
+void ModuleImporter::LoadCheckerTexture()
 {
+	GLbyte checkerTex[64][64][4];
+	GLuint GL_Tex_Checker;
 
+	for (int i = 0; i < CHECKERS_WIDTH; i++) {
+		for (int j = 0; j < CHECKERS_HEIGHT; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerTex[i][j][0] = (GLubyte)c;
+			checkerTex[i][j][1] = (GLubyte)c;
+			checkerTex[i][j][2] = (GLubyte)c;
+			checkerTex[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &GL_Tex_Checker);
+	glBindTexture(GL_TEXTURE_2D, GL_Tex_Checker);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, checkerTex);
+
+	At_Tex* tex = new At_Tex(GL_Tex_Checker);
+	App->scene_intro->texs.push_back(tex);
 }
-
 
 void ModuleImporter::GenerateBuffers(Mesh* m)
 {
