@@ -452,12 +452,15 @@ update_status ModuleGUI::Update()
 				if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					ImGui::Checkbox("Active", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
-					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
+					if (ImGui::Button("Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
+					if (selectedObj->GetCMaterial() != nullptr)
+					{
 					ImGui::Text("Texture path:"); ImGui::SameLine();
 					ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMaterial()->tex->texName);
 					ImGui::Separator();
 					ImGui::Text("Size: %i x %i px", selectedObj->GetCMaterial()->tex->w, selectedObj->GetCMaterial()->tex->h);
-					//ImGui::Checkbox("Checkers Texture", );
+					//ImGui::Checkbox("Checkers Texture");
+					}
 				}
 			}
 			ImGui::Separator();
