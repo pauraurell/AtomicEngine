@@ -9,23 +9,7 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 
-#include "Glew\include\glew.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
 
-#include "Devil\Include\il.h"
-#include "Devil\Include\ilu.h"
-#include "Devil\Include\ilut.h"
-
-#pragma comment (lib, "glu32.lib")   
-#pragma comment (lib, "opengl32.lib")
-#pragma comment (lib, "Glew/libx86/glew32.lib") 
-
-#pragma comment (lib, "Devil/lib/ILU.lib") 
-#pragma comment (lib, "Devil/lib/ILUT.lib") 
-#pragma comment (lib, "Devil/lib/DevIL.lib") 
-
-#pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 #define CHECKERS_HEIGHT 64
 #define CHECKERS_WIDTH 64
@@ -163,7 +147,21 @@ void ModuleImporter::LoadMesh(char* file_path, string name)
 
 void ModuleImporter::LoadTexture(char* file_path)
 {
-	
+	ILuint texture;
+	ilGenImages(1, &texture);
+	ilBindImage(texture);
+	ilLoadImage(file_path);
+
+	Gl_Tex = ilutGLBindTexImage();
+	ilDeleteImages(1, &texture);
+
+	if (texture != NULL)
+	{
+		LOG("Texture: %s loaded", file_path);
+	}
+	else {
+		LOG("Error loading the texture!");
+	}
 }
 
 void ModuleImporter::LoadCheckerTexture(char* file_path)

@@ -138,5 +138,6 @@ bool ModuleInput::CleanUp()
 
 void ModuleInput::LoadDraggedFile(SDL_Event e)
 {
+	App->importer->LoadTexture(e.drop.file);
 	App->importer->LoadMesh(e.drop.file);
 }

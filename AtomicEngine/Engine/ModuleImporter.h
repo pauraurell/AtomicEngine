@@ -5,6 +5,24 @@
 #include <vector>
 #include <string>
 
+#include "Glew\include\glew.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
+
+#include "Devil\Include\il.h"
+#include "Devil\Include\ilu.h"
+#include "Devil\Include\ilut.h"
+
+#pragma comment (lib, "glu32.lib")   
+#pragma comment (lib, "opengl32.lib")
+#pragma comment (lib, "Glew/libx86/glew32.lib") 
+
+#pragma comment (lib, "Devil/lib/ILU.lib") 
+#pragma comment (lib, "Devil/lib/ILUT.lib") 
+#pragma comment (lib, "Devil/lib/DevIL.lib") 
+
+#pragma comment (lib, "Assimp/libx86/assimp.lib")
+
 using namespace std;
 
 class ModuleImporter : public Module
@@ -22,4 +40,6 @@ public:
 	void LoadCheckerTexture(char* file_path);
 		
 	void GenerateBuffers(mesh* m);
+
+	GLuint Gl_Tex;
 };

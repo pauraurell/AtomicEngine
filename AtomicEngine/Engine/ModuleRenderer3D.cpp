@@ -17,9 +17,7 @@
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	wireframe_mode = false;
-	cube_render = false;
-	rectangle_render = false;
-	pyramid_render = false;
+	loaded = false;
 }
 
 // Destructor
@@ -181,10 +179,19 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::RenderMesh(mesh *m) {
+void ModuleRenderer3D::RenderMesh(mesh *m, char* texture) {
 
 	CheckWireframeMode();
 
+	if (texture != NULL && loaded == false)
+	{
+		App->importer->LoadTexture(texture);
+		loaded = true;
+	}
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, App->importer->Gl_Tex);
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -193,19 +200,20 @@ void ModuleRenderer3D::RenderMesh(mesh *m) {
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	glBindBuffer(GL_ARRAY_BUFFER, m->id_normals);
 	glNormalPointer(GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->id_index);
 	glBindBuffer(GL_ARRAY_BUFFER, m->id_texcoords);
-
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->id_index);
-
 	glDrawElements(GL_TRIANGLES, m->num_index, GL_UNSIGNED_INT, NULL);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	
+	glBindBuffer(GL_NORMAL_ARRAY, 0);
+
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
 
 	if (m->vNormals) {
 		glBegin(GL_LINES);
@@ -345,60 +353,58 @@ void ModuleRenderer3D::DrawCubeVerticeArray() {
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void ModuleRenderer3D::DrawRectangle() {
-	GLfloat vertices[] = { 2.f, 2.f, 0.f,
-				-2.f, 2.f, 0.f,
-				-2.f, 0.f, 0.f,
-				2.f, 0.f, 0.f,
-				2.f, 0.f, -2.f,
-				2.f, 2.f, -2.f,
-				-2.f, 2.f, -2.f,
-				-2.f, 0.f, -2.f, };          // 8 of vertex coords
+//void ModuleRenderer3D::DrawRectangle() {
+//	GLfloat vertices[] = { 2.f, 2.f, 0.f,
+//				-2.f, 2.f, 0.f,
+//				-2.f, 0.f, 0.f,
+//				2.f, 0.f, 0.f,
+//				2.f, 0.f, -2.f,
+//				2.f, 2.f, -2.f,
+//				-2.f, 2.f, -2.f,
+//				-2.f, 0.f, -2.f, };          // 8 of vertex coords
+//
+//	GLubyte indices[] = { 0,1,2, 2,3,0,   // 36 of indices
+//				 0,3,4, 4,5,0,
+//				 0,5,6, 6,1,0,
+//				 1,6,7, 7,2,1,
+//				 7,4,3, 3,2,7,
+//				 4,7,6, 6,5,4 };
+//
+//	// activate and specify pointer to vertex array
+//	glEnableClientState(GL_VERTEX_ARRAY);
+//	glVertexPointer(3, GL_FLOAT, 0, vertices);
+//
+//	// draw a cube
+//	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+//
+//	// deactivate vertex arrays after drawing
+//	glDisableClientState(GL_VERTEX_ARRAY);
+//}
 
-	GLubyte indices[] = { 0,1,2, 2,3,0,   // 36 of indices
-				 0,3,4, 4,5,0,
-				 0,5,6, 6,1,0,
-				 1,6,7, 7,2,1,
-				 7,4,3, 3,2,7,
-				 4,7,6, 6,5,4 };
-
-	// activate and specify pointer to vertex array
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-
-	// draw a cube
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
-
-	// deactivate vertex arrays after drawing
-	glDisableClientState(GL_VERTEX_ARRAY);
-}
-
-void ModuleRenderer3D::DrawPyramid() {
-	float pyramid_vertices[] = { -1.0f,0.0f,-1.0f,
-			1.0f ,0.0f, -1.0f,
-			1.0f ,0.0f, 1.0f,
-			-1.0f ,0.0f, 1.0f,
-			-0.0f ,1.5f, -0.0f
-	};
-
-	uint pyramid_indices[]{ 0,1,2,
-		2,3,0,3,2,4,
-		0,3,4,2,1,4,
-		1,0,4
-	};
-
-	// activate and specify pointer to vertex array
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, pyramid_vertices);
-
-	// draw a pyramid
-	glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, pyramid_indices);
-
-	// deactivate vertex arrays after drawing
-	glDisableClientState(GL_VERTEX_ARRAY);
-}
-
-
+//void ModuleRenderer3D::DrawPyramid() {
+//	float pyramid_vertices[] = { -1.0f,0.0f,-1.0f,
+//			1.0f ,0.0f, -1.0f,
+//			1.0f ,0.0f, 1.0f,
+//			-1.0f ,0.0f, 1.0f,
+//			-0.0f ,1.5f, -0.0f
+//	};
+//
+//	uint pyramid_indices[]{ 0,1,2,
+//		2,3,0,3,2,4,
+//		0,3,4,2,1,4,
+//		1,0,4
+//	};
+//
+//	// activate and specify pointer to vertex array
+//	glEnableClientState(GL_VERTEX_ARRAY);
+//	glVertexPointer(3, GL_FLOAT, 0, pyramid_vertices);
+//
+//	// draw a pyramid
+//	glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, pyramid_indices);
+//
+//	// deactivate vertex arrays after drawing
+//	glDisableClientState(GL_VERTEX_ARRAY);
+//}
 
 void ModuleRenderer3D::CheckWireframeMode() {
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)

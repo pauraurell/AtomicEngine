@@ -32,7 +32,7 @@ public:
 
 	void OnResize(int width, int height);
 
-	void RenderMesh(mesh* m);
+	void RenderMesh(mesh* m, char* texture = NULL);
 
 	void CheckWireframeMode();
 
@@ -40,8 +40,6 @@ public:
 	void DrawCube();
 	void DrawCubeDirectMode();
 	void DrawCubeVerticeArray();
-	void DrawRectangle();
-	void DrawPyramid();
 
 	void SetLight(bool enabled);
 	void SetFaceCulling(bool enabled);
@@ -57,8 +55,5 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 	bool wireframe_mode;
-
-	bool cube_render;
-	bool rectangle_render;
-	bool pyramid_render;
+	bool loaded;
 };
