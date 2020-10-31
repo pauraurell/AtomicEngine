@@ -95,7 +95,32 @@ void GameObject::DeleteComponent(Component* comp)
 	bool deleted = false;
 	for (int i = 0; i < components.size() && deleted == false; i++)
 	{
-		if (components[i] == comp) { components.erase(components.begin() + i); deleted = true; }
+		if (components[i] == comp)
+		{ 
+			switch (components[i]->type)
+			{
+			case ComponentType::Mesh:
+				for (int j = 0; j < App->scene_intro->meshes.size(); j++)
+				{
+					if(App->scene_intro->meshes[j] == components[i]->owner->GetCMesh()->m)
+					{
+						App->scene_intro->meshes.erase(App->scene_intro->meshes.begin() + j);
+					}
+				}
+				break;
+			case ComponentType::Material:
+				for (int j = 0; j < App->scene_intro->texs.size(); j++)
+				{
+					if (App->scene_intro->texs[j] == components[i]->owner->GetCMaterial()->tex)
+					{
+						App->scene_intro->texs.erase(App->scene_intro->texs.begin() + j);
+					}
+				}
+				break;
+			}
+
+			components.erase(components.begin() + i); deleted = true;
+		}
 	}
 	delete comp;
 
