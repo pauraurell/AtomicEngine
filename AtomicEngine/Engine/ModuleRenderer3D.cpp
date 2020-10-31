@@ -184,24 +184,32 @@ void ModuleRenderer3D::RenderGameObject(Mesh *m, At_Tex* tex) {
 
 	CheckWireframeMode();
 
-	if (tex != NULL && tex->loaded == false)
+	if (tex != NULL)
 	{
-		App->importer->LoadTexture(tex->texName);
-		for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
+		glEnable(GL_TEXTURE_2D);
+		if (tex->checkers == false)
 		{
-			if(App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == tex->texName)
+			if (tex->loaded == false)
 			{
-				App->scene_intro->game_objects[i]->GetCMaterial()->tex->loaded = true;
+				App->importer->LoadTexture(tex->texName);
+				for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
+				{
+					if (App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == tex->texName)
+					{
+						App->scene_intro->game_objects[i]->GetCMaterial()->tex->loaded = true;
+					}
+				}
 			}
+
+			glBindTexture(GL_TEXTURE_2D, tex->Gl_Tex);
+		}
+		
+		else 
+		{
+			glBindTexture(GL_TEXTURE_2D, App->scene_intro->texs[0]->Gl_Tex);
 		}
 	}
 
-	if (tex != NULL) 
-	{
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, tex->Gl_Tex);
-	}
-	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
