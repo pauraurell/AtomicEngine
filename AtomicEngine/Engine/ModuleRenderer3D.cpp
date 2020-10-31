@@ -183,14 +183,17 @@ void ModuleRenderer3D::RenderGameObject(Mesh *m, At_Tex* tex) {
 
 	CheckWireframeMode();
 
-	if (tex->texName != NULL && tex->loaded == false)
+	if (tex != NULL && tex->loaded == false)
 	{
 		App->importer->LoadTexture(tex->texName);
 		tex->loaded = true;
 	}
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, tex->Gl_Tex);
+	if (tex != NULL) 
+	{
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, tex->Gl_Tex);
+	}
 	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);

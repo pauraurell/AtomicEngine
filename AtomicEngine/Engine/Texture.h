@@ -1,5 +1,6 @@
+#pragma once
+
 #include "Globals.h"
-#include <string>
 #include "Glew\include\glew.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -17,7 +18,7 @@ public:
 	}
 	~At_Tex() {};
 
-	char* texName;
-	GLuint Gl_Tex;
+	char* texName = nullptr;
+	GLuint Gl_Tex = 0;
 	bool loaded = false;
 };
