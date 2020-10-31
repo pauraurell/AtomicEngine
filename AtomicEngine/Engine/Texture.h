@@ -21,4 +21,6 @@ public:
 	char* texName = nullptr;
 	GLuint Gl_Tex = 0;
 	bool loaded = false;
+	int w = 0;
+	int h = 0;
 };
