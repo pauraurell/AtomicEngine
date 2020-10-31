@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "Mesh.h"
 #include "Texture.h"
+#include "ComponentMaterial.h"
 
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
@@ -186,7 +187,13 @@ void ModuleRenderer3D::RenderGameObject(Mesh *m, At_Tex* tex) {
 	if (tex != NULL && tex->loaded == false)
 	{
 		App->importer->LoadTexture(tex->texName);
-		tex->loaded = true;
+		for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
+		{
+			if(App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == tex->texName)
+			{
+				App->scene_intro->game_objects[i]->GetCMaterial()->tex->loaded = true;
+			}
+		}
 	}
 
 	if (tex != NULL) 

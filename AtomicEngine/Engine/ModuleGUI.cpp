@@ -37,6 +37,8 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	gridChecker = true;
 	printInspector = false;
 
+	selectedObj = nullptr;
+
 	r = 0.05;
 	g = 0.05;
 	b = 0.05;
