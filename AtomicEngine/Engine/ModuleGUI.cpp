@@ -18,7 +18,7 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	InspectorWindowActive = true;
 
 	fullscreen = false;
-	resizable = false;
+	resizable = true;
 	borderless = true;
 	fulldesktop = false;
 
