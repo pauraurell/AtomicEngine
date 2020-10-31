@@ -168,6 +168,7 @@ void ModuleImporter::LoadTexture(char* file_path)
 				if (App->scene_intro->texs[i] == tex) {
 					App->gui->selectedObj->CreateComponent(ComponentType::Material);
 					App->gui->selectedObj->GetCMaterial()->tex = tex;
+					App->gui->selectedObj->GetCMaterial()->tex->loaded = true;
 				}
 			}
 

@@ -92,6 +92,7 @@ void ModuleSceneIntro::DeleteGameObject(GameObject* to_delete)
 			break;
 		}
 	}
+	App->gui->selectedObj = nullptr;
 
 }
 

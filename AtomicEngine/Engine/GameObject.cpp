@@ -48,10 +48,6 @@ void GameObject::Update()
 Component* GameObject::CreateComponent(ComponentType type)
 {
 	Component* newComponent = nullptr;
-	for (int i = 0; i < components.size(); i++)
-	{
-		if (components[i]->type == type) { return nullptr; }
-	}
 	switch (type)
 	{
 	case ComponentType::Transform:

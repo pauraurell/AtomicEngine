@@ -189,7 +189,7 @@ void ModuleRenderer3D::RenderGameObject(Mesh *m, At_Tex* tex) {
 		App->importer->LoadTexture(tex->texName);
 		for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
 		{
-			if(App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == tex->texName)
+			if(App->scene_intro->game_objects[i]->GetCMaterial() != nullptr && App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == tex->texName)
 			{
 				App->scene_intro->game_objects[i]->GetCMaterial()->tex->loaded = true;
 			}
