@@ -33,5 +33,6 @@ Our Github Repository: https://github.com/pauraurell/AtomicEngine
 * Deleting GameObjects and Components.
 * RightClick + Alt to zoom in/out a GameObject.
 * You can change the GameObject names on the inspector.
+* Color albedo in material component.
 
 

@@ -498,10 +498,13 @@ update_status ModuleGUI::Update()
 						{
 							ImGui::Text("Texture path:"); ImGui::SameLine();
 							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), "No texture...");
-							ImGui::Checkbox("Use Albedo", &selectedObj->GetCMesh()->m->color);
-							float color[3] = { selectedObj->GetCMesh()->m->r, selectedObj->GetCMesh()->m->g, selectedObj->GetCMesh()->m->b };
-							ImGui::ColorPicker3("", color, ImGuiColorEditFlags_Float);
-							selectedObj->GetCMesh()->m->r = color[0]; selectedObj->GetCMesh()->m->g = color[1]; selectedObj->GetCMesh()->m->b = color[2];
+							if(selectedObj->GetCMesh() != nullptr)
+							{
+								ImGui::Checkbox("Use Albedo", &selectedObj->GetCMesh()->m->color);
+								float color[3] = { selectedObj->GetCMesh()->m->r, selectedObj->GetCMesh()->m->g, selectedObj->GetCMesh()->m->b };
+								ImGui::ColorPicker3("", color, ImGuiColorEditFlags_Float);
+								selectedObj->GetCMesh()->m->r = color[0]; selectedObj->GetCMesh()->m->g = color[1]; selectedObj->GetCMesh()->m->b = color[2];
+							}
 						}
 					}
 				}
