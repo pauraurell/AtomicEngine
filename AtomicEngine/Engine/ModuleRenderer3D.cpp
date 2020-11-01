@@ -222,11 +222,10 @@ void ModuleRenderer3D::RenderGameObject(Mesh *m, At_Tex* tex) {
 	glBindBuffer(GL_ARRAY_BUFFER, m->id_texcoords);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	if (m->color) { glColor3f(m->r, m->g, m->b); }
-	if(tex != nullptr) 
-	{ 
-		if (tex->checkers) { glColor3f(1, 1, 1); }
-	}
+	glColor3f(m->r, m->g, m->b);
+	if (m->color == false) { glColor3f(1, 1, 1); }
+	if(tex != nullptr ) {	if (tex->checkers) { glColor3f(1, 1, 1); }}
+	 
 	glDrawElements(GL_TRIANGLES, m->num_index, GL_UNSIGNED_INT, NULL);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
