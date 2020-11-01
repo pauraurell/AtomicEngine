@@ -4,7 +4,6 @@
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
-
 #include "Glew/include/glew.h"
 
 
@@ -78,29 +77,44 @@ update_status ModuleGUI::PreUpdate()
 
 update_status ModuleGUI::Update()
 {
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+	{
+		HierarchyWindowActive = true;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_I) == KEY_DOWN)
+	{
+		InspectorWindowActive = true;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN)
+	{
+		ConsoleWindowActive = true;
+	}
+
 	DockingSpace(dockingWin);
 
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("New Project"))
+			if (ImGui::MenuItem("New Project", 0, false, false))
 			{}
 			
-			if (ImGui::MenuItem("Open"))
+			if (ImGui::MenuItem("Open" ,0, false, false))
 			{}
 
-			if (ImGui::MenuItem("Save"))
+			if (ImGui::MenuItem("Save", "Ctrl + S", false, false))
 			{}
 		
-			if (ImGui::MenuItem("Exit"))
+			if (ImGui::MenuItem("Exit", "Alt + F4"))
 			{
 				return UPDATE_STOP;
 			}
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Edit"))
+		if (ImGui::BeginMenu("Edit", false))
 		{
 			ImGui::EndMenu();
 		}
@@ -151,7 +165,7 @@ update_status ModuleGUI::Update()
 				ConfigurationWindowActive = true;
 			}
 			
-			if (ImGui::MenuItem("Console"))
+			if (ImGui::MenuItem("Console", "Ctrl + K"))
 			{
 				ConsoleWindowActive = true;
 			}
@@ -161,12 +175,12 @@ update_status ModuleGUI::Update()
 				App->renderer3D->wireframe_mode = !App->renderer3D->wireframe_mode;
 			}
 
-			if (ImGui::MenuItem("View Hierarchy"))
+			if (ImGui::MenuItem("View Hierarchy", "Ctrl + H"))
 			{
 				HierarchyWindowActive = true;
 			}
 
-			if (ImGui::MenuItem("View Inspector"))
+			if (ImGui::MenuItem("View Inspector", "Ctrl + I"))
 			{
 				InspectorWindowActive = true;
 			}
@@ -194,7 +208,7 @@ update_status ModuleGUI::Update()
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Window"))
+		if (ImGui::BeginMenu("Window", false))
 		{
 			ImGui::EndMenu();
 		}
@@ -213,7 +227,7 @@ update_status ModuleGUI::Update()
 
 			if (ImGui::MenuItem("Download lastest"))
 			{
-				ShellExecuteA(NULL, "open", "https://github.com/pauraurell/AtomicEngine", NULL, NULL, SW_SHOWNORMAL);
+				ShellExecuteA(NULL, "open", "https://github.com/pauraurell/AtomicEngine/releases", NULL, NULL, SW_SHOWNORMAL);
 			}
 
 			if (ImGui::MenuItem("About"))
@@ -289,6 +303,8 @@ update_status ModuleGUI::Update()
 			ImGui::TextColored(tColor, "%i.0GB", ram = (SDL_GetSystemRAM() * 0.001));
 			ImGui::Text("Caps: "); ImGui::SameLine();
 			ImGui::TextColored(tColor, "%s", GetCaps());
+			ImGui::Text("GPU:");ImGui::SameLine(); 
+			ImGui::TextColored(tColor, "%s", (const char*)glGetString(GL_RENDERER));
 		}
 
 		if (ImGui::CollapsingHeader("Input"))
@@ -546,6 +562,10 @@ update_status ModuleGUI::Update()
 			ImGui::Text("%d.%d.%d", GLEW_VERSION_MAJOR, GLEW_VERSION_MINOR, GLEW_VERSION_MICRO);
 			ImGui::BulletText("MathGeoLib"); ImGui::SameLine();
 			ImGui::Text("1.5");
+			ImGui::BulletText("Assimp"); ImGui::SameLine();
+			ImGui::Text("3.1.1");
+			ImGui::BulletText("Devil"); ImGui::SameLine();
+			ImGui::Text("1.8.0"/*std::to_string(IL_VERSION).c_str()*/);
 
 			ImGui::Separator();
 
