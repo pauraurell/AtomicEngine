@@ -61,14 +61,15 @@ bool ModuleImporter::CleanUp() {
 
 void ModuleImporter::LoadMesh(char* file_path, string name)
 {
-	Mesh* myMesh = new Mesh();
-	
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
-	myMesh->filename = file_path;
+
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
+			Mesh* myMesh = new Mesh();
+			myMesh->filename = file_path;
+
 			aiMesh* ourMesh = scene->mMeshes[i];
 
 			myMesh->num_vertex = ourMesh->mNumVertices;
@@ -132,19 +133,22 @@ void ModuleImporter::LoadMesh(char* file_path, string name)
 					myMesh->texcoords[v + 1] = ourMesh->mTextureCoords[0][i].y;
 				}
 			}
-		}
 
-		App->scene_intro->meshes.push_back(myMesh);
-		for (int i = 0; i < App->scene_intro->meshes.size(); i++)
-		{
-			if (App->scene_intro->meshes[i] == myMesh) {
-				GenerateBuffers(myMesh);
-				if (name != "none") { App->scene_intro->CreateGameObject(App->scene_intro->meshes[i], name); }
-				else {
-					App->scene_intro->CreateGameObject(App->scene_intro->meshes[i]);
+			App->scene_intro->meshes.push_back(myMesh);
+
+			for (int i = 0; i < App->scene_intro->meshes.size(); i++)
+			{
+				if (App->scene_intro->meshes[i] == myMesh) {
+					GenerateBuffers(myMesh);
+					if (name != "none") { App->scene_intro->CreateGameObject(App->scene_intro->meshes[i], name); }
+					else {
+						App->scene_intro->CreateGameObject(App->scene_intro->meshes[i]);
+					}
 				}
 			}
 		}
+
+		
 	
 		aiReleaseImport(scene);
 	}
