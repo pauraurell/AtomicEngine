@@ -5,6 +5,14 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include "Devil\Include\il.h"
+#include "Devil\Include\ilu.h"
+#include "Devil\Include\ilut.h"
+
+#pragma comment (lib, "Devil/lib/ILU.lib") 
+#pragma comment (lib, "Devil/lib/ILUT.lib") 
+#pragma comment (lib, "Devil/lib/DevIL.lib") 
+
 using namespace std;
 
 class At_Tex
@@ -26,7 +34,7 @@ public:
 	char* texName = nullptr;
 	GLuint Gl_Tex = 0;
 	bool loaded = false;
-	int w = 0;
-	int h = 0;
 	bool checkers = false;
+	ILuint w;
+	ILuint h;
 };
