@@ -19,7 +19,18 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(-3, 2, 1));
 	App->camera->LookAt(vec3(0.f, 0.f, 0.f));
 
+
 	App->importer->LoadMesh("Assets/3D Objects/BakerHouse.fbx");
+
+	if (game_objects[0] != nullptr && game_objects[1] != nullptr)
+	{
+		App->gui->selectedObj = game_objects[0];
+		App->importer->LoadTexture("Assets/Textures/BakerHouseTexture.png");
+		App->gui->selectedObj = game_objects[1];
+		App->importer->LoadTexture("Assets/Textures/BakerHouseTexture.png");
+		App->gui->selectedObj = nullptr;
+	}
+
 	return ret;
 }
 
