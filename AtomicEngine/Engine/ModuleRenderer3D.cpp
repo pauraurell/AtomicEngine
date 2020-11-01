@@ -425,8 +425,6 @@ void ModuleRenderer3D::DrawCubeVerticeArray() {
 //}
 
 void ModuleRenderer3D::CheckWireframeMode() {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		wireframe_mode = !wireframe_mode;
 
 	if (wireframe_mode) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

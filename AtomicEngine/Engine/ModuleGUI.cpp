@@ -92,6 +92,11 @@ update_status ModuleGUI::Update()
 		ConsoleWindowActive = true;
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	{
+		App->renderer3D->wireframe_mode = !App->renderer3D->wireframe_mode;
+	}
+
 	DockingSpace(dockingWin);
 
 	if (ImGui::BeginMainMenuBar())
@@ -476,7 +481,7 @@ update_status ModuleGUI::Update()
 							ImGui::Text("Texture path:"); ImGui::SameLine();
 							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMaterial()->tex->texName);
 							ImGui::Separator();
-							ImGui::Text("Size: %i x %i px", selectedObj->GetCMaterial()->tex->w, selectedObj->GetCMaterial()->tex->h);
+							///ImGui::Text("Size: %i x %i px", selectedObj->GetCMaterial()->tex->w, selectedObj->GetCMaterial()->tex->h);
 							ImGui::Checkbox("Checkers Texture", &selectedObj->GetCMaterial()->tex->checkers);
 						}
 					}

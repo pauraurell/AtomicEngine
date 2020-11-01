@@ -16,7 +16,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 	cam_speed = 0.15;
 	sensitivity = 5;
-	speed_multiplier = 1.75f;
+	speed_multiplier = 2.0f;
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -115,15 +115,14 @@ update_status ModuleCamera3D::Update()
 	{
 		if (App->gui->selectedObj != nullptr)
 		{
-			if (App->input->GetMouseXMotion() > 0) {
-				Position -= X * speed * 4;
-				Reference -= X * speed * 4;
-			}
+			int dx = -App->input->GetMouseXMotion();
+			int dy = -App->input->GetMouseYMotion();
 
-			if (App->input->GetMouseXMotion() < 0) {
-				Position += X * speed * 4;
-				Reference += X * speed * 4;
-			}
+			if (dx != 0) { Z = rotate(Z, (float)dx * (0.1f * sensitivity), Y); }
+			if (dy != 0) { Z = rotate(Z, (float)dy * (0.1f * sensitivity), X); }
+
+			Position = Z * length(Position);
+
 			LookAtSelectedObject();
 		}
 	}
@@ -132,13 +131,18 @@ update_status ModuleCamera3D::Update()
 	{
 		if (App->gui->selectedObj != nullptr)
 		{
-			if (App->input->GetMouseYMotion() > 0) {
-				Position += Z * camera_speed_weel;
+			float zoom_speed = 0.5;
+
+			if (App->input->GetMouseYMotion() > 0) 
+			{
+				Position += Z * zoom_speed;
 			}
 
-			if (App->input->GetMouseYMotion() < 0) {
-				Position -= Z * camera_speed_weel;
+			if (App->input->GetMouseYMotion() < 0) 
+			{
+				Position -= Z * zoom_speed;
 			}
+
 			LookAtSelectedObject();
 		}
 	}
