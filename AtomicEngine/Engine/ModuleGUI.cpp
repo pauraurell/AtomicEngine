@@ -493,9 +493,13 @@ update_status ModuleGUI::Update()
 				}
 				else 
 				{
-					if (ImGui::MenuItem("Material...", 0, false, false))
-					{
+					if (ImGui::IsMouseClicked(0)) 
+					{ 
 						LOG("This GameObject already has a Component Material!");
+						ImGui::CloseCurrentPopup(); 
+					}
+					if (ImGui::MenuItem("Material...", 0, false, false))
+					{						
 						ImGui::CloseCurrentPopup();
 					}
 				}
