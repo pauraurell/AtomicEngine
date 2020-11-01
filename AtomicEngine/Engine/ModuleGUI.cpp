@@ -421,7 +421,7 @@ update_status ModuleGUI::Update()
 				ImGui::Checkbox("Freeze", &selectedObj->GetCTransform()->active);
 				ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->pos.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->pos.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->pos.z);
 				ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->rot.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->rot.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->rot.z);
-				ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->scale.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->scale.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->scale.z);
+				ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x: 1.0", &selectedObj->GetCTransform()->scale.x); ImGui::SameLine(); ImGui::Text("y: 1.0", &selectedObj->GetCTransform()->scale.y); ImGui::SameLine(); ImGui::Text("z: 1.0", &selectedObj->GetCTransform()->scale.z);
 			}
 			if (selectedObj->GetCMesh() != nullptr)
 			{
