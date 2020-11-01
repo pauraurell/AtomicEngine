@@ -111,27 +111,27 @@ update_status ModuleGUI::Update()
 			{
 				if (ImGui::MenuItem("Cube"))
 				{
-					App->importer->LoadMesh("Primitives/CubePrimitive.fbx", "Cube");
+					App->importer->LoadMesh("Assets/3D Objects/Primitives/CubePrimitive.fbx", "Cube");
 				}
 
 				if (ImGui::MenuItem("Sphere"))
 				{
-					App->importer->LoadMesh("Primitives/SpherePrimitive.fbx","Sphere");
+					App->importer->LoadMesh("Assets/3D Objects/Primitives/SpherePrimitive.fbx","Sphere");
 				}
 
 				if (ImGui::MenuItem("Pyramid"))
 				{
-					App->importer->LoadMesh("Primitives/PyramidPrimitive.fbx", "Pyramid");
+					App->importer->LoadMesh("Assets/3D Objects/Primitives/PyramidPrimitive.fbx", "Pyramid");
 				}
 
 				if (ImGui::MenuItem("Cylinder"))
 				{
-					App->importer->LoadMesh("Primitives/CylinderPrimitive.fbx", "Cylinder");
+					App->importer->LoadMesh("Assets/3D Objects/Primitives/CylinderPrimitive.fbx", "Cylinder");
 				}
 
 				if (ImGui::MenuItem("Cone"))
 				{
-					App->importer->LoadMesh("Primitives/ConePrimitive.fbx", "Cone");
+					App->importer->LoadMesh("Assets/3D Objects/Primitives/ConePrimitive.fbx", "Cone");
 				}
 
 				ImGui::EndMenu();
@@ -471,7 +471,7 @@ update_status ModuleGUI::Update()
 						if (selectedObj->GetCMaterial() != nullptr)
 						{
 							ImGui::Text("Texture path:"); ImGui::SameLine();
-							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), "No texture..");
+							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), "No texture...");
 						}
 					}
 				}
@@ -483,15 +483,22 @@ update_status ModuleGUI::Update()
 			}
 			if (ImGui::BeginPopup("AddPopUp"))
 			{
-				if (ImGui::MenuItem("Material.."))
+				if (selectedObj->GetCMaterial() == nullptr)
 				{
-					if (selectedObj->GetCMaterial() == nullptr)
+					if (ImGui::MenuItem("Material..."))
 					{
 						selectedObj->CreateComponent(ComponentType::Material);
+						ImGui::CloseCurrentPopup();
 					}
-					ImGui::CloseCurrentPopup();
 				}
-
+				else 
+				{
+					if (ImGui::MenuItem("Material...", 0, false, false))
+					{
+						LOG("This GameObject already has a Component Material!");
+						ImGui::CloseCurrentPopup();
+					}
+				}
 				ImGui::EndPopup();
 			}
 		}

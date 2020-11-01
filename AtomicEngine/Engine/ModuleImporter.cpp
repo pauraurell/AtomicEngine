@@ -140,9 +140,9 @@ void ModuleImporter::LoadMesh(char* file_path, string name)
 			{
 				if (App->scene_intro->meshes[i] == myMesh) {
 					GenerateBuffers(myMesh);
-					if (name != "none") { App->scene_intro->CreateGameObject(App->scene_intro->meshes[i], name); }
+					if (ourMesh->mName != aiString("")) { App->scene_intro->CreateGameObject(App->scene_intro->meshes[i], ourMesh->mName.C_Str()); }
 					else {
-						App->scene_intro->CreateGameObject(App->scene_intro->meshes[i]);
+						App->scene_intro->CreateGameObject(App->scene_intro->meshes[i], "GameObject");
 					}
 				}
 			}

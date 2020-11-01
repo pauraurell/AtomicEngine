@@ -19,7 +19,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(-3, 2, 1));
 	App->camera->LookAt(vec3(0.f, 0.f, 0.f));
 
-	App->importer->LoadMesh("BakerHouse.fbx");
+	App->importer->LoadMesh("Assets/3D Objects/BakerHouse.fbx");
 	return ret;
 }
 
@@ -58,10 +58,7 @@ GameObject* ModuleSceneIntro::CreateGameObject()
 
 GameObject* ModuleSceneIntro::CreateGameObject(Mesh* mesh)
 {
-	string name = mesh->filename;
-	name = name.substr(0, name.length() - 4);
-
-	GameObject* newGameObject = new GameObject(name.c_str());
+	GameObject* newGameObject = new GameObject();
 	newGameObject->CreateComponent(ComponentType::Transform);
 	newGameObject->CreateComponent(ComponentType::Mesh);
 	newGameObject->GetCMesh()->m = mesh;
