@@ -451,20 +451,49 @@ update_status ModuleGUI::Update()
 				ImGui::Separator();
 				if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
-					if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
-					if (selectedObj->GetCMaterial() != nullptr)
+					if (selectedObj->GetCMaterial()->hasTex == true)
 					{
-					ImGui::Text("Texture path:"); ImGui::SameLine();
-					ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMaterial()->tex->texName);
-					ImGui::Separator();
-					ImGui::Text("Size: %i x %i px", selectedObj->GetCMaterial()->tex->w, selectedObj->GetCMaterial()->tex->h);
-					ImGui::Checkbox("Checkers Texture", &selectedObj->GetCMaterial()->tex->checkers);
+						ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
+						if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
+						if (selectedObj->GetCMaterial() != nullptr)
+						{
+							ImGui::Text("Texture path:"); ImGui::SameLine();
+							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMaterial()->tex->texName);
+							ImGui::Separator();
+							ImGui::Text("Size: %i x %i px", selectedObj->GetCMaterial()->tex->w, selectedObj->GetCMaterial()->tex->h);
+							ImGui::Checkbox("Checkers Texture", &selectedObj->GetCMaterial()->tex->checkers);
+						}
+					}
+					else
+					{
+						ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
+						if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
+						if (selectedObj->GetCMaterial() != nullptr)
+						{
+							ImGui::Text("Texture path:"); ImGui::SameLine();
+							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), "No texture..");
+						}
 					}
 				}
 			}
 			ImGui::Separator();
-			ImGui::Button("Add Component...");
+			if (ImGui::Button("Add Component..."))
+			{
+				ImGui::OpenPopup("AddPopUp");
+			}
+			if (ImGui::BeginPopup("AddPopUp"))
+			{
+				if (ImGui::MenuItem("Material.."))
+				{
+					if (selectedObj->GetCMaterial() == nullptr)
+					{
+						selectedObj->CreateComponent(ComponentType::Material);
+					}
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndPopup();
+			}
 		}
 		
 		ImGui::End();

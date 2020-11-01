@@ -36,7 +36,7 @@ void GameObject::Update()
 	{
 		if (GetCMesh() != nullptr && GetCMesh()->m != nullptr && GetCMesh()->active == true)
 		{
-			if (GetCMaterial() != nullptr && GetCMaterial()->tex != nullptr && GetCMaterial()->active == true)
+			if (GetCMaterial() != nullptr && GetCMaterial()->tex != nullptr && GetCMaterial()->hasTex == true && GetCMaterial()->active == true)
 			{
 				App->renderer3D->RenderGameObject(GetCMesh()->m, GetCMaterial()->tex);
 			}
@@ -62,6 +62,8 @@ Component* GameObject::CreateComponent(ComponentType type)
 	}
 	newComponent->owner = this;
 	components.push_back(newComponent);
+
+	LOG("New Component Created");
 
 	return newComponent;
 }

@@ -17,6 +17,7 @@ public:
 	void Disable();
 
 	At_Tex* tex;
+	bool hasTex;
 };
 
 #endif //__COMPONENTMATERIAL_H__
