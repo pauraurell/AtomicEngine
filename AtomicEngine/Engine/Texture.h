@@ -35,6 +35,7 @@ public:
 	GLuint Gl_Tex = 0;
 	bool loaded = false;
 	bool checkers = false;
+	bool visible = true;
 	ILuint w;
 	ILuint h;
 };

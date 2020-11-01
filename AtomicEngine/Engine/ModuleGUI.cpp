@@ -481,8 +481,13 @@ update_status ModuleGUI::Update()
 							ImGui::Text("Texture path:"); ImGui::SameLine();
 							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMaterial()->tex->texName);
 							ImGui::Text("Size: %u x %u px", selectedObj->GetCMaterial()->tex->w, selectedObj->GetCMaterial()->tex->h);
-							ImGui::Separator();
 							ImGui::Checkbox("Checkers Texture", &selectedObj->GetCMaterial()->tex->checkers);
+							ImGui::Separator();
+							float color[3] = { selectedObj->GetCMesh()->m->r, selectedObj->GetCMesh()->m->g, selectedObj->GetCMesh()->m->b };
+							ImGui::Checkbox("Use Diffuse Texture", &selectedObj->GetCMaterial()->tex->visible);
+							ImGui::Checkbox("Use Albedo", &selectedObj->GetCMesh()->m->color);
+							ImGui::ColorPicker3("", color, ImGuiColorEditFlags_Float);
+							selectedObj->GetCMesh()->m->r = color[0]; selectedObj->GetCMesh()->m->g = color[1]; selectedObj->GetCMesh()->m->b = color[2];
 						}
 					}
 					else
@@ -493,6 +498,10 @@ update_status ModuleGUI::Update()
 						{
 							ImGui::Text("Texture path:"); ImGui::SameLine();
 							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), "No texture...");
+							ImGui::Checkbox("Use Albedo", &selectedObj->GetCMesh()->m->color);
+							float color[3] = { selectedObj->GetCMesh()->m->r, selectedObj->GetCMesh()->m->g, selectedObj->GetCMesh()->m->b };
+							ImGui::ColorPicker3("", color, ImGuiColorEditFlags_Float);
+							selectedObj->GetCMesh()->m->r = color[0]; selectedObj->GetCMesh()->m->g = color[1]; selectedObj->GetCMesh()->m->b = color[2];
 						}
 					}
 				}
