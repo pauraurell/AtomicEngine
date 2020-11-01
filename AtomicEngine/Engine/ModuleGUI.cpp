@@ -475,7 +475,9 @@ update_status ModuleGUI::Update()
 					if (selectedObj->GetCMaterial()->hasTex == true)
 					{
 						ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
-						if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
+						if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); 
+						selectedObj->GetCMesh()->m->color = false;
+						}
 						if (selectedObj->GetCMaterial() != nullptr)
 						{
 							ImGui::Text("Texture path:"); ImGui::SameLine();
@@ -493,7 +495,8 @@ update_status ModuleGUI::Update()
 					else
 					{
 						ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
-						if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); }
+						if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); selectedObj->GetCMesh()->m->color = false;
+						}
 						if (selectedObj->GetCMaterial() != nullptr)
 						{
 							ImGui::Text("Texture path:"); ImGui::SameLine();
