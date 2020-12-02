@@ -12,7 +12,6 @@
 #include "ModuleFileSystem.h"
 #include <vector>
 
-
 class Application
 {
 public:
@@ -48,9 +47,17 @@ private:
 	void FinishUpdate();
 
 public:
+
+	void StartGame();
+	void StopGame();
+
+public:
+
+	bool inGame;
 	float	ms_cap;
 	float	dt;
 	float	fps;
+	int frames_since_start;
 
 	std::string title;
 	std::string organization;

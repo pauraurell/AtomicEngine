@@ -4,8 +4,9 @@
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ModuleWindow.h"
 #include "Glew/include/glew.h"
-
+#include "Time.h"
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -77,6 +78,31 @@ update_status ModuleGUI::PreUpdate()
 
 update_status ModuleGUI::Update()
 {
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration |  ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove;
+
+	bool visible = true;
+	if (ImGui::Begin("Game Time Buttons", &visible, flags))
+	{
+		if (ImGui::Button("Play")) 
+		{ 
+			App->StartGame();
+		}
+
+		ImGui::SameLine();
+
+		//if (Time::GameTimeClock.paused){ if (ImGui::Button("Resume")) { Time::GameTimeClock.Resume(); } }
+		//else { if (ImGui::Button("Pause")) { Time::GameTimeClock.Pause(); } }
+		ImGui::Button("Pause");
+		ImGui::SameLine();
+
+		if (ImGui::Button("Stop")) 
+		{ 
+			App->StopGame(); 
+		}
+
+	}
+	ImGui::End();
+		
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
 	{
 		HierarchyWindowActive = true;
@@ -352,6 +378,18 @@ update_status ModuleGUI::Update()
 			ImGui::SliderFloat("Blue", &b, 0, 1);
 		}
 
+		if (ImGui::CollapsingHeader("Time"))
+		{
+			ImGui::Columns();
+			ImGui::Text("Frame Count:  %i frames", App->frames_since_start);
+			ImGui::Text("Time since start up:  %.3f seconds", Time::RealTimeClock.GetTimeSinceStartup());
+			ImGui::Text("Real time +dt:  %.3f seconds", Time::RealTimeClock.dt);
+			ImGui::Separator();
+			ImGui::Text("Game time: %.3f seconds", Time::GameTimeClock.GetTimeSinceStartup());
+			ImGui::Text("Game time Scale %.1f", Time::GameTimeClock.timeScale);
+			ImGui::Text("Game time dt:  %.3f seconds", Time::GameTimeClock.dt);
+		}
+
 		ImGui::End();
 	}
 
@@ -618,8 +656,6 @@ update_status ModuleGUI::Update()
 
 	//Demo Window
 	if (demowindow) { ImGui::ShowDemoWindow(&demowindow); }
-
-	
 
 	return UPDATE_CONTINUE;
 }

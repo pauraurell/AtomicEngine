@@ -82,6 +82,12 @@
     <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\Containers\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Sources\Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -180,6 +186,12 @@
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\Containers\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -202,6 +214,9 @@
     </Filter>
     <Filter Include="GameObjects">
       <UniqueIdentifier>{d9933ca1-6b8c-4fd4-8cac-8147ece06478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Containers\ImGuizmo">
+      <UniqueIdentifier>{c8717358-cc63-41dd-b265-6901109e1f5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

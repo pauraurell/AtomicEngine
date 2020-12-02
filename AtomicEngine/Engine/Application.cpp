@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Time.h"
 
 Application::Application()
 {
@@ -26,6 +27,8 @@ Application::Application()
 
 	fps = 0;
 	ms_cap = 1000 / 120;
+	inGame = false;
+	frames_since_start = 0;
 }
 
 Application::~Application()
@@ -55,6 +58,8 @@ bool Application::Init()
 		ret = list_modules[i]->Start();
 	}
 
+	Time::RealTimeClock.Start();
+
 	return ret;
 }
 
@@ -64,6 +69,9 @@ void Application::PrepareUpdate()
 	dt = (float)ms_timer.Read() / 1000.0f;
 	ms_timer.Start();
 	fps = 1.0f / dt;
+
+	Time::RealTimeClock.Step();
+	Time::GameTimeClock.Step();
 }
 
 // ---------------------------------------------
@@ -101,7 +109,7 @@ update_status Application::Update()
 		ret = list_modules[i]->PostUpdate();
 	}
 
-	
+	frames_since_start++;
 	FinishUpdate();
 	return ret;
 }
@@ -132,4 +140,19 @@ const char* Application::GetTitleName() const
 const char* Application::GetOrganizationName() const
 {
 	return organization.c_str();
+}
+
+void Application::StartGame()
+{
+	if (inGame == false) 
+	{
+		inGame = true;
+		Time::GameTimeClock.Start();
+	}
+}
+
+void Application::StopGame()
+{
+	inGame = false;
+	Time::GameTimeClock.Stop();
 }
