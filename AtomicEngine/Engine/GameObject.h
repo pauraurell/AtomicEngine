@@ -9,6 +9,7 @@ class Component;
 class ComponentMesh;
 class ComponentTransform;
 class ComponentMaterial;
+class ComponentCamera;
 enum class ComponentType;
 
 using namespace std;
@@ -27,6 +28,8 @@ public:
 	ComponentMesh* GetCMesh();
 	ComponentTransform* GetCTransform();
 	ComponentMaterial* GetCMaterial();
+	ComponentCamera* GetCCamera();
+
 
 	string name;
 	bool active;

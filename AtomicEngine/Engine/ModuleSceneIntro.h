@@ -16,7 +16,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	GameObject* CreateGameObject();
+	GameObject* CreateGameObject(bool camera = false);
 	GameObject* CreateGameObject(Mesh* m);
 	GameObject* CreateGameObject(Mesh* m, string name);
 	void DeleteGameObject(GameObject* to_delete);
