@@ -56,6 +56,16 @@ float Timer::ReadSec() const
 	}
 }
 
+void Timer::Continue()
+{
+	if (running == false)
+	{
+		running = true;
+		started_at = SDL_GetTicks() - (stopped_at - started_at);
+	}
+
+}
+
 
 
 

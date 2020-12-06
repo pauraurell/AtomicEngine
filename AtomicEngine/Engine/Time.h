@@ -12,10 +12,8 @@ struct Clock
 	bool paused;
 	bool started;
 
-	void Step();
-	
 	float GetTimeSinceStartup();
-	float deltaTime(); 
+	void Step();
 
 	float timeScale;
 	float dt;
@@ -26,7 +24,7 @@ struct Clock
 
 class Time {
 public:
-	static void Init();
-	static Clock RealTimeClock;
-	static Clock GameTimeClock;
+	static void Start();
+	static Clock RealTime;
+	static Clock GameTime;
 };

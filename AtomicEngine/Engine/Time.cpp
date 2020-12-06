@@ -1,15 +1,15 @@
 #include "Time.h"
 
-Clock Time::RealTimeClock;
-Clock Time::GameTimeClock;
+Clock Time::RealTime;
+Clock Time::GameTime;
 
-void Time::Init()
+void Time::Start()
 {
-	GameTimeClock.timeScale = 1.0f;
-	GameTimeClock.started = false;
+	GameTime.timeScale = 1.0f;
+	GameTime.started = false;
 
-	RealTimeClock.timer.Start();
-	RealTimeClock.started = true;
+	RealTime.timer.Start();
+	RealTime.started = true;
 }
 
 Clock::Clock()
@@ -35,15 +35,13 @@ void Clock::Stop()
 void Clock::Pause()
 {
 	paused = true;
-	timeScale = 0.0f;
 	timer.Stop();
 }
 
 void Clock::Resume()
 {
 	paused = false;
-	timeScale = 1.0f;
-	timer.Resume();
+	timer.Continue();
 }
 
 void Clock::Step()
@@ -57,9 +55,4 @@ float Clock::GetTimeSinceStartup()
 	if (started != false)
 		return timer.ReadSec();
 	else return 0.0f;
-}
-
-float Clock::deltaTime()
-{
-	return dt * timeScale;
 }

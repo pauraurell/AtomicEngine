@@ -58,7 +58,7 @@ bool Application::Init()
 		ret = list_modules[i]->Start();
 	}
 
-	Time::RealTimeClock.Start();
+	Time::RealTime.Start();
 
 	return ret;
 }
@@ -70,8 +70,8 @@ void Application::PrepareUpdate()
 	ms_timer.Start();
 	fps = 1.0f / dt;
 
-	Time::RealTimeClock.Step();
-	Time::GameTimeClock.Step();
+	Time::RealTime.Step();
+	Time::GameTime.Step();
 }
 
 // ---------------------------------------------
@@ -147,12 +147,12 @@ void Application::StartGame()
 	if (inGame == false) 
 	{
 		inGame = true;
-		Time::GameTimeClock.Start();
+		Time::GameTime.Start();
 	}
 }
 
 void Application::StopGame()
 {
 	inGame = false;
-	Time::GameTimeClock.Stop();
+	Time::GameTime.Stop();
 }

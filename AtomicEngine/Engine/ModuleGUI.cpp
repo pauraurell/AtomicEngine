@@ -90,7 +90,16 @@ update_status ModuleGUI::Update()
 
 		ImGui::SameLine();
 
-		ImGui::Button("Pause");
+		if (Time::GameTime.paused == false)
+		{
+			if (ImGui::Button("Pause")) { Time::GameTime.Pause(); }
+		}
+
+		else 
+		{ 
+			if (ImGui::Button("Resume")) { Time::GameTime.Resume(); } 
+		}
+		
 		ImGui::SameLine();
 
 		if (ImGui::Button("Stop")) 
@@ -380,12 +389,12 @@ update_status ModuleGUI::Update()
 		{
 			ImGui::Columns();
 			ImGui::Text("Frame Count:  %i frames", App->frames_since_start);
-			ImGui::Text("Time since start up:  %.3f seconds", Time::RealTimeClock.GetTimeSinceStartup());
-			ImGui::Text("Real time +dt:  %.3f seconds", Time::RealTimeClock.dt);
+			ImGui::Text("Time since start up:  %.3f seconds", Time::RealTime.GetTimeSinceStartup());
+			ImGui::Text("Real time dt:  %.3f seconds", Time::RealTime.dt);
 			ImGui::Separator();
-			ImGui::Text("Game time: %.3f seconds", Time::GameTimeClock.GetTimeSinceStartup());
-			ImGui::Text("Game time Scale %.1f", Time::GameTimeClock.timeScale);
-			ImGui::Text("Game time dt:  %.3f seconds", Time::GameTimeClock.dt);
+			ImGui::Text("Game time: %.3f seconds", Time::GameTime.GetTimeSinceStartup());
+			ImGui::Text("Game time Scale %.1f", Time::GameTime.timeScale);
+			ImGui::Text("Game time dt:  %.3f seconds", Time::GameTime.dt);
 		}
 
 		ImGui::End();
