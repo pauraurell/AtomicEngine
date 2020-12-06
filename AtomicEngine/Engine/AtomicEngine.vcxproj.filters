@@ -88,6 +88,9 @@
     <ClCompile Include="Time.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="parson\parson.c">
+      <Filter>Sources\FileManagement\parson</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -192,6 +195,9 @@
     <ClInclude Include="Time.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="parson\parson.h">
+      <Filter>Sources\FileManagement\parson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -217,6 +223,12 @@
     </Filter>
     <Filter Include="Sources\Containers\ImGuizmo">
       <UniqueIdentifier>{c8717358-cc63-41dd-b265-6901109e1f5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\FileManagement">
+      <UniqueIdentifier>{00484cf9-5528-4bd5-aa8b-32980b948fc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\FileManagement\parson">
+      <UniqueIdentifier>{6fc13a3b-4d50-4fc6-bd2b-c3279eb92218}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

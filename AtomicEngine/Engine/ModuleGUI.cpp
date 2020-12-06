@@ -90,8 +90,6 @@ update_status ModuleGUI::Update()
 
 		ImGui::SameLine();
 
-		//if (Time::GameTimeClock.paused){ if (ImGui::Button("Resume")) { Time::GameTimeClock.Resume(); } }
-		//else { if (ImGui::Button("Pause")) { Time::GameTimeClock.Pause(); } }
 		ImGui::Button("Pause");
 		ImGui::SameLine();
 
