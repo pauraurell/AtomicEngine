@@ -91,6 +91,15 @@
     <ClCompile Include="parson\parson.c">
       <Filter>Sources\FileManagement\parson</Filter>
     </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleResource.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleJson.cpp">
+      <Filter>Sources\FileManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -198,6 +207,15 @@
     <ClInclude Include="parson\parson.h">
       <Filter>Sources\FileManagement\parson</Filter>
     </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleResource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleJson.h">
+      <Filter>Sources\FileManagement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Sources">
@@ -230,5 +248,13 @@
     <Filter Include="Sources\FileManagement\parson">
       <UniqueIdentifier>{6fc13a3b-4d50-4fc6-bd2b-c3279eb92218}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Resources">
+      <UniqueIdentifier>{acbb87f7-b60e-425d-8ffb-f6ee559f0730}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Game\Assets\Config\config.json">
+      <Filter>Sources\FileManagement</Filter>
+    </None>
   </ItemGroup>
 </Project>

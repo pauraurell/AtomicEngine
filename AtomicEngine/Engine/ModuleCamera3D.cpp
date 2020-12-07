@@ -5,6 +5,7 @@
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	name = "camera";
 	CalculateViewMatrix();
 
 	X = vec3(1.0f, 0.0f, 0.0f);
@@ -14,8 +15,6 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Position = vec3(4.0f, 3.5f, -8.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 
-	cam_speed = 0.15;
-	sensitivity = 5;
 	speed_multiplier = 2.0f;
 }
 
@@ -233,4 +232,18 @@ void ModuleCamera3D::LookAtSelectedObject(bool go_to_gameObj)
 	float3 position = App->gui->selectedObj->GetCTransform()->pos;
 	LookAt(vec3(position.x, position.y, position.z));
 	if (go_to_gameObj) Position = vec3(position.x + 2.0f, position.y + 3.8f, position.z - 5.0f);
+}
+
+bool ModuleCamera3D::LoadConfig(ConfigFile* data)
+{
+	cam_speed = data->GetFloat("cameraSpeed");
+	sensitivity = data->GetFloat("mouseSensitivity");
+	return true;
+}
+
+bool ModuleCamera3D::SaveConfig(ConfigFile* data) const
+{
+	data->AddFloat("cameraSpeed", cam_speed);
+	data->AddFloat("mouseSensitivity", sensitivity);
+	return true;
 }

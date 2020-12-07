@@ -2,6 +2,9 @@
 
 class Application;
 
+#include <string>
+class ConfigFile;
+
 class Module
 {
 private :
@@ -9,6 +12,7 @@ private :
 
 public:
 	Application* App;
+	std::string name;
 
 	Module(Application* parent, bool start_enabled = true) : App(parent)
 	{}
@@ -44,5 +48,15 @@ public:
 	virtual bool CleanUp() 
 	{ 
 		return true; 
+	}
+
+	virtual bool LoadConfig(ConfigFile* data)
+	{
+		return true;
+	}
+
+	virtual bool SaveConfig(ConfigFile* data) const
+	{
+		return true;
 	}
 };

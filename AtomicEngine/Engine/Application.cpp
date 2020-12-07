@@ -60,6 +60,8 @@ bool Application::Init()
 
 	Time::RealTime.Start();
 
+	LoadConfigFile();
+
 	return ret;
 }
 
@@ -83,7 +85,6 @@ void Application::FinishUpdate()
 	{
 		SDL_Delay(ms_cap - last_frame_ms);
 	}
-
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -132,6 +133,12 @@ void Application::AddModule(Module* mod)
 	list_modules.push_back(mod);
 }
 
+void Application::SetTitleName(const char* _name)
+{
+	title = _name;
+	window->SetTitle(title.c_str());
+}
+
 const char* Application::GetTitleName() const
 {
 	return title.c_str();
@@ -140,6 +147,16 @@ const char* Application::GetTitleName() const
 const char* Application::GetOrganizationName() const
 {
 	return organization.c_str();
+}
+
+void Application::SetEngineVersion(double _version)
+{
+	engine_version = _version;
+}
+
+double Application::GetEngineVersion() const
+{
+	return engine_version;
 }
 
 void Application::StartGame()
@@ -155,4 +172,58 @@ void Application::StopGame()
 {
 	inGame = false;
 	Time::GameTime.Stop();
+}
+bool Application::LoadConfigFile()
+{
+	bool ret = false;
+
+	char* buffer = nullptr;
+	uint size = App->fileSystem->readFile("Assets/Config/config.json", &buffer);
+
+	if (size < 0) { return ret; }
+		
+	ConfigFile conf(buffer);
+	RELEASE_ARRAY(buffer);
+
+	ConfigFile data = conf.GetArray("App", 0);
+	std::string name = data.GetString("Name", "unknown name");
+	SetTitleName(name.c_str());
+	double version = data.GetNumber("Version", 0);
+	SetEngineVersion(version);
+
+	for (uint i = 0; i < list_modules.size(); i++)
+	{
+		ConfigFile module = conf.GetArray(list_modules[i]->name.c_str(), 0);
+		ret = list_modules[i]->LoadConfig(&module);
+	}
+
+	return ret;
+}
+
+bool Application::SaveConfigFile() const
+{
+	bool ret = false;
+
+	ConfigFile save;
+	save.AddArray("App");
+	ConfigFile data;
+	data.AddString("Name", title.c_str());
+	data.AddFloat("Version", engine_version);
+	save.AddArrayChild(data);
+
+	for (uint i = 0; i < list_modules.size(); i++)
+	{
+		ConfigFile module;
+		save.AddArray(list_modules[i]->name.c_str());
+
+		ret &= list_modules[i]->SaveConfig(&module);
+		save.AddArrayChild(module);
+	}
+
+	char* buffer = nullptr;
+	uint size = save.Save(&buffer);
+
+	App->fileSystem->writeFile("Assets/Config/config.json", buffer, size);
+
+	return ret;
 }

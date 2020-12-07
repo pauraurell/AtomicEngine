@@ -20,6 +20,10 @@ public:
 	void GoToOrigin();
 	void LookAtSelectedObject(bool go_to_gameObj = false);
 
+	bool LoadConfig(ConfigFile* data)override;
+	bool SaveConfig(ConfigFile* data)const override;
+
+
 private:
 
 	void CalculateViewMatrix();

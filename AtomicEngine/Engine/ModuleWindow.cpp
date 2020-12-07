@@ -4,6 +4,7 @@
 
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	name = "window";
 	window = NULL;
 	screen_surface = NULL;
 }
@@ -138,4 +139,20 @@ void ModuleWindow::SetFullDesktop(bool state)
 		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 	else if (!state)
 		SDL_SetWindowFullscreen(window, 0);
+}
+
+bool ModuleWindow::LoadConfig(ConfigFile* data)
+{
+	SetFullscreen(data->GetBool("Fullscreen", WIN_FULLSCREEN));
+	SetResizable(data->GetBool("Resizable", WIN_RESIZABLE));
+	SetBorderless(data->GetBool("Borderless", WIN_BORDERLESS));
+	return true;
+}
+
+bool ModuleWindow::SaveConfig(ConfigFile* data) const
+{
+	data->AddBool("Fullscreen", fullscreen);
+	data->AddBool("Resizable", resizable);
+	data->AddBool("Borderless", borderless);
+	return true;
 }

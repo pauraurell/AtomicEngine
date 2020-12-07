@@ -51,6 +51,9 @@ public:
 	void StartGame();
 	void StopGame();
 
+	bool LoadConfigFile();
+	bool SaveConfigFile() const;
+
 public:
 
 	bool inGame;
@@ -61,9 +64,14 @@ public:
 
 	std::string title;
 	std::string organization;
+	double engine_version;
 
 	const char* GetTitleName() const;
+	void SetTitleName(const char* _name);
 	const char* GetOrganizationName() const;
+	
+	void SetEngineVersion(double _version);
+	double GetEngineVersion() const;
 };
 
 extern Application* App;

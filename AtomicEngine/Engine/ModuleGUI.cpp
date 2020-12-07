@@ -10,6 +10,8 @@
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	name = "gui";
+
 	demowindow = false;
 	ConfigurationWindowActive = false;
 	ConsoleWindowActive = true;
@@ -142,8 +144,15 @@ update_status ModuleGUI::Update()
 			if (ImGui::MenuItem("Open" ,0, false, false))
 			{}
 
-			if (ImGui::MenuItem("Save", "Ctrl + S", false, false))
-			{}
+			if (ImGui::MenuItem("Save Configuration", "Ctrl + S"))
+			{
+				App->SaveConfigFile();
+			}
+
+			if (ImGui::MenuItem("Load Configuration", "Ctrl + L"))
+			{
+				App->LoadConfigFile();
+			}
 		
 			if (ImGui::MenuItem("Exit", "Alt + F4"))
 			{

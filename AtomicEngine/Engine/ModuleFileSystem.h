@@ -47,6 +47,12 @@ public:
 	unsigned int Save(const char* file, const void* buffer, unsigned int size, bool append = false) const;
 	bool Remove(const char* file);
 
+	uint writeFile(const char* fileName, const void* data, uint bytes);
+	uint readFile(const char* fileName, char** data);
+	void NormalizePath(char* full_path, bool toLower = false) const;
+	void NormalizePath(std::string& full_path, bool toLower = false) const;
+	void GetNameFromPath(const char* full_path, std::string* path, std::string* file, std::string* fileWithExtension, std::string* extension) const;
+
 private:
 
 	void CreateAssimpIO();

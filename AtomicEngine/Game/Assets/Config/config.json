@@ -1,0 +1,21 @@
+{
+  "App": [
+    {
+      "Name": "Atomic Engine",
+      "Version": 0.4
+    }
+  ],
+  "window": [
+    {
+      "Fullscreen": false,
+      "Resizable": true,
+      "Borderless": true
+    }
+  ],
+  "camera": [
+    {
+      "cameraSpeed": 0.5,
+      "mouseSensitivity": 5
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "SDL/include/SDL.h"
+#include "ModuleJson.h"
 
 class Application;
 
@@ -27,12 +28,19 @@ public:
 	void SetBorderless(bool state);
 	void SetFullDesktop(bool state);
 
+	bool LoadConfig(ConfigFile* data)override;
+	bool SaveConfig(ConfigFile* data)const override;
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface;
+
+	bool fullscreen;
+	bool resizable;
+	bool borderless;
 };
 
 #endif // __ModuleWindow_H__
