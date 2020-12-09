@@ -40,6 +40,7 @@ public:
 	bool faceCullingChecker;
 
 	bool gridChecker;
+	bool bbChecker;
 	int gridSize;
 
 	float r;

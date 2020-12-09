@@ -376,6 +376,11 @@ update_status ModuleGUI::Update()
 			if (ImGui::Checkbox("Show grid", &gridChecker)) {
 				App->scene_intro->grid = gridChecker;
 			}
+
+			if (ImGui::Checkbox("Show Bounding Boxes", &bbChecker)) {
+				bbChecker != bbChecker;
+			}
+
 			ImGui::SliderInt("Grid size", &gridSize, 0, 200);
 			
 			ImGui::Separator();

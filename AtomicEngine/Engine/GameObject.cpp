@@ -36,6 +36,7 @@ void GameObject::Update()
 	}
 	if (active == true)
 	{
+		if (App->gui->bbChecker) { RenderBB(BB); }
 		if (GetCMesh() != nullptr && GetCMesh()->m != nullptr && GetCMesh()->active == true)
 		{
 			if (GetCMaterial() != nullptr && GetCMaterial()->tex != nullptr && GetCMaterial()->hasTex == true && GetCMaterial()->active == true)
@@ -45,7 +46,6 @@ void GameObject::Update()
 			else { App->renderer3D->RenderGameObject(GetCMesh()->m); }
 		}
 	}
-	RenderBB(BB);
 }
 
 Component* GameObject::CreateComponent(ComponentType type)
