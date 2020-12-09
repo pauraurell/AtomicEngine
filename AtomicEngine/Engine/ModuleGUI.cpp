@@ -6,7 +6,7 @@
 #include "ComponentTransform.h"
 #include "ModuleWindow.h"
 #include "Glew/include/glew.h"
-#include "Time.h"
+#include "AtTime.h"
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -410,8 +410,6 @@ update_status ModuleGUI::Update()
 		ImGui::End();
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) { LOG("Press F to pay respects"); }
-
 	if (HierarchyWindowActive)
 	{
 		ImGui::Begin("Hierarchy", &HierarchyWindowActive);
@@ -576,7 +574,7 @@ update_status ModuleGUI::Update()
 				{
 					if (ImGui::IsMouseClicked(0)) 
 					{ 
-						LOG("This GameObject already has a Component Material!");
+						atLOG("This GameObject already has a Component Material!");
 						ImGui::CloseCurrentPopup(); 
 					}
 					if (ImGui::MenuItem("Material...", 0, false, false))

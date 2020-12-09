@@ -2,7 +2,7 @@
 #define __COMPONENT_H__
 
 #include "GameObject.h"
-#include "MathGeoLib/include/Math/float3.h"
+#include "MathGeoLib/Math/float3.h"
 
 enum class ComponentType
 {

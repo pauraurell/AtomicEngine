@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "ImGui/imgui.h"
+#include "MathGeoLib/MathGeoLib.h"
 
 class Component;
 class ComponentMesh;
@@ -31,6 +32,9 @@ public:
 	string name;
 	bool active;
 	bool is_selected;
+
+	void RenderBB(AABB& BB);
+	AABB BB;
 
 	ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
 

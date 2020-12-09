@@ -72,7 +72,7 @@ void ModuleImporter::LoadMesh(char* file_path, string name)
 			myMesh->num_vertex = ourMesh->mNumVertices;
 			myMesh->vertex = new float[myMesh->num_vertex * 3];
 			memcpy(myMesh->vertex, ourMesh->mVertices, sizeof(float) * myMesh->num_vertex * 3);
-			LOG("New mesh with %d vertices", &myMesh->num_vertex);
+			atLOG("New mesh with %d vertices", &myMesh->num_vertex);
 
 			// copy faces
 			if (ourMesh->HasFaces())
@@ -83,7 +83,7 @@ void ModuleImporter::LoadMesh(char* file_path, string name)
 				{
 					if (ourMesh->mFaces[i].mNumIndices != 3)
 					{
-						LOG("WARNING, geometry face with != 3 indices!");
+						atLOG("WARNING, geometry face with != 3 indices!");
 					}
 					else
 					{
@@ -149,7 +149,7 @@ void ModuleImporter::LoadMesh(char* file_path, string name)
 		aiReleaseImport(scene);
 	}
 	else
-		LOG("Error loading scene %s", file_path);
+		atLOG("Error loading scene %s", file_path);
 }
 
 void ModuleImporter::LoadTexture(char* file_path)
@@ -186,16 +186,16 @@ void ModuleImporter::LoadTexture(char* file_path)
 				}
 			}
 
-			LOG("Texture: %s loaded", file_path);
+			atLOG("Texture: %s loaded", file_path);
 		}
 		else
 		{
-			LOG("Texture: %s loaded", file_path);
-			LOG("No GameObject was selected!")
+			atLOG("Texture: %s loaded", file_path);
+			atLOG("No GameObject was selected!")
 		}
 	}
 	else {
-		LOG("Error loading the texture!");
+		atLOG("Error loading the texture!");
 	}
 }
 

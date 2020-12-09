@@ -34,7 +34,7 @@ ModuleFileSystem::~ModuleFileSystem()
 // Called before render is available
 bool ModuleFileSystem::Init()
 {
-	LOG("Loading File System");
+	atLOG("Loading File System");
 	bool ret = true;
 
 	// Ask SDL for a write dir
@@ -42,7 +42,7 @@ bool ModuleFileSystem::Init()
 
 	// Trun this on while in game mode
 	if (PHYSFS_setWriteDir(write_path) == 0)
-		LOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
+		atLOG("File System error while creating write dir: %s\n", PHYSFS_getLastError());
 
 	SDL_free(write_path);
 
@@ -68,7 +68,7 @@ bool ModuleFileSystem::AddPath(const char* path_or_zip)
 
 	if (PHYSFS_mount(path_or_zip, nullptr, 1) == 0)
 	{
-		LOG("File System error while adding a path or zip: %s\n", PHYSFS_getLastError());
+		atLOG("File System error while adding a path or zip: %s\n", PHYSFS_getLastError());
 	}
 	else
 		ret = true;
@@ -179,7 +179,7 @@ uint ModuleFileSystem::Load(const char* file, char** buffer) const
 			uint readed = (uint)PHYSFS_read(fs_file, *buffer, 1, size);
 			if (readed != size)
 			{
-				LOG("File System error while reading from file %s: %s\n", file, PHYSFS_getLastError());
+				atLOG("File System error while reading from file %s: %s\n", file, PHYSFS_getLastError());
 				RELEASE(buffer);
 			}
 			else
@@ -187,10 +187,10 @@ uint ModuleFileSystem::Load(const char* file, char** buffer) const
 		}
 
 		if (PHYSFS_close(fs_file) == 0)
-			LOG("File System error while closing file %s: %s\n", file, PHYSFS_getLastError());
+			atLOG("File System error while closing file %s: %s\n", file, PHYSFS_getLastError());
 	}
 	else
-		LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
+		atLOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
 
 	return ret;
 }
@@ -233,25 +233,25 @@ uint ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int s
 		uint written = (uint)PHYSFS_write(fs_file, (const void*)buffer, 1, size);
 		if (written != size)
 		{
-			LOG("File System error while writing to file %s: %s", file, PHYSFS_getLastError());
+			atLOG("File System error while writing to file %s: %s", file, PHYSFS_getLastError());
 		}
 		else
 		{
 			if (append == true)
-				LOG("Added %u data to [%s%s]", size, PHYSFS_getWriteDir(), file)
+				atLOG("Added %u data to [%s%s]", size, PHYSFS_getWriteDir(), file)
 			else if (overwrite == true)
-				LOG("File [%s%s] overwritten with %u bytes", PHYSFS_getWriteDir(), file, size)
+				atLOG("File [%s%s] overwritten with %u bytes", PHYSFS_getWriteDir(), file, size)
 			else
-				LOG("New file created [%s%s] of %u bytes", PHYSFS_getWriteDir(), file, size);
+				atLOG("New file created [%s%s] of %u bytes", PHYSFS_getWriteDir(), file, size);
 
 			ret = written;
 		}
 
 		if (PHYSFS_close(fs_file) == 0)
-			LOG("File System error while closing file %s: %s", file, PHYSFS_getLastError());
+			atLOG("File System error while closing file %s: %s", file, PHYSFS_getLastError());
 	}
 	else
-		LOG("File System error while opening file %s: %s", file, PHYSFS_getLastError());
+		atLOG("File System error while opening file %s: %s", file, PHYSFS_getLastError());
 
 	return ret;
 }
@@ -264,11 +264,11 @@ bool ModuleFileSystem::Remove(const char* file)
 	{
 		if (PHYSFS_delete(file) == 0)
 		{
-			LOG("File deleted: [%s]", file);
+			atLOG("File deleted: [%s]", file);
 			ret = true;
 		}
 		else
-			LOG("File System error while trying to delete [%s]: ", file, PHYSFS_getLastError());
+			atLOG("File System error while trying to delete [%s]: ", file, PHYSFS_getLastError());
 	}
 
 	return ret;
@@ -282,7 +282,7 @@ size_t AssimpWrite(aiFile* file, const char* data, size_t size, size_t chunks)
 {
 	PHYSFS_sint64 ret = PHYSFS_write((PHYSFS_File*)file->UserData, (void*)data, size, chunks);
 	if (ret == -1)
-		LOG("File System error while WRITE via assimp: %s", PHYSFS_getLastError());
+		atLOG("File System error while WRITE via assimp: %s", PHYSFS_getLastError());
 
 	return (size_t)ret;
 }
@@ -291,7 +291,7 @@ size_t AssimpRead(aiFile* file, char* data, size_t size, size_t chunks)
 {
 	PHYSFS_sint64 ret = PHYSFS_read((PHYSFS_File*)file->UserData, (void*)data, size, chunks);
 	if (ret == -1)
-		LOG("File System error while READ via assimp: %s", PHYSFS_getLastError());
+		atLOG("File System error while READ via assimp: %s", PHYSFS_getLastError());
 
 	return (size_t)ret;
 }
@@ -300,7 +300,7 @@ size_t AssimpTell(aiFile* file)
 {
 	PHYSFS_sint64 ret = PHYSFS_tell((PHYSFS_File*)file->UserData);
 	if (ret == -1)
-		LOG("File System error while TELL via assimp: %s", PHYSFS_getLastError());
+		atLOG("File System error while TELL via assimp: %s", PHYSFS_getLastError());
 
 	return (size_t)ret;
 }
@@ -309,7 +309,7 @@ size_t AssimpSize(aiFile* file)
 {
 	PHYSFS_sint64 ret = PHYSFS_fileLength((PHYSFS_File*)file->UserData);
 	if (ret == -1)
-		LOG("File System error while SIZE via assimp: %s", PHYSFS_getLastError());
+		atLOG("File System error while SIZE via assimp: %s", PHYSFS_getLastError());
 
 	return (size_t)ret;
 }
@@ -317,7 +317,7 @@ size_t AssimpSize(aiFile* file)
 void AssimpFlush(aiFile* file)
 {
 	if (PHYSFS_flush((PHYSFS_File*)file->UserData) == 0)
-		LOG("File System error while FLUSH via assimp: %s", PHYSFS_getLastError());
+		atLOG("File System error while FLUSH via assimp: %s", PHYSFS_getLastError());
 }
 
 aiReturn AssimpSeek(aiFile* file, size_t pos, aiOrigin from)
@@ -338,7 +338,7 @@ aiReturn AssimpSeek(aiFile* file, size_t pos, aiOrigin from)
 	}
 
 	if (res == 0)
-		LOG("File System error while SEEK via assimp: %s", PHYSFS_getLastError());
+		atLOG("File System error while SEEK via assimp: %s", PHYSFS_getLastError());
 
 	return (res != 0) ? aiReturn_SUCCESS : aiReturn_FAILURE;
 }
@@ -361,7 +361,7 @@ aiFile* AssimpOpen(aiFileIO* io, const char* name, const char* format)
 void AssimpClose(aiFileIO* io, aiFile* file)
 {
 	if (PHYSFS_close((PHYSFS_File*)file->UserData) == 0)
-		LOG("File System error while CLOSE via assimp: %s", PHYSFS_getLastError());
+		atLOG("File System error while CLOSE via assimp: %s", PHYSFS_getLastError());
 }
 
 void ModuleFileSystem::CreateAssimpIO()

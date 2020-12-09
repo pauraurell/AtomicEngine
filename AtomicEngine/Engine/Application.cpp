@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "Time.h"
+#include "AtTime.h"
 
 Application::Application()
 {
@@ -52,7 +52,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("Application Start --------------");
+	atLOG("Application Start --------------");
 	for (int i = 0; i < list_modules.size() && ret == true; i++)
 	{
 		ret = list_modules[i]->Start();
