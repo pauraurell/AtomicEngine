@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "AtTime.h"
 
 Application::Application()
 {
@@ -26,6 +27,8 @@ Application::Application()
 
 	fps = 0;
 	ms_cap = 1000 / 120;
+	inGame = false;
+	frames_since_start = 0;
 }
 
 Application::~Application()
@@ -49,11 +52,13 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOG("Application Start --------------");
+	atLOG("Application Start --------------");
 	for (int i = 0; i < list_modules.size() && ret == true; i++)
 	{
 		ret = list_modules[i]->Start();
 	}
+
+	Time::RealTime.Start();
 
 	return ret;
 }
@@ -64,6 +69,9 @@ void Application::PrepareUpdate()
 	dt = (float)ms_timer.Read() / 1000.0f;
 	ms_timer.Start();
 	fps = 1.0f / dt;
+
+	Time::RealTime.Step();
+	Time::GameTime.Step();
 }
 
 // ---------------------------------------------
@@ -101,7 +109,7 @@ update_status Application::Update()
 		ret = list_modules[i]->PostUpdate();
 	}
 
-	
+	frames_since_start++;
 	FinishUpdate();
 	return ret;
 }
@@ -132,4 +140,19 @@ const char* Application::GetTitleName() const
 const char* Application::GetOrganizationName() const
 {
 	return organization.c_str();
+}
+
+void Application::StartGame()
+{
+	if (inGame == false) 
+	{
+		inGame = true;
+		Time::GameTime.Start();
+	}
+}
+
+void Application::StopGame()
+{
+	inGame = false;
+	Time::GameTime.Stop();
 }

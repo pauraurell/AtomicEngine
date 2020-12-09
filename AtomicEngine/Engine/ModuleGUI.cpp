@@ -5,8 +5,9 @@
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
+#include "ModuleWindow.h"
 #include "Glew/include/glew.h"
-
+#include "AtTime.h"
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -78,6 +79,38 @@ update_status ModuleGUI::PreUpdate()
 
 update_status ModuleGUI::Update()
 {
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration |  ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove;
+
+	bool visible = true;
+	if (ImGui::Begin("Game Time Buttons", &visible, flags))
+	{
+		if (ImGui::Button("Play")) 
+		{ 
+			App->StartGame();
+		}
+
+		ImGui::SameLine();
+
+		if (Time::GameTime.paused == false)
+		{
+			if (ImGui::Button("Pause")) { Time::GameTime.Pause(); }
+		}
+
+		else 
+		{ 
+			if (ImGui::Button("Resume")) { Time::GameTime.Resume(); } 
+		}
+		
+		ImGui::SameLine();
+
+		if (ImGui::Button("Stop")) 
+		{ 
+			App->StopGame(); 
+		}
+
+	}
+	ImGui::End();
+		
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
 	{
 		HierarchyWindowActive = true;
@@ -349,6 +382,11 @@ update_status ModuleGUI::Update()
 			if (ImGui::Checkbox("Show grid", &gridChecker)) {
 				App->scene_intro->grid = gridChecker;
 			}
+
+			if (ImGui::Checkbox("Show Bounding Boxes", &bbChecker)) {
+				bbChecker != bbChecker;
+			}
+
 			ImGui::SliderInt("Grid size", &gridSize, 0, 200);
 			
 			ImGui::Separator();
@@ -356,6 +394,18 @@ update_status ModuleGUI::Update()
 			ImGui::SliderFloat("Red", &r, 0, 1);
 			ImGui::SliderFloat("Green", &g, 0, 1);
 			ImGui::SliderFloat("Blue", &b, 0, 1);
+		}
+
+		if (ImGui::CollapsingHeader("Time"))
+		{
+			ImGui::Columns();
+			ImGui::Text("Frame Count:  %i frames", App->frames_since_start);
+			ImGui::Text("Time since start up:  %.3f seconds", Time::RealTime.GetTimeSinceStartup());
+			ImGui::Text("Real time dt:  %.3f seconds", Time::RealTime.dt);
+			ImGui::Separator();
+			ImGui::Text("Game time: %.3f seconds", Time::GameTime.GetTimeSinceStartup());
+			ImGui::Text("Game time Scale %.1f", Time::GameTime.timeScale);
+			ImGui::Text("Game time dt:  %.3f seconds", Time::GameTime.dt);
 		}
 
 		ImGui::End();
@@ -370,8 +420,6 @@ update_status ModuleGUI::Update()
 		}
 		ImGui::End();
 	}
-
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) { LOG("Press F to pay respects"); }
 
 	if (HierarchyWindowActive)
 	{
@@ -557,7 +605,7 @@ update_status ModuleGUI::Update()
 				{
 					if (ImGui::IsMouseClicked(0)) 
 					{ 
-						LOG("This GameObject already has a Component Material!");
+						atLOG("This GameObject already has a Component Material!");
 						ImGui::CloseCurrentPopup(); 
 					}
 					if (ImGui::MenuItem("Material...", 0, false, false))
@@ -644,8 +692,6 @@ update_status ModuleGUI::Update()
 
 	//Demo Window
 	if (demowindow) { ImGui::ShowDemoWindow(&demowindow); }
-
-	
 
 	return UPDATE_CONTINUE;
 }

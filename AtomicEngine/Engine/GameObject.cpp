@@ -6,12 +6,14 @@
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 #include "ModuleSceneIntro.h"
+#include "MathGeoLib/Geometry/AABB.h"
 
 GameObject::GameObject()
 {
 	active = true;
 	name = "GameObject";
 	is_selected = false;
+	BB = AABB({ 0,0,0 }, { 0,0,0 });
 }
 
 GameObject::GameObject(const char* GOname)
@@ -35,6 +37,7 @@ void GameObject::Update()
 	}
 	if (active == true)
 	{
+		if (App->gui->bbChecker) { RenderBB(BB); }
 		if (GetCMesh() != nullptr && GetCMesh()->m != nullptr && GetCMesh()->active == true)
 		{
 			if (GetCMaterial() != nullptr && GetCMaterial()->tex != nullptr && GetCMaterial()->hasTex == true && GetCMaterial()->active == true)
@@ -67,7 +70,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	newComponent->owner = this;
 	components.push_back(newComponent);
 
-	LOG("New Component Created");
+	atLOG("New Component Created");
 
 	return newComponent;
 }
@@ -129,7 +132,7 @@ void GameObject::DeleteComponent(Component* comp)
 	}
 	delete comp;
 
-	LOG("Component deleted");
+	atLOG("Component deleted");
 }
 
 ComponentMesh* GameObject::GetCMesh()
@@ -182,4 +185,48 @@ ComponentCamera* GameObject::GetCCamera()
 		}
 	}
 	return nullptr;
+}
+
+void GameObject::RenderBB(AABB& BB)
+{
+	BB.SetNegativeInfinity();
+	if (GetCMesh() != nullptr) { BB.Enclose((float3*)GetCMesh()->m->vertex, GetCMesh()->m->num_vertex); }
+
+	glDisable(GL_LIGHTING);
+	glLineWidth(1.0f);
+	glColor3f(0.6, 0.9, 0.7);
+	glBegin(GL_LINES);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glEnd();
+	glEnable(GL_LIGHTING);
 }

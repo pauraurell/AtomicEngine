@@ -10,7 +10,7 @@
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-#include "MathGeoLib\include\MathGeoLib.h"
+#include "MathGeoLib\MathGeoLib.h"
 
 #pragma comment (lib, "glu32.lib")   
 #pragma comment (lib, "opengl32.lib")
@@ -28,33 +28,33 @@ ModuleRenderer3D::~ModuleRenderer3D()
 // Called before render is available
 bool ModuleRenderer3D::Init()
 {
-	LOG("Creating 3D Renderer context");
+	atLOG("Creating 3D Renderer context");
 	bool ret = true;
 
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	if (context == NULL)
 	{
-		LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
+		atLOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 
 	GLenum error = glewInit();
 	if (error != GL_NO_ERROR)
 	{
-		LOG("Error initializing glew library ! %s", SDL_GetError());
+		atLOG("Error initializing glew library ! %s", SDL_GetError());
 		ret = false;
 	}
 	else
 	{
-		LOG("using Glew %s", glewGetString(GLEW_VERSION));
+		atLOG("using Glew %s", glewGetString(GLEW_VERSION));
 	}
 
 	if (ret == true)
 	{
 		//Use Vsync
 		if (VSYNC && SDL_GL_SetSwapInterval(1) < 0)
-			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+			atLOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
@@ -64,7 +64,7 @@ bool ModuleRenderer3D::Init()
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			atLOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 
@@ -76,7 +76,7 @@ bool ModuleRenderer3D::Init()
 		error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			atLOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 
@@ -90,7 +90,7 @@ bool ModuleRenderer3D::Init()
 		error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
+			atLOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
 
@@ -159,7 +159,7 @@ update_status ModuleRenderer3D::PostUpdate()
 // Called before quitting
 bool ModuleRenderer3D::CleanUp()
 {
-	LOG("Destroying 3D Renderer");
+	atLOG("Destroying 3D Renderer");
 
 	SDL_GL_DeleteContext(context);
 
