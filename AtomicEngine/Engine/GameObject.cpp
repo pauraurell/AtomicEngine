@@ -226,3 +226,59 @@ void GameObject::RenderBB(AABB& BB)
 	glEnd();
 	glEnable(GL_LIGHTING);
 }
+
+void GameObject::CreateChild(GameObject* to_delete)
+{
+	if (to_delete != nullptr)
+	{
+		children.push_back(to_delete);
+	}	
+}
+
+bool GameObject::DeleteChild(GameObject* to_delete)
+{
+	bool ret = false;
+	for (size_t i = 0; i < children.size(); i++)
+	{
+		if (children[i] == to_delete)
+		{
+			children.erase(children.begin() + i);
+			ret = true;
+		}
+	}
+	return ret;
+}
+
+void GameObject::Reparent(GameObject* new_parent)
+{
+	if (this->children.size() > 0) 
+	{
+		for (int i = 0; i < children.size(); i++)
+		{
+			if (this->children[i] != new_parent)
+			{
+				parent->DeleteChild(this);
+				parent = new_parent;
+				new_parent->CreateChild(this);
+			}
+		}
+	}
+	else  
+	{
+		parent->DeleteChild(this);
+		parent = new_parent;
+		new_parent->CreateChild(this);
+	}
+}
+
+void GameObject::DeleteChildren()
+{
+	for (size_t i = 0; i < children.size(); i++){ children[i]->DeleteChildren(); children[i] = nullptr;}
+	this->~GameObject();
+}
+
+void GameObject::SetRootChild()
+{
+	this->parent = App->scene_intro->root;
+	App->scene_intro->root->CreateChild(this);
+}

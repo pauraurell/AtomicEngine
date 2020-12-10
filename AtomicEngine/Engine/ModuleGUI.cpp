@@ -65,6 +65,7 @@ bool ModuleGUI::Init()
 	
 	App->window->SetResizable(resizable);
 	App->window->SetBorderless(borderless);
+	ImGuizmo::Enable(false);
 
 	return true;
 }
@@ -74,6 +75,7 @@ update_status ModuleGUI::PreUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 
 	return UPDATE_CONTINUE;
 }
@@ -420,60 +422,12 @@ update_status ModuleGUI::Update()
 
 	if (HierarchyWindowActive)
 	{
-		ImGui::Begin("Hierarchy", &HierarchyWindowActive);
 		
-		if (App->scene_intro->game_objects.size() > 0) 
-		{
-			for (int j = 0; j < App->scene_intro->game_objects.size(); j++) 
-			{
-				const char* name = App->scene_intro->game_objects[j]->name.c_str();
-				
-				if (ImGui::TreeNodeEx(name, App->scene_intro->game_objects[j]->flag))
-				{
-					ImGui::TreePop();
-				} 
-				if (ImGui::IsItemClicked(0))
-				{
-					for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
-					{
-						if (App->scene_intro->game_objects[i] != App->scene_intro->game_objects[j])
-						{
-							App->scene_intro->game_objects[i]->flag = ImGuiTreeNodeFlags_None;
-						}
-					}
+		ImGui::Begin("Hierarchy", &HierarchyWindowActive);
 
-					if (App->scene_intro->game_objects[j] == selectedObj) {
-						selectedObj = nullptr;
-						App->scene_intro->game_objects[j]->flag = ImGuiTreeNodeFlags_None;
-						printInspector = false;
-					}
+		int id = 0;
+		AddGOtoHierarchy(App->scene_intro->root, id);
 
-					else {
-						selectedObj = App->scene_intro->game_objects[j];
-						printInspector = true;
-					}
-
-
-				}		
-
-				if (ImGui::IsItemClicked(1))
-				{
-					ImGui::OpenPopup("DeletePopUp");
-				}
-
-			}
-
-			if (ImGui::BeginPopup("DeletePopUp"))
-			{
-				if (ImGui::MenuItem("Delete"))
-				{
-					App->scene_intro->DeleteGameObject(selectedObj);
-					ImGui::CloseCurrentPopup();
-				}
-
-				ImGui::EndPopup();
-			}
-		}
 		ImGui::End();
 	}
 
@@ -690,6 +644,67 @@ bool ModuleGUI::CleanUp()
 	ms_log.clear();
 	logs.clear();
 	return true;
+}
+
+void ModuleGUI::AddGOtoHierarchy(GameObject* go, int& id)
+{
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+	if (go == App->scene_intro->root) { flags |= ImGuiTreeNodeFlags_DefaultOpen; }
+
+	if (selectedObj == go) { flags |= ImGuiTreeNodeFlags_Selected; }
+
+	if (go->children.size() == 0) { flags |= ImGuiTreeNodeFlags_Leaf; }
+
+
+	if (ImGui::TreeNodeEx(go->name.c_str(), flags))
+	{
+		if (ImGui::IsItemClicked() && go != App->scene_intro->root)
+		{
+			selectedObj = go;
+			printInspector = true;
+		}
+
+		ImGui::PushID(id);
+
+		if (ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("Hierarchy", &id, sizeof(int));
+			ImGui::EndDragDropSource();
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Hierarchy"))
+			{
+				IM_ASSERT(payload->DataSize == sizeof(int));
+				int payload_n = *(const int*)payload->Data;
+				std::vector<GameObject*> gameObjects = App->scene_intro->GetGameObjects();
+				GameObject* target = gameObjects[payload_n];
+				target->Reparent(go);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+		ImGui::PopID();
+		id++;
+
+		if (ImGui::BeginPopupContextItem())
+		{
+			if (ImGui::Button("Delete"))
+			{
+				App->scene_intro->DeleteGameObject(selectedObj);
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		for (size_t i = 0; i < go->children.size(); i++)
+		{
+			AddGOtoHierarchy(go->children[i], id);
+		}
+		ImGui::TreePop();
+	}
 }
 
 const char* ModuleGUI::GetCaps()

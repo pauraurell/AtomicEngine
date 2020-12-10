@@ -7,6 +7,7 @@
 #include <string>
 #include "GameObject.h"
 #include "ImGui/imgui.h"
+#include "ImGuizmo/ImGuizmo.h"
 
 using namespace std;
 
@@ -23,6 +24,7 @@ public:
 	bool CleanUp();
 
 	update_status DockingSpace(bool* open);
+	void AddGOtoHierarchy(GameObject* gameObject, int& id);
 
 	const char* GetCaps();
 	void DrawUi();

@@ -159,6 +159,7 @@ namespace ImGuizmo
    // translation is applied in world space
    enum OPERATION
    {
+      DISABLE,
       TRANSLATE,
       ROTATE,
       SCALE,

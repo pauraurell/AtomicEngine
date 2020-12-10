@@ -25,9 +25,16 @@ public:
 	Component* CreateComponent(ComponentType type);
 	void DeleteComponent(Component* comp);
 	void DeleteComponents();
+
 	ComponentMesh* GetCMesh();
 	ComponentTransform* GetCTransform();
 	ComponentMaterial* GetCMaterial();
+
+	void Reparent(GameObject* new_parent);
+	void CreateChild(GameObject* to_delete);
+	bool DeleteChild(GameObject* to_delete);
+	void DeleteChildren();
+	void SetRootChild();
 
 	string name;
 	bool active;
@@ -37,6 +44,9 @@ public:
 	AABB BB;
 
 	ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
+
+	std::vector<GameObject*> children;
+	GameObject* parent;
 
 private:
 	vector<Component*> components;
