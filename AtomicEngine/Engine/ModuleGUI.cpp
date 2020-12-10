@@ -7,6 +7,8 @@
 #include "ModuleWindow.h"
 #include "Glew/include/glew.h"
 #include "AtTime.h"
+#include "ModuleSceneIntro.h"
+
 
 ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -109,7 +111,8 @@ update_status ModuleGUI::Update()
 
 	}
 	ImGui::End();
-		
+	
+
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
 	{
 		HierarchyWindowActive = true;
@@ -419,7 +422,6 @@ update_status ModuleGUI::Update()
 	{
 		ImGui::Begin("Hierarchy", &HierarchyWindowActive);
 		
-
 		if (App->scene_intro->game_objects.size() > 0) 
 		{
 			for (int j = 0; j < App->scene_intro->game_objects.size(); j++) 
@@ -450,12 +452,15 @@ update_status ModuleGUI::Update()
 						selectedObj = App->scene_intro->game_objects[j];
 						printInspector = true;
 					}
+
+
 				}		
 
 				if (ImGui::IsItemClicked(1))
 				{
 					ImGui::OpenPopup("DeletePopUp");
 				}
+
 			}
 
 			if (ImGui::BeginPopup("DeletePopUp"))
@@ -488,9 +493,12 @@ update_status ModuleGUI::Update()
 			if(ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				ImGui::Checkbox("Freeze", &selectedObj->GetCTransform()->active);
-				ImGui::Text("Position"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->pos.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->pos.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->pos.z);
-				ImGui::Text("Rotation"); ImGui::SameLine(); ImGui::Text("x: %.1f", &selectedObj->GetCTransform()->rot.x); ImGui::SameLine(); ImGui::Text("y: %.1f", &selectedObj->GetCTransform()->rot.y); ImGui::SameLine(); ImGui::Text("z: %.1f", &selectedObj->GetCTransform()->rot.z);
-				ImGui::Text("Scale"); ImGui::SameLine(); ImGui::Text("x: 1.0", &selectedObj->GetCTransform()->scale.x); ImGui::SameLine(); ImGui::Text("y: 1.0", &selectedObj->GetCTransform()->scale.y); ImGui::SameLine(); ImGui::Text("z: 1.0", &selectedObj->GetCTransform()->scale.z);
+				ImGui::Text("Position"); ImGui::SameLine();
+				ImGui::Text("x: %.2f", selectedObj->GetCTransform()->pos.x); ImGui::SameLine(); ImGui::Text("y: %.2f", selectedObj->GetCTransform()->pos.y); ImGui::SameLine(); ImGui::Text("z: %.2f", selectedObj->GetCTransform()->pos.z);
+				ImGui::Text("Rotation"); ImGui::SameLine(); 
+				ImGui::Text("x: %.2f", selectedObj->GetCTransform()->rot.x); ImGui::SameLine(); ImGui::Text("y: %.2f", selectedObj->GetCTransform()->rot.y); ImGui::SameLine(); ImGui::Text("z: %.2f", selectedObj->GetCTransform()->rot.z);
+				ImGui::Text("Scale"); ImGui::SameLine(); 
+				ImGui::Text("x: %.2f", selectedObj->GetCTransform()->scale.x); ImGui::SameLine(); ImGui::Text("y: %.2f", selectedObj->GetCTransform()->scale.y); ImGui::SameLine(); ImGui::Text("z: %.2f", selectedObj->GetCTransform()->scale.z);
 			}
 			if (selectedObj->GetCMesh() != nullptr)
 			{

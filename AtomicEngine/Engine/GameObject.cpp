@@ -13,6 +13,7 @@ GameObject::GameObject()
 	name = "GameObject";
 	is_selected = false;
 	BB = AABB({ 0,0,0 }, { 0,0,0 });
+	CreateComponent(ComponentType::Transform);
 }
 
 GameObject::GameObject(const char* GOname)
@@ -170,11 +171,26 @@ ComponentMaterial* GameObject::GetCMaterial()
 void GameObject::RenderBB(AABB& BB)
 {
 	BB.SetNegativeInfinity();
-	if (GetCMesh() != nullptr) { BB.Enclose((float3*)GetCMesh()->m->vertex, GetCMesh()->m->num_vertex); }
+
+	if (GetCMesh() != nullptr)
+	{
+		BB.Enclose((float3*)GetCMesh()->m->vertex, GetCMesh()->m->num_vertex);
+	}
 
 	glDisable(GL_LIGHTING);
-	glLineWidth(1.0f);
-	glColor3f(0.6, 0.9, 0.7);
+
+	if (this == App->gui->selectedObj)
+	{
+		glColor3f(0.5, 0.9, 0.6);
+		glLineWidth(1.5f);
+	}
+
+	else
+	{
+		glColor3f(0.85, 0.85, 0.85);
+		glLineWidth(1.0f);
+	}
+
 	glBegin(GL_LINES);
 
 	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
