@@ -128,7 +128,7 @@ void ModuleSceneIntro::DeleteGameObject(GameObject* to_delete)
 
 std::vector<GameObject*> ModuleSceneIntro::GetGameObjects()
 {
-	std::vector<GameObject*> temp;
+	vector<GameObject*> temp;
 	PushbackGameObjects(root, temp);
 	return temp;
 }

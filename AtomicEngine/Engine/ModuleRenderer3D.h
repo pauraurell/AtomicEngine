@@ -6,7 +6,12 @@
 #include "ModuleImporter.h"
 #include "ModuleGUI.h"
 #include <array>
-
+#include "ModuleGui.h"
+#include "GameObject.h"
+#include "ComponentMaterial.h"
+#include "ComponentMesh.h"
+#include "Component.h"
+#include "ComponentTransform.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 #include "ImGui/imgui_impl_sdl.h"
@@ -33,7 +38,7 @@ public:
 
 	void OnResize(int width, int height);
 
-	void RenderGameObject(Mesh* m, At_Tex* tex = NULL);
+	void RenderGameObject(GameObject* game_object);
 
 	void CheckWireframeMode();
 

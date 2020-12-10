@@ -1,37 +1,42 @@
-#pragma once
-#ifndef __COMPONENTTRANSFORM_H__
-#define __COMPONENTTRANSFORM_H__
+#ifndef __TRANSFORM_H__
+#define __TRANSFORM_H__
 
 #include "Component.h"
+#include "MathGeoLib/MathGeoLib.h"
 
-class ComponentTransform : public Component
-{
+class ComponentTransform : public Component {
 public:
 	ComponentTransform();
 	~ComponentTransform();
 
-	void Enable();
-	void Update();
-	void Disable();
+	void Set(float4x4 transform);
 
-	float3 GetPosition();
-	float3 GetScale();
-	float3 GetEulerRotation();
+	float4x4 GetLocalTransform();
+	float4x4 GetGlobalTransform();
+	void SetGlobalTransform(float4x4 newTransform);
+
+	void UpdateLocalTransform();
+	void UpdateTRS();
+	void UpdateGlobalTransform();
+	void UpdateGlobalTransform(float4x4 parentGlobalTransform);
+	void ChangeParentTransform(float4x4 newParentGlobalTransform);
+
 	void SetPosition(float x, float y, float z);
-	void SetScale(float x, float y, float z);
 	void SetRotation(float x, float y, float z);
-	void SetQuaternionRotation(Quat quadRot);
-	Quat GetQuaternionRotation();
-	void RecalculateMatrix();
+	void SetRotation(Quat new_rotation);
+	void SetScale(float x, float y, float z);
 
-public:
-	float3 pos = { 23,0,0 };
-	float3 rot = { 0.0f,0.0f,0.0f };
-	float3 scale = { 1.0f,1.0f,1.0f };
-	Quat rotationQuat = { 0.0f,0.0f,0.0f,1.0f };
+	Quat GetRotation();
+	void UpdateEulerRotation();
 
-	float4x4 localMatrix = float4x4::identity;
-	float4x4 globalMatrix = float4x4::identity;
+	float4x4 localMat = float4x4::identity;
+	float4x4 globalMat = float4x4::identity;
+	float4x4 parentGlobalMat = float4x4::identity;
+
+	float3 pos;
+	Quat rot;
+	float3 scale;
+	float3 eulerRotation;
 };
 
-#endif //__COMPONENTTRANSFORM_H__
+#endif //__TRANSFORM_H__

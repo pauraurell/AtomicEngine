@@ -4,8 +4,7 @@
 #include "Primitive.h"
 #include "Mesh.h"
 #include "Texture.h"
-#include "ComponentMaterial.h"
-
+#include "ModuleSceneIntro.h"
 #include "Glew\include\glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
@@ -180,28 +179,28 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::RenderGameObject(Mesh *m, At_Tex* tex) {
+void ModuleRenderer3D::RenderGameObject(GameObject* go) {
 
 	CheckWireframeMode();
 
-	if (tex != NULL && tex->visible)
+	if (go->GetCMaterial()->tex != NULL && go->GetCMaterial()->tex->visible)
 	{
 		glEnable(GL_TEXTURE_2D);
-		if (tex->checkers == false)
+		if (go->GetCMaterial()->tex->checkers == false)
 		{
-			if (tex->loaded == false)
+			if (go->GetCMaterial()->tex->loaded == false)
 			{
-				App->importer->LoadTexture(tex->texName);
+				App->importer->LoadTexture(go->GetCMaterial()->tex->texName);
 				for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
 				{
-					if (App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == tex->texName)
+					if (App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == go->GetCMaterial()->tex->texName)
 					{
 						App->scene_intro->game_objects[i]->GetCMaterial()->tex->loaded = true;
 					}
 				}
 			}
 
-			glBindTexture(GL_TEXTURE_2D, tex->Gl_Tex);
+			glBindTexture(GL_TEXTURE_2D, go->GetCMaterial()->tex->Gl_Tex);
 		}
 		
 		else 
@@ -214,19 +213,24 @@ void ModuleRenderer3D::RenderGameObject(Mesh *m, At_Tex* tex) {
 	glEnableClientState(GL_NORMAL_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m->id_vertex);
+	glBindBuffer(GL_ARRAY_BUFFER, go->GetCMesh()->m->id_vertex);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ARRAY_BUFFER, m->id_normals);
+	glBindBuffer(GL_ARRAY_BUFFER, go->GetCMesh()->m->id_normals);
 	glNormalPointer(GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->id_index);
-	glBindBuffer(GL_ARRAY_BUFFER, m->id_texcoords);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, go->GetCMesh()->m->id_index);
+	glBindBuffer(GL_ARRAY_BUFFER, go->GetCMesh()->m->id_texcoords);
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	glColor3f(m->r, m->g, m->b);
-	if (m->color == false) { glColor3f(1, 1, 1); }
-	if(tex != nullptr ) {	if (tex->checkers) { glColor3f(1, 1, 1); }}
+	glPushMatrix();
+	glMultMatrixf((float*)&go->GetCTransform()->GetGlobalTransform().Transposed());
+
+	glColor3f(go->GetCMesh()->m->r, go->GetCMesh()->m->g, go->GetCMesh()->m->b);
+	if (go->GetCMesh()->m->color == false) { glColor3f(1, 1, 1); }
+	if(go->GetCMaterial()->tex != nullptr ) {	if (go->GetCMaterial()->tex->checkers) { glColor3f(1, 1, 1); }}
 	 
-	glDrawElements(GL_TRIANGLES, m->num_index, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, go->GetCMesh()->m->num_index, GL_UNSIGNED_INT, NULL);
+
+	glPopMatrix();
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -237,19 +241,21 @@ void ModuleRenderer3D::RenderGameObject(Mesh *m, At_Tex* tex) {
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);
 
-	if (m->vNormals) {
+
+	if (go->GetCMesh()->m->vNormals) {
 		glBegin(GL_LINES);
 		glColor3f(0.3f, 0.1f, 0.7f);
-		RenderVertexNormals(m);
+		RenderVertexNormals(go->GetCMesh()->m);
 		glEnd();
 	}
 	
-	if (m->fNormals) {
+	if (go->GetCMesh()->m->fNormals) {
 		glBegin(GL_LINES);
 		glColor3f(0.6f, 0.4f, 0.1f);
-		RenderFaceNormals(m);
+		RenderFaceNormals(go->GetCMesh()->m);
 		glEnd();
 	}
+
 }
 
 void ModuleRenderer3D::DrawCube() {

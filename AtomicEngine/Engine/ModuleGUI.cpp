@@ -454,6 +454,7 @@ update_status ModuleGUI::Update()
 				ImGui::Text("Scale"); ImGui::SameLine(); 
 				ImGui::Text("x: %.2f", selectedObj->GetCTransform()->scale.x); ImGui::SameLine(); ImGui::Text("y: %.2f", selectedObj->GetCTransform()->scale.y); ImGui::SameLine(); ImGui::Text("z: %.2f", selectedObj->GetCTransform()->scale.z);
 			}
+
 			if (selectedObj->GetCMesh() != nullptr)
 			{
 				ImGui::Separator();

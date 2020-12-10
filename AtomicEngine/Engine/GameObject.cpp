@@ -37,14 +37,17 @@ void GameObject::Update()
 	}
 	if (active == true)
 	{
-		if (App->gui->bbChecker) { RenderBB(BB); }
+		if (App->gui->bbChecker) 
+		{ 
+			RenderBB(BB);
+		}
 		if (GetCMesh() != nullptr && GetCMesh()->m != nullptr && GetCMesh()->active == true)
 		{
 			if (GetCMaterial() != nullptr && GetCMaterial()->tex != nullptr && GetCMaterial()->hasTex == true && GetCMaterial()->active == true)
 			{
-				App->renderer3D->RenderGameObject(GetCMesh()->m, GetCMaterial()->tex);
+				App->renderer3D->RenderGameObject(this);
 			}
-			else { App->renderer3D->RenderGameObject(GetCMesh()->m); }
+			else { App->renderer3D->RenderGameObject(this); }
 		}
 	}
 }
@@ -168,65 +171,6 @@ ComponentMaterial* GameObject::GetCMaterial()
 	return nullptr;
 }
 
-void GameObject::RenderBB(AABB& BB)
-{
-	BB.SetNegativeInfinity();
-
-	if (GetCMesh() != nullptr)
-	{
-		BB.Enclose((float3*)GetCMesh()->m->vertex, GetCMesh()->m->num_vertex);
-	}
-
-	glDisable(GL_LIGHTING);
-
-	if (this == App->gui->selectedObj)
-	{
-		glColor3f(0.5, 0.9, 0.6);
-		glLineWidth(1.5f);
-	}
-
-	else
-	{
-		glColor3f(0.85, 0.85, 0.85);
-		glLineWidth(1.0f);
-	}
-
-	glBegin(GL_LINES);
-
-	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
-	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
-	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
-	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
-
-	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
-	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
-	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
-	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
-
-	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
-	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
-	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
-	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
-
-	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
-	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
-	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
-	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
-
-	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
-	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
-	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
-	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
-
-	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
-	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
-	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
-	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
-
-	glEnd();
-	glEnable(GL_LIGHTING);
-}
-
 void GameObject::CreateChild(GameObject* to_delete)
 {
 	if (to_delete != nullptr)
@@ -281,4 +225,84 @@ void GameObject::SetRootChild()
 {
 	this->parent = App->scene_intro->root;
 	App->scene_intro->root->CreateChild(this);
+}
+
+void GameObject::UpdateChildrenTransforms()
+{
+	for (size_t i = 0; i < children.size(); i++)
+	{
+		children[i]->GetCTransform()->UpdateGlobalTransform(GetCTransform()->GetGlobalTransform());
+	}
+}
+
+void GameObject::CalculateBB()
+{
+	BB.SetNegativeInfinity();
+
+	if (children.empty() == false)
+	{
+		for (std::vector<GameObject*>::iterator it_c = children.begin(); it_c != children.end(); it_c++)
+		{
+			(*it_c)->CalculateBB();
+			if ((*it_c)->BB.IsFinite()) { BB.Enclose((*it_c)->BB); }
+		}
+	}
+
+	if (GetCMesh() != nullptr) { BB.Enclose((float3*)GetCMesh()->m->vertex, GetCMesh()->m->num_vertex); }
+
+	if (children.size() <= 0) { BB.TransformAsAABB(GetCTransform()->globalMat); }
+}
+
+void GameObject::RenderBB(AABB& BB) 
+{
+	CalculateBB();
+
+	glDisable(GL_LIGHTING);
+
+	if (this == App->gui->selectedObj)
+	{
+		glColor3f(0.5, 0.9, 0.6);
+		glLineWidth(1.5f);
+	}
+
+	else
+	{
+		glColor3f(0.85, 0.85, 0.85);
+		glLineWidth(1.0f);
+	}
+
+	glBegin(GL_LINES);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+
+	glVertex3f(BB.CornerPoint(0).x, BB.CornerPoint(0).y, BB.CornerPoint(0).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+	glVertex3f(BB.CornerPoint(3).x, BB.CornerPoint(3).y, BB.CornerPoint(3).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(2).x, BB.CornerPoint(2).y, BB.CornerPoint(2).z);
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+
+	glVertex3f(BB.CornerPoint(6).x, BB.CornerPoint(6).y, BB.CornerPoint(6).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(1).x, BB.CornerPoint(1).y, BB.CornerPoint(1).z);
+
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(4).x, BB.CornerPoint(4).y, BB.CornerPoint(4).z);
+	glVertex3f(BB.CornerPoint(5).x, BB.CornerPoint(5).y, BB.CornerPoint(5).z);
+	glVertex3f(BB.CornerPoint(7).x, BB.CornerPoint(7).y, BB.CornerPoint(7).z);
+
+	glEnd();
+	glEnable(GL_LIGHTING);
 }

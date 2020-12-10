@@ -1,58 +1,82 @@
 #include "ComponentTransform.h"
+#include "ImGui/imgui.h"
+#include "Globals.h"
+#include "GameObject.h"
 
 ComponentTransform::ComponentTransform() : Component()
 {
 	type = ComponentType::Transform;
 
-	this->owner = owner;
+	pos = float3::zero;
+	rot = Quat::identity;
+	eulerRotation = float3::zero;
+	scale = float3::one;
 
-	pos = float3{ 0,0,0 };
-	scale = float3{ 1,1,1 };
-	rot = float3{ 0,0,0 };
-	rotationQuat = Quat{ 0.0f, 0.0f, 0.0f, 1.0f };
-
-	localMatrix = float4x4::identity;
-	globalMatrix = float4x4::identity;
+	localMat = float4x4::FromTRS(pos, rot, scale);
+	globalMat = localMat;
+	parentGlobalMat = float4x4::identity;
 }
 
-ComponentTransform::~ComponentTransform()
+ComponentTransform::~ComponentTransform() {}
+
+
+void ComponentTransform::Set(float4x4 g_transform)
 {
+	localMat = g_transform;
 }
 
-void ComponentTransform::Enable()
+float4x4 ComponentTransform::GetLocalTransform()
 {
-	active = true;
+	return localMat;
 }
 
-void ComponentTransform::Update()
+float4x4 ComponentTransform::GetGlobalTransform()
 {
+	return globalMat;
 }
 
-void ComponentTransform::Disable()
+void ComponentTransform::SetGlobalTransform(float4x4 newTransform)
 {
-	active = false;
+	globalMat = newTransform;
+	float4x4 inverseParentGlobal = parentGlobalMat;
+	inverseParentGlobal.Inverse();
+	localMat = inverseParentGlobal * globalMat;
+	UpdateTRS();
+	owner->UpdateChildrenTransforms();
 }
 
-float3 ComponentTransform::GetPosition()
+void ComponentTransform::UpdateLocalTransform()
 {
-	return pos;
+	localMat = float4x4::FromTRS(pos, rot, scale);
+	UpdateEulerRotation();
 }
 
-float3 ComponentTransform::GetScale()
+void ComponentTransform::UpdateTRS()
 {
-	return scale;
+	localMat.Decompose(pos, rot, scale);
+	UpdateEulerRotation();
 }
 
-void ComponentTransform::SetRotation(float x, float y, float z)
+void ComponentTransform::UpdateGlobalTransform()
 {
-	rot.x = x;
-	rot.y = y;
-	rot.z = z;
+	UpdateLocalTransform();
+	globalMat = parentGlobalMat * localMat;
 }
 
-void ComponentTransform::SetQuaternionRotation(Quat quatRot)
+void ComponentTransform::UpdateGlobalTransform(float4x4 parentGlobalTransform)
 {
-	rotationQuat = quatRot;
+	UpdateLocalTransform();
+	parentGlobalMat = parentGlobalTransform;
+	globalMat = parentGlobalMat * localMat;
+}
+
+void ComponentTransform::ChangeParentTransform(float4x4 newParentGlobalTransform)
+{
+	parentGlobalMat = newParentGlobalTransform;
+	newParentGlobalTransform.Inverse();
+	localMat = newParentGlobalTransform * globalMat;
+	UpdateTRS();
+	globalMat = parentGlobalMat * localMat;
 }
 
 void ComponentTransform::SetPosition(float x, float y, float z)
@@ -60,6 +84,34 @@ void ComponentTransform::SetPosition(float x, float y, float z)
 	pos.x = x;
 	pos.y = y;
 	pos.z = z;
+
+	UpdateLocalTransform();
+}
+
+void ComponentTransform::SetRotation(float x, float y, float z)
+{
+	eulerRotation = float3(x, y, z);
+	rot = Quat::FromEulerXYZ(x * DEGTORAD, y * DEGTORAD, z * DEGTORAD);
+	UpdateGlobalTransform();
+}
+
+void ComponentTransform::SetRotation(Quat newrot)
+{
+	rot = newrot;
+	eulerRotation = rot.ToEulerXYZ() * RADTODEG;
+
+	UpdateGlobalTransform();
+}
+
+Quat ComponentTransform::GetRotation()
+{
+	return rot;
+}
+
+void ComponentTransform::UpdateEulerRotation()
+{
+	eulerRotation = rot.ToEulerXYZ();
+	eulerRotation *= RADTODEG;
 }
 
 void ComponentTransform::SetScale(float x, float y, float z)
@@ -67,20 +119,5 @@ void ComponentTransform::SetScale(float x, float y, float z)
 	scale.x = x;
 	scale.y = y;
 	scale.z = z;
+	UpdateGlobalTransform();
 }
-
-float3 ComponentTransform::GetEulerRotation()
-{
-	return rot;
-}
-
-Quat ComponentTransform::GetQuaternionRotation()
-{
-	return rotationQuat;
-}
-
-void ComponentTransform::RecalculateMatrix()
-{
-	localMatrix.Set(float4x4::FromTRS(pos, rotationQuat, scale));
-}
-

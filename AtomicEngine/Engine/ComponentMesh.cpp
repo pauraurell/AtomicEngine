@@ -20,10 +20,7 @@ void ComponentMesh::Enable()
 
 void ComponentMesh::Update()
 {
-	/*if (m != nullptr)
-	{
-		App->renderer3D->RenderGameObject(m);
-	}*/
+
 }
 
 void ComponentMesh::Disable()

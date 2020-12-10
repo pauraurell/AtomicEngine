@@ -35,13 +35,15 @@ public:
 	bool DeleteChild(GameObject* to_delete);
 	void DeleteChildren();
 	void SetRootChild();
+	void UpdateChildrenTransforms();
 
 	string name;
 	bool active;
 	bool is_selected;
 
-	void RenderBB(AABB& BB);
 	AABB BB;
+	void RenderBB(AABB& BB);
+	void CalculateBB();
 
 	ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
 
