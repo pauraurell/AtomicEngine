@@ -56,16 +56,16 @@ Component* GameObject::CreateComponent(ComponentType type)
 	switch (type)
 	{
 	case ComponentType::Transform:
-		newComponent = new ComponentTransform();
+		newComponent = new ComponentTransform(this);
 		break;
 	case ComponentType::Mesh:
-		newComponent = new ComponentMesh();
+		newComponent = new ComponentMesh(this);
 		break;
 	case ComponentType::Material:
-		newComponent = new ComponentMaterial();
+		newComponent = new ComponentMaterial(this);
 		break;
 	case ComponentType::Camera:
-		newComponent = new ComponentCamera();
+		newComponent = new ComponentCamera(this);
 		break;
 	}
 	newComponent->owner = this;

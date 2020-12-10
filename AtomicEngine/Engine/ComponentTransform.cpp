@@ -1,8 +1,9 @@
 #include "ComponentTransform.h"
 
-ComponentTransform::ComponentTransform() : Component()
+ComponentTransform::ComponentTransform(GameObject* go) : Component()
 {
 	type = ComponentType::Transform;
+	owner = go;
 
 	this->owner = owner;
 
