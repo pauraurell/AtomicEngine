@@ -65,7 +65,7 @@ update_status ModuleSceneIntro::Update()
 	return UPDATE_CONTINUE;
 }
 
-GameObject* ModuleSceneIntro::CreateGameObject()
+GameObject* ModuleSceneIntro::CreateGameObject(bool camera)
 {
 	GameObject* newGameObject = new GameObject();
 
@@ -73,6 +73,12 @@ GameObject* ModuleSceneIntro::CreateGameObject()
 
 	newGameObject->CreateComponent(ComponentType::Transform);
 	game_objects.push_back(newGameObject);
+
+	if (camera == true)
+	{
+		newGameObject->CreateComponent(ComponentType::Camera);
+		newGameObject->name = "Camera";
+	}
 
 	return newGameObject;
 }

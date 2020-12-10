@@ -4,6 +4,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ComponentCamera.h"
 #include "ModuleWindow.h"
 #include "Glew/include/glew.h"
 #include "AtTime.h"
@@ -192,6 +193,11 @@ update_status ModuleGUI::Update()
 				}
 
 				ImGui::EndMenu();
+			}
+
+			if (ImGui::MenuItem("Camera"))
+			{
+				App->scene_intro->CreateGameObject(true);
 			}
 
 			if (ImGui::MenuItem("Empty Game Object"))
@@ -522,6 +528,15 @@ update_status ModuleGUI::Update()
 					}
 				}
 			}
+			if (selectedObj->GetCCamera() != nullptr)
+			{
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Checkbox("Disable", &selectedObj->GetCCamera()->active); ImGui::SameLine();
+					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
+				}
+			}
 			ImGui::Separator();
 			if (ImGui::Button("Add Component..."))
 			{
@@ -529,13 +544,21 @@ update_status ModuleGUI::Update()
 			}
 			if (ImGui::BeginPopup("AddPopUp"))
 			{
-				if (selectedObj->GetCMaterial() == nullptr)
+				if (ImGui::MenuItem("Material..."))
 				{
-					if (ImGui::MenuItem("Material..."))
+					if (selectedObj->GetCMaterial() == nullptr)
 					{
 						selectedObj->CreateComponent(ComponentType::Material);
-						ImGui::CloseCurrentPopup();
 					}
+					ImGui::CloseCurrentPopup();
+				}
+				if (ImGui::MenuItem("Camera..."))
+				{
+					if (selectedObj->GetCCamera() == nullptr)
+					{
+						selectedObj->CreateComponent(ComponentType::Camera);
+					}
+					ImGui::CloseCurrentPopup();
 				}
 				else 
 				{
