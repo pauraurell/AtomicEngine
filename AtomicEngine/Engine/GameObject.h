@@ -35,7 +35,7 @@ public:
 	bool DeleteChild(GameObject* to_delete);
 	void DeleteChildren();
 	void SetRootChild();
-	void UpdateChildrenTransforms();
+	void UpdateChildren();
 
 	string name;
 	bool active;

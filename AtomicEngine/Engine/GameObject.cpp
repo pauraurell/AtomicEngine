@@ -227,7 +227,7 @@ void GameObject::SetRootChild()
 	App->scene_intro->root->CreateChild(this);
 }
 
-void GameObject::UpdateChildrenTransforms()
+void GameObject::UpdateChildren()
 {
 	for (size_t i = 0; i < children.size(); i++)
 	{

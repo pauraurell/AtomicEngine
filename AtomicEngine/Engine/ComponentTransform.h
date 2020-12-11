@@ -13,21 +13,17 @@ public:
 
 	float4x4 GetLocalTransform();
 	float4x4 GetGlobalTransform();
-	void SetGlobalTransform(float4x4 newTransform);
+	void SetGlobalTransform(float4x4 trans);
 
 	void UpdateLocalTransform();
-	void UpdateTRS();
 	void UpdateGlobalTransform();
-	void UpdateGlobalTransform(float4x4 parentGlobalTransform);
-	void ChangeParentTransform(float4x4 newParentGlobalTransform);
+	void UpdateGlobalTransform(float4x4 trans);
+	void ChangeParentTransform(float4x4 trans);
 
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float x, float y, float z);
-	void SetRotation(Quat new_rotation);
+	void SetRotation(Quat rot);
 	void SetScale(float x, float y, float z);
-
-	Quat GetRotation();
-	void UpdateEulerRotation();
 
 	float4x4 localMat = float4x4::identity;
 	float4x4 globalMat = float4x4::identity;

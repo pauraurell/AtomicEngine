@@ -444,15 +444,65 @@ update_status ModuleGUI::Update()
 			printInspector = true;
 			
 			ImGui::Separator();
-			if(ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+			if (selectedObj->GetCMaterial() != nullptr) 
 			{
-				ImGui::Checkbox("Freeze", &selectedObj->GetCTransform()->active);
-				ImGui::Text("Position"); ImGui::SameLine();
-				ImGui::Text("x: %.2f", selectedObj->GetCTransform()->pos.x); ImGui::SameLine(); ImGui::Text("y: %.2f", selectedObj->GetCTransform()->pos.y); ImGui::SameLine(); ImGui::Text("z: %.2f", selectedObj->GetCTransform()->pos.z);
-				ImGui::Text("Rotation"); ImGui::SameLine(); 
-				ImGui::Text("x: %.2f", selectedObj->GetCTransform()->rot.x); ImGui::SameLine(); ImGui::Text("y: %.2f", selectedObj->GetCTransform()->rot.y); ImGui::SameLine(); ImGui::Text("z: %.2f", selectedObj->GetCTransform()->rot.z);
-				ImGui::Text("Scale"); ImGui::SameLine(); 
-				ImGui::Text("x: %.2f", selectedObj->GetCTransform()->scale.x); ImGui::SameLine(); ImGui::Text("y: %.2f", selectedObj->GetCTransform()->scale.y); ImGui::SameLine(); ImGui::Text("z: %.2f", selectedObj->GetCTransform()->scale.z);
+				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Text("             X"); ImGui::SameLine(); 
+					ImGui::Text("        Y"); ImGui::SameLine();
+					ImGui::Text("       Z"); 
+
+					ImGui::Text("Position "); ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
+					
+					if (ImGui::DragFloat("##posx", &selectedObj->GetCTransform()->pos.x, 0.05f, 0.f, 0.f, "%.2f")) {
+						selectedObj->GetCTransform()->SetPosition(selectedObj->GetCTransform()->pos.x, selectedObj->GetCTransform()->pos.y, selectedObj->GetCTransform()->pos.z);
+						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
+
+					if (ImGui::DragFloat("##posy", &selectedObj->GetCTransform()->pos.y, 0.05f, 0.f, 0.f, "%.2f")) {
+						selectedObj->GetCTransform()->SetPosition(selectedObj->GetCTransform()->pos.x, selectedObj->GetCTransform()->pos.y, selectedObj->GetCTransform()->pos.z);
+						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
+					
+					if (ImGui::DragFloat("##posz", &selectedObj->GetCTransform()->pos.z, 0.05f, 0.f, 0.f, "%.2f")) {
+						selectedObj->GetCTransform()->SetPosition(selectedObj->GetCTransform()->pos.x, selectedObj->GetCTransform()->pos.y, selectedObj->GetCTransform()->pos.z);
+						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					}
+
+					ImGui::Text("Rotation "); ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
+
+					if (ImGui::DragFloat("##rotx", &selectedObj->GetCTransform()->eulerRotation.x, 0.05f, 0.f, 0.f, "%.2f")) {
+						selectedObj->GetCTransform()->SetRotation(selectedObj->GetCTransform()->eulerRotation.x, selectedObj->GetCTransform()->eulerRotation.y, selectedObj->GetCTransform()->eulerRotation.z);
+						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
+
+					if (ImGui::DragFloat("##roty", &selectedObj->GetCTransform()->eulerRotation.y, 0.05f, 0.f, 0.f, "%.2f")) {
+						selectedObj->GetCTransform()->SetRotation(selectedObj->GetCTransform()->eulerRotation.x, selectedObj->GetCTransform()->eulerRotation.y, selectedObj->GetCTransform()->eulerRotation.z);
+						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
+	
+					if (ImGui::DragFloat("##rotz", &selectedObj->GetCTransform()->eulerRotation.z, 0.05f, 0.f, 0.f, "%.2f")) {
+						selectedObj->GetCTransform()->SetRotation(selectedObj->GetCTransform()->eulerRotation.x, selectedObj->GetCTransform()->eulerRotation.y, selectedObj->GetCTransform()->eulerRotation.z);
+						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					}
+
+					ImGui::Text("Scale    "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+					
+					if (ImGui::DragFloat("##scalex", &selectedObj->GetCTransform()->scale.x, 0.05f, 0.f, 0.f, "%.2f")) {
+						selectedObj->GetCTransform()->SetScale(selectedObj->GetCTransform()->scale.x, selectedObj->GetCTransform()->scale.y, selectedObj->GetCTransform()->scale.z);
+						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
+
+					if (ImGui::DragFloat("##scaley", &selectedObj->GetCTransform()->scale.y, 0.05f, 0.f, 0.f, "%.2f")) {
+						selectedObj->GetCTransform()->SetScale(selectedObj->GetCTransform()->scale.x, selectedObj->GetCTransform()->scale.y, selectedObj->GetCTransform()->scale.z);
+						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
+
+					if (ImGui::DragFloat("##scalez", &selectedObj->GetCTransform()->scale.z, 0.05f, 0.f, 0.f, "%.2f")) {
+						selectedObj->GetCTransform()->SetScale(selectedObj->GetCTransform()->scale.x, selectedObj->GetCTransform()->scale.y, selectedObj->GetCTransform()->scale.z);
+						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					}
+				}
 			}
 
 			if (selectedObj->GetCMesh() != nullptr)

@@ -183,7 +183,7 @@ void ModuleRenderer3D::RenderGameObject(GameObject* go) {
 
 	CheckWireframeMode();
 
-	if (go->GetCMaterial()->tex != NULL && go->GetCMaterial()->tex->visible)
+	if (go->GetCMaterial() != nullptr && go->GetCMaterial()->tex != NULL && go->GetCMaterial()->tex->visible)
 	{
 		glEnable(GL_TEXTURE_2D);
 		if (go->GetCMaterial()->tex->checkers == false)
@@ -226,7 +226,7 @@ void ModuleRenderer3D::RenderGameObject(GameObject* go) {
 
 	glColor3f(go->GetCMesh()->m->r, go->GetCMesh()->m->g, go->GetCMesh()->m->b);
 	if (go->GetCMesh()->m->color == false) { glColor3f(1, 1, 1); }
-	if(go->GetCMaterial()->tex != nullptr ) {	if (go->GetCMaterial()->tex->checkers) { glColor3f(1, 1, 1); }}
+	if(go->GetCMaterial() != nullptr && go->GetCMaterial()->tex != nullptr) {	if (go->GetCMaterial()->tex->checkers) { glColor3f(1, 1, 1); }}
 	 
 	glDrawElements(GL_TRIANGLES, go->GetCMesh()->m->num_index, GL_UNSIGNED_INT, NULL);
 
