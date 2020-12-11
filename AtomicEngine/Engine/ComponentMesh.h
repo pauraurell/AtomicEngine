@@ -8,7 +8,7 @@
 class ComponentMesh : public Component
 {
 public:
-	ComponentMesh();
+	ComponentMesh(GameObject* go);
 	~ComponentMesh();
 
 	void Enable();

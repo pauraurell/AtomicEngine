@@ -1,14 +1,16 @@
 #include "ComponentMaterial.h"
 
-ComponentMaterial::ComponentMaterial() : Component()
+ComponentMaterial::ComponentMaterial(GameObject* go) : Component()
 {
 	type = ComponentType::Material;
+	owner = go;
 	hasTex = false;
 }
 
-ComponentMaterial::ComponentMaterial(At_Tex* text) : Component()
+ComponentMaterial::ComponentMaterial(GameObject* go, At_Tex* text) : Component()
 {
 	type = ComponentType::Material;
+	owner = go;
 	tex = text;
 	hasTex = true;
 }

@@ -3,9 +3,10 @@
 #include "ModuleRenderer3D.h"
 #include "ComponentMaterial.h"
 
-ComponentMesh::ComponentMesh() : Component()
+ComponentMesh::ComponentMesh(GameObject* go) : Component()
 {
 	type = ComponentType::Mesh;
+	owner = go;
 }
 
 ComponentMesh::~ComponentMesh()

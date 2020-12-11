@@ -4,6 +4,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ComponentCamera.h"
 #include "ModuleSceneIntro.h"
 
 GameObject::GameObject()
@@ -57,13 +58,16 @@ Component* GameObject::CreateComponent(ComponentType type)
 	switch (type)
 	{
 	case ComponentType::Transform:
-		newComponent = new ComponentTransform();
+		newComponent = new ComponentTransform(this);
 		break;
 	case ComponentType::Mesh:
-		newComponent = new ComponentMesh();
+		newComponent = new ComponentMesh(this);
 		break;
 	case ComponentType::Material:
-		newComponent = new ComponentMaterial();
+		newComponent = new ComponentMaterial(this);
+		break;
+	case ComponentType::Camera:
+		newComponent = new ComponentCamera(this);
 		break;
 	}
 	newComponent->owner = this;
@@ -87,6 +91,9 @@ void GameObject::DeleteComponents()
 			DeleteComponent(components[i]);
 			break;
 		case ComponentType::Material:
+			DeleteComponent(components[i]);
+			break;
+		case ComponentType::Camera:
 			DeleteComponent(components[i]);
 			break;
 		}
@@ -175,6 +182,19 @@ ComponentMaterial* GameObject::GetCMaterial()
 		if (components[i]->type == ComponentType::Material) {
 			cMaterial = (ComponentMaterial*)components[i];
 			return cMaterial;
+		}
+	}
+	return nullptr;
+}
+
+ComponentCamera* GameObject::GetCCamera()
+{
+	ComponentCamera* cCamera;
+
+	for (int i = 0; i < components.size(); i++) {
+		if (components[i]->type == ComponentType::Camera) {
+			cCamera = (ComponentCamera*)components[i];
+			return cCamera;
 		}
 	}
 	return nullptr;

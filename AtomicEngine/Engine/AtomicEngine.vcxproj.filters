@@ -181,6 +181,9 @@
     <ClCompile Include="MathGeoLib\Time\Clock.cpp">
       <Filter>Sources\Containers\MathGeoLib\Time</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -461,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="MathGeoLib\Time\Clock.h">
       <Filter>Sources\Containers\MathGeoLib\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
