@@ -42,6 +42,7 @@ public:
 
 	string name;
 	bool active;
+	uint UUID = 0;
 
 	AABB BB;
 	void RenderBB(AABB& BB);
@@ -50,8 +51,7 @@ public:
 	ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
 
 	std::vector<GameObject*> children;
-	GameObject* parent;
-
+	GameObject* parent = nullptr;
 
 private:
 	vector<Component*> components;

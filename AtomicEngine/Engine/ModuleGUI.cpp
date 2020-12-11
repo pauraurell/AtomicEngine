@@ -88,30 +88,33 @@ update_status ModuleGUI::Update()
 	bool visible = true;
 	if (ImGui::Begin("Game Time Buttons", &visible, flags))
 	{
-		if (ImGui::Button("Play")) 
-		{ 
-			App->StartGame();
-		}
-
-		ImGui::SameLine();
-
-		if (Time::GameTime.paused == false)
+		if (Time::GameTime.GetTimeSinceStartup() > 0) 
 		{
-			if (ImGui::Button("Pause")) { Time::GameTime.Pause(); }
-		}
+			if (Time::GameTime.paused == false)
+			{
+				if (ImGui::Button("Pause")) { Time::GameTime.Pause(); }
+			}
 
+			else
+			{
+				if (ImGui::Button("Resume")) { Time::GameTime.Resume(); }
+			}
+			ImGui::SameLine();
+
+			if (ImGui::Button("Stop"))
+			{
+				App->StopGame();
+			}
+		}
 		else 
-		{ 
-			if (ImGui::Button("Resume")) { Time::GameTime.Resume(); } 
-		}
-		
-		ImGui::SameLine();
+		{
+			if (ImGui::Button("Play"))
+			{
+				App->StartGame();
+			}
 
-		if (ImGui::Button("Stop")) 
-		{ 
-			App->StopGame(); 
+			ImGui::SameLine();
 		}
-
 	}
 	ImGui::End();
 	
@@ -447,6 +450,7 @@ update_status ModuleGUI::Update()
 			if (ImGui::InputText(" ", buff, IM_ARRAYSIZE(buff), ImGuiInputTextFlags_EnterReturnsTrue)) {
 				selectedObj->name.assign(buff);
 			}
+			ImGui::Text("UUID: %i", selectedObj->UUID);
 			printInspector = true;
 			
 			ImGui::Separator();
