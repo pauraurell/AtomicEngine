@@ -566,7 +566,7 @@ update_status ModuleGUI::Update()
 					else
 					{
 						float horizontalFOV = selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG;
-						if (ImGui::SliderFloat("Horizontal FOV", &horizontalFOV, 55.0f, 110.0f))
+						if (ImGui::SliderFloat("Horizontal FOV", &horizontalFOV, 25.0f, 115.0f))
 						{
 							selectedObj->GetCCamera()->frustum.horizontalFov = horizontalFOV * DEGTORAD;
 							selectedObj->GetCCamera()->frustum.verticalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.horizontalFov * 0.5f) * (1 / selectedObj->GetCCamera()->aspectRatio));
@@ -579,8 +579,8 @@ update_status ModuleGUI::Update()
 					ImGui::Separator();
 					ImGui::Spacing();
 
-					ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 100.0f);
-					ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 2000.0f);
+					ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 0.001f, 50.0f);
+					ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 50.0f, 2000.0f);
 				}
 			}
 			ImGui::Separator();
