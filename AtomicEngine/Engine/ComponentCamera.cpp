@@ -10,6 +10,8 @@ ComponentCamera::ComponentCamera(GameObject* go) : Component()
 	type = ComponentType::Camera;
 	owner = go;
 
+	fixedFOV = FIXED_HORIZONTAL_FOV;
+	aspectRatio = 16.0f / 9.0f;
 	frustum.type = FrustumType::PerspectiveFrustum;
 
 	frustum.pos = float3(0.0f, 0.0f, -5.0f);

@@ -41,7 +41,6 @@ public:
 public:
 	FixedFOV fixedFOV;
 
-private:
 	Frustum frustum;
 	float aspectRatio;
 	float3 reference;

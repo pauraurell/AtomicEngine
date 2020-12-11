@@ -535,6 +535,52 @@ update_status ModuleGUI::Update()
 				{
 					ImGui::Checkbox("Disable", &selectedObj->GetCCamera()->active); ImGui::SameLine();
 					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
+
+					ImGui::Spacing();
+
+					bool fixedVerticalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_VERTICAL_FOV;
+					bool fixedHorizontalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_HORIZONTAL_FOV;
+
+					if (ImGui::RadioButton("Fixed VerticalFOV", fixedVerticalFOV))
+						selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_VERTICAL_FOV;
+					ImGui::SameLine();
+					if (ImGui::RadioButton("Fixed HorizontalFOV", fixedHorizontalFOV))
+						selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_HORIZONTAL_FOV;
+
+					ImGui::Spacing();
+
+					//Fixed Vertical FOV Settings
+					if (fixedVerticalFOV)
+					{
+						float verticalFOV = selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG;
+						if (ImGui::SliderFloat("Vertical FOV", &verticalFOV, 20.0f, 60.0f))
+						{
+							selectedObj->GetCCamera()->frustum.verticalFov = verticalFOV * RADTODEG;
+							selectedObj->GetCCamera()->frustum.horizontalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.verticalFov * 0.5f) * (selectedObj->GetCCamera()->aspectRatio));
+						}
+
+						ImGui::Spacing();
+						ImGui::Text("Horizontal FOV: %.2f", selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG);
+					}
+					//Fixed Horizontal FOV Settings
+					else
+					{
+						float horizontalFOV = selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG;
+						if (ImGui::SliderFloat("Horizontal FOV", &horizontalFOV, 55.0f, 110.0f))
+						{
+							selectedObj->GetCCamera()->frustum.horizontalFov = horizontalFOV * DEGTORAD;
+							selectedObj->GetCCamera()->frustum.verticalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.horizontalFov * 0.5f) * (1 / selectedObj->GetCCamera()->aspectRatio));
+						}
+						ImGui::Spacing();
+						ImGui::Text("Vertical FOV: %.2f", selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG);
+					}
+
+					ImGui::Spacing();
+					ImGui::Separator();
+					ImGui::Spacing();
+
+					ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 100.0f);
+					ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 2000.0f);
 				}
 			}
 			ImGui::Separator();
@@ -560,7 +606,7 @@ update_status ModuleGUI::Update()
 					}
 					ImGui::CloseCurrentPopup();
 				}
-				else 
+				/*else 
 				{
 					if (ImGui::IsMouseClicked(0)) 
 					{ 
@@ -571,7 +617,7 @@ update_status ModuleGUI::Update()
 					{						
 						ImGui::CloseCurrentPopup();
 					}
-				}
+				}*/
 				ImGui::EndPopup();
 			}
 		}
