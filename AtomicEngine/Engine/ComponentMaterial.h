@@ -8,8 +8,8 @@
 class ComponentMaterial : public Component
 {
 public:
-	ComponentMaterial();
-	ComponentMaterial(At_Tex* text);
+	ComponentMaterial(GameObject* go);
+	ComponentMaterial(GameObject* go, At_Tex* text);
 	~ComponentMaterial();
 
 	void Enable();

@@ -54,6 +54,8 @@ public:
 	void RenderVertexNormals(Mesh* m);
 	void RenderFaceNormals(Mesh* m);
 
+	void DrawAABB(float3* aabb);
+
 public:
 
 	Light lights[MAX_LIGHTS];

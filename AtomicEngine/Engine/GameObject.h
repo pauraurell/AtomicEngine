@@ -11,6 +11,7 @@ class Component;
 class ComponentMesh;
 class ComponentTransform;
 class ComponentMaterial;
+class ComponentCamera;
 enum class ComponentType;
 
 using namespace std;
@@ -30,6 +31,7 @@ public:
 	ComponentMesh* GetCMesh();
 	ComponentTransform* GetCTransform();
 	ComponentMaterial* GetCMaterial();
+	ComponentCamera* GetCCamera();
 
 	void Reparent(GameObject* new_parent);
 	void CreateChild(GameObject* child);

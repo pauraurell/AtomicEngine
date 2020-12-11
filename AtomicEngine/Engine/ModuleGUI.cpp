@@ -4,6 +4,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ComponentCamera.h"
 #include "ModuleWindow.h"
 #include "Glew/include/glew.h"
 #include "AtTime.h"
@@ -195,6 +196,11 @@ update_status ModuleGUI::Update()
 				}
 
 				ImGui::EndMenu();
+			}
+
+			if (ImGui::MenuItem("Camera"))
+			{
+				App->scene_intro->CreateGameObject(true);
 			}
 
 			if (ImGui::MenuItem("Empty Game Object"))
@@ -578,6 +584,61 @@ update_status ModuleGUI::Update()
 					}
 				}
 			}
+			if (selectedObj->GetCCamera() != nullptr)
+			{
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::Checkbox("Disable", &selectedObj->GetCCamera()->active); ImGui::SameLine();
+					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
+
+					ImGui::Spacing();
+
+					bool fixedVerticalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_VERTICAL_FOV;
+					bool fixedHorizontalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_HORIZONTAL_FOV;
+
+					if (ImGui::RadioButton("Fixed VerticalFOV", fixedVerticalFOV))
+						selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_VERTICAL_FOV;
+					ImGui::SameLine();
+					if (ImGui::RadioButton("Fixed HorizontalFOV", fixedHorizontalFOV))
+						selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_HORIZONTAL_FOV;
+
+					ImGui::Spacing();
+
+					//Fixed Vertical FOV Settings
+					if (fixedVerticalFOV)
+					{
+						float verticalFOV = selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG;
+						if (ImGui::SliderFloat("Vertical FOV", &verticalFOV, 20.0f, 60.0f))
+						{
+							selectedObj->GetCCamera()->frustum.verticalFov = verticalFOV * RADTODEG;
+							selectedObj->GetCCamera()->frustum.horizontalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.verticalFov * 0.5f) * (selectedObj->GetCCamera()->aspectRatio));
+						}
+
+						ImGui::Spacing();
+						ImGui::Text("Horizontal FOV: %.2f", selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG);
+					}
+					//Fixed Horizontal FOV Settings
+					else
+					{
+						float horizontalFOV = selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG;
+						if (ImGui::SliderFloat("Horizontal FOV", &horizontalFOV, 25.0f, 115.0f))
+						{
+							selectedObj->GetCCamera()->frustum.horizontalFov = horizontalFOV * DEGTORAD;
+							selectedObj->GetCCamera()->frustum.verticalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.horizontalFov * 0.5f) * (1 / selectedObj->GetCCamera()->aspectRatio));
+						}
+						ImGui::Spacing();
+						ImGui::Text("Vertical FOV: %.2f", selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG);
+					}
+
+					ImGui::Spacing();
+					ImGui::Separator();
+					ImGui::Spacing();
+
+					ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 0.001f, 50.0f);
+					ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 50.0f, 2000.0f);
+				}
+			}
 			ImGui::Separator();
 			if (ImGui::Button("Add Component..."))
 			{
@@ -585,15 +646,23 @@ update_status ModuleGUI::Update()
 			}
 			if (ImGui::BeginPopup("AddPopUp"))
 			{
-				if (selectedObj->GetCMaterial() == nullptr)
+				if (ImGui::MenuItem("Material..."))
 				{
-					if (ImGui::MenuItem("Material..."))
+					if (selectedObj->GetCMaterial() == nullptr)
 					{
 						selectedObj->CreateComponent(ComponentType::Material);
-						ImGui::CloseCurrentPopup();
 					}
+					ImGui::CloseCurrentPopup();
 				}
-				else 
+				if (ImGui::MenuItem("Camera..."))
+				{
+					if (selectedObj->GetCCamera() == nullptr)
+					{
+						selectedObj->CreateComponent(ComponentType::Camera);
+					}
+					ImGui::CloseCurrentPopup();
+				}
+				/*else 
 				{
 					if (ImGui::IsMouseClicked(0)) 
 					{ 
@@ -604,7 +673,7 @@ update_status ModuleGUI::Update()
 					{						
 						ImGui::CloseCurrentPopup();
 					}
-				}
+				}*/
 				ImGui::EndPopup();
 			}
 		}

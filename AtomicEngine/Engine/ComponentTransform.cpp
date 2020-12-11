@@ -3,9 +3,10 @@
 #include "Globals.h"
 #include "GameObject.h"
 
-ComponentTransform::ComponentTransform() : Component()
+ComponentTransform::ComponentTransform(GameObject* go) : Component()
 {
 	type = ComponentType::Transform;
+	owner = go;
 
 	pos = float3::zero; rotQuat = Quat::identity;
 	rot = float3::zero; scale = float3::one;
