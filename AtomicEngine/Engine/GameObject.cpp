@@ -5,22 +5,21 @@
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
 #include "ModuleSceneIntro.h"
-#include "MathGeoLib/Geometry/AABB.h"
 
 GameObject::GameObject()
 {
+	CreateComponent(ComponentType::Transform);
 	active = true;
 	name = "GameObject";
-	is_selected = false;
 	BB = AABB({ 0,0,0 }, { 0,0,0 });
-	CreateComponent(ComponentType::Transform);
 }
 
 GameObject::GameObject(const char* GOname)
 {
 	active = true;
 	name = GOname;
-	is_selected = false;
+	CreateComponent(ComponentType::Transform);
+	BB = AABB({ 0,0,0 }, { 0,0,0 });
 }
 
 GameObject::~GameObject()
@@ -121,12 +120,22 @@ void GameObject::DeleteComponent(Component* comp)
 						App->scene_intro->texs.erase(App->scene_intro->texs.begin() + j);
 					}
 				}
+
+				for (int j = 0; j < App->scene_intro->game_objects.size(); j++)
+				{
+					if (App->scene_intro->game_objects[j]->GetCMaterial() == components[i])
+					{
+						delete App->scene_intro->game_objects[j]->GetCMaterial()->tex;
+						delete App->scene_intro->game_objects[j]->GetCMaterial();
+					}
+				}
 				break;
 			}
 
 			components.erase(components.begin() + i); deleted = true;
 		}
 	}
+	comp = nullptr;
 	delete comp;
 
 	atLOG("Component deleted");
@@ -171,12 +180,21 @@ ComponentMaterial* GameObject::GetCMaterial()
 	return nullptr;
 }
 
-void GameObject::CreateChild(GameObject* to_delete)
+void GameObject::CreateChild(GameObject* child)
 {
-	if (to_delete != nullptr)
+	if (child != nullptr)
 	{
-		children.push_back(to_delete);
+		children.push_back(child);
 	}	
+}
+
+void GameObject::CreateNewChild()
+{
+	GameObject* child = new GameObject();
+	if (child != nullptr)
+	{
+		children.push_back(child);
+	}
 }
 
 bool GameObject::DeleteChild(GameObject* to_delete)
@@ -225,14 +243,6 @@ void GameObject::SetRootChild()
 {
 	this->parent = App->scene_intro->root;
 	App->scene_intro->root->CreateChild(this);
-}
-
-void GameObject::UpdateChildren()
-{
-	for (size_t i = 0; i < children.size(); i++)
-	{
-		children[i]->GetCTransform()->UpdateGlobalTransform(GetCTransform()->GetGlobalTransform());
-	}
 }
 
 void GameObject::CalculateBB()

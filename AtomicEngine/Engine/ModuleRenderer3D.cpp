@@ -183,31 +183,34 @@ void ModuleRenderer3D::RenderGameObject(GameObject* go) {
 
 	CheckWireframeMode();
 
-	if (go->GetCMaterial() != nullptr && go->GetCMaterial()->tex != NULL && go->GetCMaterial()->tex->visible)
+	if (go->GetCMaterial() != nullptr) 
 	{
-		glEnable(GL_TEXTURE_2D);
-		if (go->GetCMaterial()->tex->checkers == false)
+		if (go->GetCMaterial()->tex != nullptr)
 		{
-			if (go->GetCMaterial()->tex->loaded == false)
+			glEnable(GL_TEXTURE_2D);
+			if (go->GetCMaterial()->tex->checkers == false)
 			{
-				App->importer->LoadTexture(go->GetCMaterial()->tex->texName);
-				for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
+				if (go->GetCMaterial()->tex->loaded == false)
 				{
-					if (App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == go->GetCMaterial()->tex->texName)
+					App->importer->LoadTexture(go->GetCMaterial()->tex->texName);
+					for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
 					{
-						App->scene_intro->game_objects[i]->GetCMaterial()->tex->loaded = true;
+						if (App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == go->GetCMaterial()->tex->texName)
+						{
+							App->scene_intro->game_objects[i]->GetCMaterial()->tex->loaded = true;
+						}
 					}
 				}
+				glBindTexture(GL_TEXTURE_2D, go->GetCMaterial()->tex->Gl_Tex);
 			}
 
-			glBindTexture(GL_TEXTURE_2D, go->GetCMaterial()->tex->Gl_Tex);
-		}
-		
-		else 
-		{
-			glBindTexture(GL_TEXTURE_2D, App->scene_intro->texs[0]->Gl_Tex);
+			else
+			{
+				glBindTexture(GL_TEXTURE_2D, App->scene_intro->texs[0]->Gl_Tex);
+			}
 		}
 	}
+	
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -222,7 +225,7 @@ void ModuleRenderer3D::RenderGameObject(GameObject* go) {
 	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 	glPushMatrix();
-	glMultMatrixf((float*)&go->GetCTransform()->GetGlobalTransform().Transposed());
+	glMultMatrixf((float*)&go->GetCTransform()->globalMat.Transposed());
 
 	glColor3f(go->GetCMesh()->m->r, go->GetCMesh()->m->g, go->GetCMesh()->m->b);
 	if (go->GetCMesh()->m->color == false) { glColor3f(1, 1, 1); }

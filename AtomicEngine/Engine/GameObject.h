@@ -5,6 +5,7 @@
 #include <string>
 #include "ImGui/imgui.h"
 #include "MathGeoLib/MathGeoLib.h"
+#include "Globals.h"
 
 class Component;
 class ComponentMesh;
@@ -31,15 +32,14 @@ public:
 	ComponentMaterial* GetCMaterial();
 
 	void Reparent(GameObject* new_parent);
-	void CreateChild(GameObject* to_delete);
+	void CreateChild(GameObject* child);
+	void CreateNewChild();
 	bool DeleteChild(GameObject* to_delete);
 	void DeleteChildren();
 	void SetRootChild();
-	void UpdateChildren();
 
 	string name;
 	bool active;
-	bool is_selected;
 
 	AABB BB;
 	void RenderBB(AABB& BB);
@@ -49,6 +49,7 @@ public:
 
 	std::vector<GameObject*> children;
 	GameObject* parent;
+
 
 private:
 	vector<Component*> components;

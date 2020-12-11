@@ -7,73 +7,55 @@ ComponentTransform::ComponentTransform() : Component()
 {
 	type = ComponentType::Transform;
 
-	pos = float3::zero;
-	rot = Quat::identity;
-	eulerRotation = float3::zero;
-	scale = float3::one;
-
-	localMat = float4x4::FromTRS(pos, rot, scale);
+	pos = float3::zero; rotQuat = Quat::identity;
+	rot = float3::zero; scale = float3::one;
+	
+	localMat = float4x4::FromTRS(pos, rotQuat, scale);
 	globalMat = localMat;
+
 	parentGlobalMat = float4x4::identity;
 }
 
 ComponentTransform::~ComponentTransform() {}
 
-
-void ComponentTransform::Set(float4x4 g_transform)
+void ComponentTransform::SetGlobalTransform(float4x4 trans)
 {
-	localMat = g_transform;
+	globalMat = trans;
+
+	float4x4 inv = parentGlobalMat;
+	inv.Inverse();
+	localMat = inv * globalMat;
+	
+	localMat.Decompose(pos, rotQuat, scale);
+	rot = rotQuat.ToEulerXYZ();
+	rot *= RADTODEG;
 }
 
-float4x4 ComponentTransform::GetLocalTransform()
+void ComponentTransform::UpdateLocalMatrix()
 {
-	return localMat;
+	localMat = float4x4::FromTRS(pos, rotQuat, scale);
+	rot = rotQuat.ToEulerXYZ();
+	rot *= RADTODEG;
+
+	if (owner->children.size() > 0) 
+	{
+		for (size_t i = 0; i < owner->children.size(); i++)
+		{
+			owner->children[i]->GetCTransform()->UpdateGlobalMatrix(globalMat);
+		}
+	}
 }
 
-float4x4 ComponentTransform::GetGlobalTransform()
+void ComponentTransform::UpdateGlobalMatrix()
 {
-	return globalMat;
-}
-
-void ComponentTransform::SetGlobalTransform(float4x4 newTransform)
-{
-	globalMat = newTransform;
-	float4x4 inverseParentGlobal = parentGlobalMat;
-	inverseParentGlobal.Inverse();
-	localMat = inverseParentGlobal * globalMat;
-	localMat.Decompose(pos, rot, scale);
-	eulerRotation = rot.ToEulerXYZ();
-	eulerRotation *= RADTODEG;
-	owner->UpdateChildren();
-}
-
-void ComponentTransform::UpdateLocalTransform()
-{
-	localMat = float4x4::FromTRS(pos, rot, scale);
-	eulerRotation = rot.ToEulerXYZ();
-	eulerRotation *= RADTODEG;
-}
-void ComponentTransform::UpdateGlobalTransform()
-{
-	UpdateLocalTransform();
+	UpdateLocalMatrix();
 	globalMat = parentGlobalMat * localMat;
 }
 
-void ComponentTransform::UpdateGlobalTransform(float4x4 parentGlobalTransform)
+void ComponentTransform::UpdateGlobalMatrix(float4x4 parentTrans)
 {
-	UpdateLocalTransform();
-	parentGlobalMat = parentGlobalTransform;
-	globalMat = parentGlobalMat * localMat;
-}
-
-void ComponentTransform::ChangeParentTransform(float4x4 newParentGlobalTransform)
-{
-	parentGlobalMat = newParentGlobalTransform;
-	newParentGlobalTransform.Inverse();
-	localMat = newParentGlobalTransform * globalMat;
-	localMat.Decompose(pos, rot, scale);
-	eulerRotation = rot.ToEulerXYZ();
-	eulerRotation *= RADTODEG;
+	UpdateLocalMatrix();
+	parentGlobalMat = parentTrans;
 	globalMat = parentGlobalMat * localMat;
 }
 
@@ -82,22 +64,21 @@ void ComponentTransform::SetPosition(float x, float y, float z)
 	pos.x = x;
 	pos.y = y;
 	pos.z = z;
-
-	UpdateLocalTransform();
+	UpdateLocalMatrix();
 }
 
 void ComponentTransform::SetRotation(float x, float y, float z)
 {
-	eulerRotation = float3(x, y, z);
-	rot = Quat::FromEulerXYZ(x * DEGTORAD, y * DEGTORAD, z * DEGTORAD);
-	UpdateGlobalTransform();
+	rot = float3(x, y, z);
+	rotQuat = Quat::FromEulerXYZ(x * DEGTORAD, y * DEGTORAD, z * DEGTORAD);
+	UpdateGlobalMatrix();
 }
 
 void ComponentTransform::SetRotation(Quat rotationQuat)
 {
-	rot = rotationQuat;
-	eulerRotation = rot.ToEulerXYZ() * RADTODEG;
-	UpdateGlobalTransform();
+	rotQuat = rotationQuat;
+	rot = rotQuat.ToEulerXYZ() * RADTODEG;
+	UpdateGlobalMatrix();
 }
 
 void ComponentTransform::SetScale(float x, float y, float z)
@@ -105,5 +86,5 @@ void ComponentTransform::SetScale(float x, float y, float z)
 	scale.x = x;
 	scale.y = y;
 	scale.z = z;
-	UpdateGlobalTransform();
+	UpdateGlobalMatrix();
 }

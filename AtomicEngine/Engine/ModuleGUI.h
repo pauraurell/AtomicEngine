@@ -26,6 +26,9 @@ public:
 	update_status DockingSpace(bool* open);
 	void AddGOtoHierarchy(GameObject* gameObject, int& id);
 
+	void GameObjectPopUps();
+	void ReparentDragDrop(GameObject* go, int& id);
+
 	const char* GetCaps();
 	void DrawUi();
 

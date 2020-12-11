@@ -451,56 +451,57 @@ update_status ModuleGUI::Update()
 					ImGui::Text("             X"); ImGui::SameLine(); 
 					ImGui::Text("        Y"); ImGui::SameLine();
 					ImGui::Text("       Z"); 
+					ComponentTransform* transform = (ComponentTransform*)selectedObj->GetCTransform();
 
 					ImGui::Text("Position "); ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
 					
-					if (ImGui::DragFloat("##posx", &selectedObj->GetCTransform()->pos.x, 0.05f, 0.f, 0.f, "%.2f")) {
-						selectedObj->GetCTransform()->SetPosition(selectedObj->GetCTransform()->pos.x, selectedObj->GetCTransform()->pos.y, selectedObj->GetCTransform()->pos.z);
-						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					if (ImGui::DragFloat("##posx", &transform->pos.x, 0.05f, 0.f, 0.f, "%.2f")) {
+						transform->SetPosition(transform->pos.x, transform->pos.y, transform->pos.z);
+						transform->UpdateGlobalMatrix();
 					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
 
-					if (ImGui::DragFloat("##posy", &selectedObj->GetCTransform()->pos.y, 0.05f, 0.f, 0.f, "%.2f")) {
-						selectedObj->GetCTransform()->SetPosition(selectedObj->GetCTransform()->pos.x, selectedObj->GetCTransform()->pos.y, selectedObj->GetCTransform()->pos.z);
-						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					if (ImGui::DragFloat("##posy", &transform->pos.y, 0.05f, 0.f, 0.f, "%.2f")) {
+						transform->SetPosition(transform->pos.x, transform->pos.y, transform->pos.z);
+						transform->UpdateGlobalMatrix();
 					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
 					
-					if (ImGui::DragFloat("##posz", &selectedObj->GetCTransform()->pos.z, 0.05f, 0.f, 0.f, "%.2f")) {
-						selectedObj->GetCTransform()->SetPosition(selectedObj->GetCTransform()->pos.x, selectedObj->GetCTransform()->pos.y, selectedObj->GetCTransform()->pos.z);
-						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					if (ImGui::DragFloat("##posz", &transform->pos.z, 0.05f, 0.f, 0.f, "%.2f")) {
+						transform->SetPosition(transform->pos.x, transform->pos.y, transform->pos.z);
+						transform->UpdateGlobalMatrix();
 					}
 
 					ImGui::Text("Rotation "); ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
 
-					if (ImGui::DragFloat("##rotx", &selectedObj->GetCTransform()->eulerRotation.x, 0.05f, 0.f, 0.f, "%.2f")) {
-						selectedObj->GetCTransform()->SetRotation(selectedObj->GetCTransform()->eulerRotation.x, selectedObj->GetCTransform()->eulerRotation.y, selectedObj->GetCTransform()->eulerRotation.z);
-						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					if (ImGui::DragFloat("##rotx", &transform->rot.x, 0.05f, 0.f, 0.f, "%.2f")) {
+						transform->SetRotation(transform->rot.x, transform->rot.y, transform->rot.z);
+						transform->UpdateGlobalMatrix();
 					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
 
-					if (ImGui::DragFloat("##roty", &selectedObj->GetCTransform()->eulerRotation.y, 0.05f, 0.f, 0.f, "%.2f")) {
-						selectedObj->GetCTransform()->SetRotation(selectedObj->GetCTransform()->eulerRotation.x, selectedObj->GetCTransform()->eulerRotation.y, selectedObj->GetCTransform()->eulerRotation.z);
-						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					if (ImGui::DragFloat("##roty", &transform->rot.y, 0.05f, 0.f, 0.f, "%.2f")) {
+						transform->SetRotation(transform->rot.x, transform->rot.y, transform->rot.z);
+						transform->UpdateGlobalMatrix();
 					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
 	
-					if (ImGui::DragFloat("##rotz", &selectedObj->GetCTransform()->eulerRotation.z, 0.05f, 0.f, 0.f, "%.2f")) {
-						selectedObj->GetCTransform()->SetRotation(selectedObj->GetCTransform()->eulerRotation.x, selectedObj->GetCTransform()->eulerRotation.y, selectedObj->GetCTransform()->eulerRotation.z);
-						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					if (ImGui::DragFloat("##rotz", &transform->rot.z, 0.05f, 0.f, 0.f, "%.2f")) {
+						transform->SetRotation(transform->rot.x, transform->rot.y, transform->rot.z);
+						transform->UpdateGlobalMatrix();
 					}
 
 					ImGui::Text("Scale    "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 					
-					if (ImGui::DragFloat("##scalex", &selectedObj->GetCTransform()->scale.x, 0.05f, 0.f, 0.f, "%.2f")) {
-						selectedObj->GetCTransform()->SetScale(selectedObj->GetCTransform()->scale.x, selectedObj->GetCTransform()->scale.y, selectedObj->GetCTransform()->scale.z);
-						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					if (ImGui::DragFloat("##scalex", &transform->scale.x, 0.05f, 0.f, 0.f, "%.2f")) {
+						transform->SetScale(transform->scale.x, transform->scale.y, transform->scale.z);
+						transform->UpdateGlobalMatrix();
 					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
 
-					if (ImGui::DragFloat("##scaley", &selectedObj->GetCTransform()->scale.y, 0.05f, 0.f, 0.f, "%.2f")) {
-						selectedObj->GetCTransform()->SetScale(selectedObj->GetCTransform()->scale.x, selectedObj->GetCTransform()->scale.y, selectedObj->GetCTransform()->scale.z);
-						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					if (ImGui::DragFloat("##scaley", &transform->scale.y, 0.05f, 0.f, 0.f, "%.2f")) {
+						transform->SetScale(transform->scale.x, transform->scale.y, transform->scale.z);
+						transform->UpdateGlobalMatrix();
 					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
 
-					if (ImGui::DragFloat("##scalez", &selectedObj->GetCTransform()->scale.z, 0.05f, 0.f, 0.f, "%.2f")) {
-						selectedObj->GetCTransform()->SetScale(selectedObj->GetCTransform()->scale.x, selectedObj->GetCTransform()->scale.y, selectedObj->GetCTransform()->scale.z);
-						selectedObj->GetCTransform()->UpdateGlobalTransform();
+					if (ImGui::DragFloat("##scalez", &transform->scale.z, 0.05f, 0.f, 0.f, "%.2f")) {
+						transform->SetScale(transform->scale.x, transform->scale.y, transform->scale.z);
+						transform->UpdateGlobalMatrix();
 					}
 				}
 			}
@@ -702,11 +703,8 @@ void ModuleGUI::AddGOtoHierarchy(GameObject* go, int& id)
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
 	if (go == App->scene_intro->root) { flags |= ImGuiTreeNodeFlags_DefaultOpen; }
-
 	if (selectedObj == go) { flags |= ImGuiTreeNodeFlags_Selected; }
-
 	if (go->children.size() == 0) { flags |= ImGuiTreeNodeFlags_Leaf; }
-
 
 	if (ImGui::TreeNodeEx(go->name.c_str(), flags))
 	{
@@ -715,31 +713,24 @@ void ModuleGUI::AddGOtoHierarchy(GameObject* go, int& id)
 			selectedObj = go;
 			printInspector = true;
 		}
-
 		ImGui::PushID(id);
-
-		if (ImGui::BeginDragDropSource())
-		{
-			ImGui::SetDragDropPayload("Hierarchy", &id, sizeof(int));
-			ImGui::EndDragDropSource();
-		}
-
-		if (ImGui::BeginDragDropTarget())
-		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Hierarchy"))
-			{
-				IM_ASSERT(payload->DataSize == sizeof(int));
-				int payload_n = *(const int*)payload->Data;
-				std::vector<GameObject*> gameObjects = App->scene_intro->GetGameObjects();
-				GameObject* target = gameObjects[payload_n];
-				target->Reparent(go);
-			}
-			ImGui::EndDragDropTarget();
-		}
-
+		ReparentDragDrop(go, id);
 		ImGui::PopID();
 		id++;
 
+		GameObjectPopUps();
+		for (size_t i = 0; i < go->children.size(); i++)
+		{
+			AddGOtoHierarchy(go->children[i], id);
+		}
+		ImGui::TreePop();
+	}
+}
+
+void ModuleGUI::GameObjectPopUps()
+{
+	if (selectedObj != nullptr) 
+	{
 		if (ImGui::BeginPopupContextItem())
 		{
 			if (ImGui::Button("Delete"))
@@ -747,14 +738,37 @@ void ModuleGUI::AddGOtoHierarchy(GameObject* go, int& id)
 				App->scene_intro->DeleteGameObject(selectedObj);
 				ImGui::CloseCurrentPopup();
 			}
+
+			if (ImGui::Button("New Child"))
+			{
+				selectedObj->CreateNewChild();
+				ImGui::CloseCurrentPopup();
+			}
+
 			ImGui::EndPopup();
 		}
+	}
+}
 
-		for (size_t i = 0; i < go->children.size(); i++)
+void ModuleGUI::ReparentDragDrop(GameObject* go, int& id)
+{
+	if (ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload("Hierarchy", &id, sizeof(int));
+		ImGui::EndDragDropSource();
+	}
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Hierarchy"))
 		{
-			AddGOtoHierarchy(go->children[i], id);
+			IM_ASSERT(payload->DataSize == sizeof(int));
+			int payload_n = *(const int*)payload->Data;
+			std::vector<GameObject*> gameObjects = App->scene_intro->GetGameObjects();
+			GameObject* target = gameObjects[payload_n];
+			target->Reparent(go);
 		}
-		ImGui::TreePop();
+		ImGui::EndDragDropTarget();
 	}
 }
 
