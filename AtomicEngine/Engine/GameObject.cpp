@@ -9,7 +9,7 @@
 
 GameObject::GameObject()
 {
-	CreateComponent(ComponentType::Transform);
+	//CreateComponent(ComponentType::Transform);
 	active = true;
 	name = "GameObject";
 	BB = AABB({ 0,0,0 }, { 0,0,0 });
@@ -19,7 +19,7 @@ GameObject::GameObject(const char* GOname)
 {
 	active = true;
 	name = GOname;
-	CreateComponent(ComponentType::Transform);
+	//CreateComponent(ComponentType::Transform);
 	BB = AABB({ 0,0,0 }, { 0,0,0 });
 }
 

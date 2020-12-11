@@ -450,7 +450,7 @@ update_status ModuleGUI::Update()
 			printInspector = true;
 			
 			ImGui::Separator();
-			if (selectedObj->GetCMaterial() != nullptr) 
+			if (selectedObj->GetCTransform() != nullptr) 
 			{
 				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 				{

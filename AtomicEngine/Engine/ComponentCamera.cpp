@@ -41,7 +41,7 @@ void ComponentCamera::Enable()
 
 void ComponentCamera::Update()
 {
-	frustum.pos = owner->GetCTransform()->GetPosition();
+	frustum.pos = owner->GetCTransform()->pos;
 
 	/*frustum.up = owner->GetCTransform()->GetGlobalTransform().WorldY();
 	frustum.front = owner->GetCTransform()->GetGlobalTransform().WorldZ();*/
