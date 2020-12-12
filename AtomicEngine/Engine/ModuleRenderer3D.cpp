@@ -18,6 +18,7 @@
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	wireframe_mode = false;
+	ray = LineSegment();
 }
 
 // Destructor
@@ -144,6 +145,10 @@ update_status ModuleRenderer3D::PreUpdate()
 
 update_status ModuleRenderer3D::Update()
 {
+	glBegin(GL_LINES);
+	glVertex3f(ray.a.x, ray.a.y, ray.a.z);
+	glVertex3f(ray.b.x, ray.b.y, ray.b.z);
+	glEnd();
 	return UPDATE_CONTINUE;
 }
 

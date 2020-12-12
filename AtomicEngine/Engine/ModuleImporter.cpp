@@ -134,7 +134,7 @@ void ModuleImporter::LoadMesh(char* file_path, string name)
 			//aiVector3D position, scaling;
 			//aiQuaternion rotation;
 
-			//if(i == 2) scene->mRootNode->mChildren[i]->mTransformation.Decompose(scaling, rotation, position);
+			//scene->mRootNode->mChildren[i]->mTransformation.Decompose(scaling, rotation, position);
 			//scaling.x = scaling.y = scaling.z = 1.0f;
 
 			//float3 pos = float3(position.x, position.y, position.z);
