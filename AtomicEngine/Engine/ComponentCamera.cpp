@@ -201,15 +201,13 @@ bool ComponentCamera::ContainsAABB(AABB& aabb)
 			}
 		}
 
-		if (iInCount == 0)
-			return false;
+		if (iInCount == 0) { return false; }
 
 		totalInside += iPtIn;
 	}
 
 	//Totally inside camera view
-	if (totalInside == 6)
-		return true;
+	if (totalInside == 6) { return true; }
 
 	//Partially inside camera view
 	return true;

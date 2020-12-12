@@ -69,6 +69,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 		break;
 	case ComponentType::Camera:
 		newComponent = new ComponentCamera(this);
+		App->scene_intro->cameras.push_back((ComponentCamera*)newComponent);
 		break;
 	}
 	newComponent->owner = this;
@@ -135,6 +136,15 @@ void GameObject::DeleteComponent(Component* comp)
 					{
 						delete App->scene_intro->game_objects[j]->GetCMaterial()->tex;
 						delete App->scene_intro->game_objects[j]->GetCMaterial();
+					}
+				}
+				break;
+			case ComponentType::Camera:
+				for (int j = 0; j < App->scene_intro->cameras.size(); j++)
+				{
+					if (App->scene_intro->cameras[j] == components[i])
+					{
+						App->scene_intro->cameras.erase(App->scene_intro->cameras.begin() + j);
 					}
 				}
 				break;

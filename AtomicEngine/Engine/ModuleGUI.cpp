@@ -590,93 +590,95 @@ update_status ModuleGUI::Update()
 				if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					ImGui::Checkbox("Disable", &selectedObj->GetCCamera()->active); ImGui::SameLine();
-					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
-
-					ImGui::Spacing();
-
-					bool fixedVerticalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_VERTICAL_FOV;
-					bool fixedHorizontalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_HORIZONTAL_FOV;
-
-					if (ImGui::RadioButton("Fixed VerticalFOV", fixedVerticalFOV))
-						selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_VERTICAL_FOV;
-					ImGui::SameLine();
-					if (ImGui::RadioButton("Fixed HorizontalFOV", fixedHorizontalFOV))
-						selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_HORIZONTAL_FOV;
-
-					ImGui::Spacing();
-
-					//Fixed Vertical FOV Settings
-					if (fixedVerticalFOV)
+					if (ImGui::Button("Delete  Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
+					if (selectedObj->GetCCamera() != nullptr)
 					{
-						float verticalFOV = selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG;
-						if (ImGui::SliderFloat("Vertical FOV", &verticalFOV, 20.0f, 60.0f))
+						ImGui::Spacing();
+
+						bool fixedVerticalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_VERTICAL_FOV;
+						bool fixedHorizontalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_HORIZONTAL_FOV;
+
+						if (ImGui::RadioButton("Fixed VerticalFOV", fixedVerticalFOV))
+							selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_VERTICAL_FOV;
+						ImGui::SameLine();
+						if (ImGui::RadioButton("Fixed HorizontalFOV", fixedHorizontalFOV))
+							selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_HORIZONTAL_FOV;
+
+						ImGui::Spacing();
+
+						//Fixed Vertical FOV Settings
+						if (fixedVerticalFOV)
 						{
-							selectedObj->GetCCamera()->frustum.verticalFov = verticalFOV * RADTODEG;
-							selectedObj->GetCCamera()->frustum.horizontalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.verticalFov * 0.5f) * (selectedObj->GetCCamera()->aspectRatio));
+							float verticalFOV = selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG;
+							if (ImGui::SliderFloat("Vertical FOV", &verticalFOV, 20.0f, 60.0f))
+							{
+								selectedObj->GetCCamera()->frustum.verticalFov = verticalFOV * RADTODEG;
+								selectedObj->GetCCamera()->frustum.horizontalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.verticalFov * 0.5f) * (selectedObj->GetCCamera()->aspectRatio));
+							}
+
+							ImGui::Spacing();
+							ImGui::Text("Horizontal FOV: %.2f", selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG);
+						}
+						//Fixed Horizontal FOV Settings
+						else
+						{
+							float horizontalFOV = selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG;
+							if (ImGui::SliderFloat("Horizontal FOV", &horizontalFOV, 25.0f, 115.0f))
+							{
+								selectedObj->GetCCamera()->frustum.horizontalFov = horizontalFOV * DEGTORAD;
+								selectedObj->GetCCamera()->frustum.verticalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.horizontalFov * 0.5f) * (1 / selectedObj->GetCCamera()->aspectRatio));
+							}
+							ImGui::Spacing();
+							ImGui::Text("Vertical FOV: %.2f", selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG);
 						}
 
 						ImGui::Spacing();
-						ImGui::Text("Horizontal FOV: %.2f", selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG);
-					}
-					//Fixed Horizontal FOV Settings
-					else
-					{
-						float horizontalFOV = selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG;
-						if (ImGui::SliderFloat("Horizontal FOV", &horizontalFOV, 25.0f, 115.0f))
-						{
-							selectedObj->GetCCamera()->frustum.horizontalFov = horizontalFOV * DEGTORAD;
-							selectedObj->GetCCamera()->frustum.verticalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.horizontalFov * 0.5f) * (1 / selectedObj->GetCCamera()->aspectRatio));
-						}
+						ImGui::Separator();
 						ImGui::Spacing();
-						ImGui::Text("Vertical FOV: %.2f", selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG);
-					}
 
-					ImGui::Spacing();
-					ImGui::Separator();
-					ImGui::Spacing();
+						ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 0.001f, 50.0f);
+						ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 50.0f, 2000.0f);
 
-					ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 0.001f, 50.0f);
-					ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 50.0f, 2000.0f);
+						if (ImGui::CollapsingHeader("Camera Transform", ImGuiTreeNodeFlags_DefaultOpen))
+						{
+							ImGui::Text("             X"); ImGui::SameLine();
+							ImGui::Text("        Y"); ImGui::SameLine();
+							ImGui::Text("       Z");
+							ComponentTransform* cTransform = (ComponentTransform*)selectedObj->GetCCamera()->camTransform;
 
-					if (ImGui::CollapsingHeader("Camera Transform", ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						ImGui::Text("             X"); ImGui::SameLine();
-						ImGui::Text("        Y"); ImGui::SameLine();
-						ImGui::Text("       Z");
-						ComponentTransform* cTransform = (ComponentTransform*)selectedObj->GetCCamera()->camTransform;
+							ImGui::Text("Position "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-						ImGui::Text("Position "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+							if (ImGui::DragFloat("##cposx", &cTransform->pos.x, 0.05f, 0.f, 0.f, "%.2f")) {
+								cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
+								cTransform->UpdateGlobalMatrix();
+							}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-						if (ImGui::DragFloat("##cposx", &cTransform->pos.x, 0.05f, 0.f, 0.f, "%.2f")) {
-							cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
-							cTransform->UpdateGlobalMatrix();
-						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+							if (ImGui::DragFloat("##cposy", &cTransform->pos.y, 0.05f, 0.f, 0.f, "%.2f")) {
+								cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
+								cTransform->UpdateGlobalMatrix();
+							}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-						if (ImGui::DragFloat("##cposy", &cTransform->pos.y, 0.05f, 0.f, 0.f, "%.2f")) {
-							cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
-							cTransform->UpdateGlobalMatrix();
-						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+							if (ImGui::DragFloat("##cposz", &cTransform->pos.z, 0.05f, 0.f, 0.f, "%.2f")) {
+								cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
+								cTransform->UpdateGlobalMatrix();
+							}
 
-						if (ImGui::DragFloat("##cposz", &cTransform->pos.z, 0.05f, 0.f, 0.f, "%.2f")) {
-							cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
-							cTransform->UpdateGlobalMatrix();
-						}
+							ImGui::Text("Rotation "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-						ImGui::Text("Rotation "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+							if (ImGui::DragFloat("##crotx", &cTransform->rot.x, 0.05f, 0.f, 0.f, "%.2f")) {
+								cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
+								cTransform->UpdateGlobalMatrix();
+							}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-						if (ImGui::DragFloat("##crotx", &cTransform->rot.x, 0.05f, 0.f, 0.f, "%.2f")) {
-							cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
-							cTransform->UpdateGlobalMatrix();
-						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+							if (ImGui::DragFloat("##croty", &cTransform->rot.y, 0.05f, 0.f, 0.f, "%.2f")) {
+								cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
+								cTransform->UpdateGlobalMatrix();
+							}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-						if (ImGui::DragFloat("##croty", &cTransform->rot.y, 0.05f, 0.f, 0.f, "%.2f")) {
-							cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
-							cTransform->UpdateGlobalMatrix();
-						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
-
-						if (ImGui::DragFloat("##crotz", &cTransform->rot.z, 0.05f, 0.f, 0.f, "%.2f")) {
-							cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
-							cTransform->UpdateGlobalMatrix();
+							if (ImGui::DragFloat("##crotz", &cTransform->rot.z, 0.05f, 0.f, 0.f, "%.2f")) {
+								cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
+								cTransform->UpdateGlobalMatrix();
+							}
 						}
 					}
 				}

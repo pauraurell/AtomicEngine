@@ -55,6 +55,7 @@ public:
 	void RenderFaceNormals(Mesh* m);
 
 	void DrawAABB(float3* aabb);
+	bool FrustumCulling(GameObject* go);
 
 public:
 
