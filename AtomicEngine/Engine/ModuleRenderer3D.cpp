@@ -499,6 +499,17 @@ void ModuleRenderer3D::RenderFaceNormals(Mesh* m)
 	}
 }
 
+void ModuleRenderer3D::UpdateProjMat(float* projMat)
+{
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glLoadMatrixf(App->camera->GetViewMatrix());
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glLoadMatrixf(App->camera->GetProjectionMatrix());
+}
+
 void ModuleRenderer3D::DrawAABB(float3* cornerPoints)
 {
 	glBegin(GL_LINES);
