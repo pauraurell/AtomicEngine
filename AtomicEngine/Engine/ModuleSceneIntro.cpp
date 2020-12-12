@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "Component.h"
 #include "ComponentMesh.h"
+#include <vector>
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -107,6 +108,25 @@ GameObject* ModuleSceneIntro::CreateGameObject(Mesh* mesh, string name)
 	newGameObject->CreateComponent(ComponentType::Mesh);
 	newGameObject->GetCMesh()->m = mesh;
 	App->scene_intro->game_objects.push_back(newGameObject);
+
+	return newGameObject;
+}
+
+GameObject* ModuleSceneIntro::CreateGameObject(Mesh* mesh, string name, float3 pos, Quat rot, float3 scale)
+{
+	GameObject* newGameObject = new GameObject(name.c_str());
+
+	newGameObject->SetRootChild();
+
+	newGameObject->CreateComponent(ComponentType::Transform);
+	newGameObject->CreateComponent(ComponentType::Mesh);
+	newGameObject->GetCMesh()->m = mesh;
+	App->scene_intro->game_objects.push_back(newGameObject);
+
+	newGameObject->GetCTransform()->SetPosition(pos.x, pos.y, pos.z);
+	newGameObject->GetCTransform()->SetRotation(rot);
+	newGameObject->GetCTransform()->SetScale(scale.x, scale.y, scale.z);
+
 
 	return newGameObject;
 }

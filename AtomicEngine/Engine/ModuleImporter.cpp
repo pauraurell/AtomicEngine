@@ -6,7 +6,7 @@
 #include "ComponentMaterial.h"
 #include "Mesh.h"
 #include "Texture.h"
-
+#include <vector>
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -130,6 +130,16 @@ void ModuleImporter::LoadMesh(char* file_path, string name)
 					myMesh->texcoords[v + 1] = ourMesh->mTextureCoords[0][i].y;
 				}
 			}
+
+			//aiVector3D position, scaling;
+			//aiQuaternion rotation;
+
+			//if(i == 2) scene->mRootNode->mChildren[i]->mTransformation.Decompose(scaling, rotation, position);
+			//scaling.x = scaling.y = scaling.z = 1.0f;
+
+			//float3 pos = float3(position.x, position.y, position.z);
+			//Quat rot = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+			//float3 scale = float3(scaling.x, scaling.y, scaling.z);
 
 			App->scene_intro->meshes.push_back(myMesh);
 

@@ -21,6 +21,8 @@ public:
 	GameObject* CreateGameObject(bool camera = false);
 	GameObject* CreateGameObject(Mesh* m);
 	GameObject* CreateGameObject(Mesh* m, string name);
+	GameObject* CreateGameObject(Mesh* m, string name, float3 pos, Quat rot, float3 scale);
+
 	void DeleteGameObject(GameObject* to_delete);
 
 	vector<GameObject*> GetGameObjects();
