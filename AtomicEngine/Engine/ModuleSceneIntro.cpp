@@ -23,8 +23,8 @@ bool ModuleSceneIntro::Start()
 	root->name = "Root Node";
 
 	grid = true;
-	App->camera->Move(vec3(-3, 2, 1));
-	App->camera->LookAt(vec3(0.f, 0.f, 0.f));
+	App->camera->Move(float3(-3, 2, 1));
+	App->camera->LookAt(float3(0.f, 0.f, 0.f));
 
 	App->importer->LoadMesh("Assets/3D Objects/BakerHouse.fbx");
 

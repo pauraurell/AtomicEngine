@@ -34,10 +34,26 @@ ComponentCamera::ComponentCamera(GameObject* go) : Component()
 	frustum.farPlaneDistance = 1000.0f;
 }
 
-/*ComponentCamera::ComponentCamera() : Component()
+ComponentCamera::ComponentCamera() : Component()
 {
 	type = ComponentType::Camera;
-}*/
+
+	camTransform = nullptr;
+
+	fixedFOV = FIXED_HORIZONTAL_FOV;
+	aspectRatio = 16.0f / 9.0f;
+	frustum.type = FrustumType::PerspectiveFrustum;
+
+	frustum.pos = float3(0.0f, 0.0f, -5.0f);
+	frustum.up = float3(0.0f, 1.0f, 0.0f);
+	frustum.front = float3(0.0f, 0.0f, 1.0f);
+
+	frustum.horizontalFov = 60.0f * DEGTORAD;
+	AdjustFieldOfView();
+
+	frustum.nearPlaneDistance = 0.3f;
+	frustum.farPlaneDistance = 1000.0f;
+}
 
 ComponentCamera::~ComponentCamera()
 {

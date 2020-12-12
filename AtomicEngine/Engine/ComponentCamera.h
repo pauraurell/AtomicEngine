@@ -15,7 +15,7 @@ class ComponentCamera : public Component
 {
 public:
 	ComponentCamera(GameObject* go);
-	//ComponentCamera();
+	ComponentCamera();
 	~ComponentCamera();
 
 	void Enable();
