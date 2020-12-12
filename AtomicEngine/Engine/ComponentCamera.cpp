@@ -10,6 +10,15 @@ ComponentCamera::ComponentCamera(GameObject* go) : Component()
 	type = ComponentType::Camera;
 	owner = go;
 
+	camTransform = new ComponentTransform(owner);
+	camTransform->pos = owner->GetCTransform()->pos;
+	camTransform->rotQuat = owner->GetCTransform()->rotQuat;
+	camTransform->rot = owner->GetCTransform()->rot;
+	camTransform->scale = owner->GetCTransform()->scale;
+	camTransform->localMat = owner->GetCTransform()->localMat;
+	camTransform->globalMat = owner->GetCTransform()->globalMat;
+	camTransform->parentGlobalMat = owner->GetCTransform()->parentGlobalMat;
+
 	fixedFOV = FIXED_HORIZONTAL_FOV;
 	aspectRatio = 16.0f / 9.0f;
 	frustum.type = FrustumType::PerspectiveFrustum;
@@ -41,10 +50,12 @@ void ComponentCamera::Enable()
 
 void ComponentCamera::Update()
 {
-	frustum.pos = owner->GetCTransform()->pos;
+	camTransform->Update();
 
-	/*frustum.up = owner->GetCTransform()->GetGlobalTransform().WorldY();
-	frustum.front = owner->GetCTransform()->GetGlobalTransform().WorldZ();*/
+	frustum.pos = owner->GetCTransform()->pos + camTransform->pos;
+
+	frustum.up = owner->GetCTransform()->globalMat.WorldY() + camTransform->globalMat.WorldY();
+	frustum.front = owner->GetCTransform()->globalMat.WorldZ() + camTransform->globalMat.WorldZ();
 
 	float3 corner_points[8];
 	frustum.GetCornerPoints(corner_points);
@@ -63,7 +74,12 @@ void ComponentCamera::SetFixedFOV(FixedFOV g_fixedFOV)
 
 void ComponentCamera::AdjustFieldOfView()
 {
-	frustum.verticalFov = 2 * atan(tan(frustum.horizontalFov * 0.5f) * (1 / aspectRatio));
+	if (fixedFOV == FixedFOV::FIXED_HORIZONTAL_FOV)
+		frustum.verticalFov = 2 * atan(tan(frustum.horizontalFov * 0.5f) * (1 / aspectRatio));
+	else
+		frustum.horizontalFov = 2.0f * std::atan(std::tan(frustum.verticalFov * 0.5f) * (aspectRatio));
+
+	//frustum.verticalFov = 2 * atan(tan(frustum.horizontalFov * 0.5f) * (1 / aspectRatio));
 	/*
 	switch (_aspectRatio)
 	{

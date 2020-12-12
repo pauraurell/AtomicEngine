@@ -4,6 +4,7 @@
 
 #include "Component.h"
 #include "MathGeoLib/MathGeoLib.h"
+#include "ComponentTransform.h"
 
 enum FixedFOV {
 	FIXED_VERTICAL_FOV,
@@ -44,6 +45,8 @@ public:
 	Frustum frustum;
 	float aspectRatio;
 	float3 reference;
+
+	ComponentTransform* camTransform;
 };
 
 #endif //__COMPONENTCAMERA_H__
