@@ -589,7 +589,7 @@ update_status ModuleGUI::Update()
 				ImGui::Separator();
 				if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					ImGui::Checkbox("Disable", &selectedObj->GetCCamera()->active); ImGui::SameLine();
+					ImGui::Checkbox("Disable ", &selectedObj->GetCCamera()->active); ImGui::SameLine();
 					if (ImGui::Button("Delete  Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
 					if (selectedObj->GetCCamera() != nullptr)
 					{
