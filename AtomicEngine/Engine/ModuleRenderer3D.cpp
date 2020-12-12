@@ -182,82 +182,85 @@ void ModuleRenderer3D::OnResize(int width, int height)
 void ModuleRenderer3D::RenderGameObject(GameObject* go) {
 
 	CheckWireframeMode();
-
-	if (go->GetCMaterial() != nullptr) 
+	if (FrustumCulling(go) == true || go == App->gui->selectedObj)
 	{
-		if (go->GetCMaterial()->tex != nullptr)
+		if (go->GetCMaterial() != nullptr)
 		{
-			glEnable(GL_TEXTURE_2D);
-			if (go->GetCMaterial()->tex->checkers == false)
+			if (go->GetCMaterial()->tex != nullptr)
 			{
-				if (go->GetCMaterial()->tex->loaded == false)
+				glEnable(GL_TEXTURE_2D);
+				if (go->GetCMaterial()->tex->checkers == false)
 				{
-					App->importer->LoadTexture(go->GetCMaterial()->tex->texName);
-					for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
+					if (go->GetCMaterial()->tex->loaded == false)
 					{
-						if (App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == go->GetCMaterial()->tex->texName)
+						App->importer->LoadTexture(go->GetCMaterial()->tex->texName);
+						for (int i = 0; i < App->scene_intro->game_objects.size(); i++)
 						{
-							App->scene_intro->game_objects[i]->GetCMaterial()->tex->loaded = true;
+							if (App->scene_intro->game_objects[i]->GetCMaterial()->tex->texName == go->GetCMaterial()->tex->texName)
+							{
+								App->scene_intro->game_objects[i]->GetCMaterial()->tex->loaded = true;
+							}
 						}
 					}
+					glBindTexture(GL_TEXTURE_2D, go->GetCMaterial()->tex->Gl_Tex);
 				}
-				glBindTexture(GL_TEXTURE_2D, go->GetCMaterial()->tex->Gl_Tex);
-			}
 
-			else
-			{
-				glBindTexture(GL_TEXTURE_2D, App->scene_intro->texs[0]->Gl_Tex);
+				else
+				{
+					glBindTexture(GL_TEXTURE_2D, App->scene_intro->texs[0]->Gl_Tex);
+				}
 			}
+		}
+
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glBindBuffer(GL_ARRAY_BUFFER, go->GetCMesh()->m->id_vertex);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		glBindBuffer(GL_ARRAY_BUFFER, go->GetCMesh()->m->id_normals);
+		glNormalPointer(GL_FLOAT, 0, NULL);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, go->GetCMesh()->m->id_index);
+		glBindBuffer(GL_ARRAY_BUFFER, go->GetCMesh()->m->id_texcoords);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+		glPushMatrix();
+		glMultMatrixf((float*)&go->GetCTransform()->globalMat.Transposed());
+
+		glColor3f(go->GetCMesh()->m->r, go->GetCMesh()->m->g, go->GetCMesh()->m->b);
+		if (go->GetCMesh()->m->color == false) { glColor3f(1, 1, 1); }
+		if (go->GetCMaterial() != nullptr && go->GetCMaterial()->tex != nullptr) { if (go->GetCMaterial()->tex->checkers) { glColor3f(1, 1, 1); } }
+
+		glDrawElements(GL_TRIANGLES, go->GetCMesh()->m->num_index, GL_UNSIGNED_INT, NULL);
+
+		glPopMatrix();
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_NORMAL_ARRAY, 0);
+
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisable(GL_TEXTURE_2D);
+
+
+		if (go->GetCMesh()->m->vNormals) {
+			glBegin(GL_LINES);
+			glColor3f(0.3f, 0.1f, 0.7f);
+			RenderVertexNormals(go->GetCMesh()->m);
+			glEnd();
+		}
+
+		if (go->GetCMesh()->m->fNormals) {
+			glBegin(GL_LINES);
+			glColor3f(0.6f, 0.4f, 0.1f);
+			RenderFaceNormals(go->GetCMesh()->m);
+			glEnd();
 		}
 	}
 	
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	glBindBuffer(GL_ARRAY_BUFFER, go->GetCMesh()->m->id_vertex);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ARRAY_BUFFER, go->GetCMesh()->m->id_normals);
-	glNormalPointer(GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, go->GetCMesh()->m->id_index);
-	glBindBuffer(GL_ARRAY_BUFFER, go->GetCMesh()->m->id_texcoords);
-	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
-	glPushMatrix();
-	glMultMatrixf((float*)&go->GetCTransform()->globalMat.Transposed());
-
-	glColor3f(go->GetCMesh()->m->r, go->GetCMesh()->m->g, go->GetCMesh()->m->b);
-	if (go->GetCMesh()->m->color == false) { glColor3f(1, 1, 1); }
-	if(go->GetCMaterial() != nullptr && go->GetCMaterial()->tex != nullptr) {	if (go->GetCMaterial()->tex->checkers) { glColor3f(1, 1, 1); }}
-	 
-	glDrawElements(GL_TRIANGLES, go->GetCMesh()->m->num_index, GL_UNSIGNED_INT, NULL);
-
-	glPopMatrix();
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_NORMAL_ARRAY, 0);
-
-	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisable(GL_TEXTURE_2D);
-
-
-	if (go->GetCMesh()->m->vNormals) {
-		glBegin(GL_LINES);
-		glColor3f(0.3f, 0.1f, 0.7f);
-		RenderVertexNormals(go->GetCMesh()->m);
-		glEnd();
-	}
-	
-	if (go->GetCMesh()->m->fNormals) {
-		glBegin(GL_LINES);
-		glColor3f(0.6f, 0.4f, 0.1f);
-		RenderFaceNormals(go->GetCMesh()->m);
-		glEnd();
-	}
 
 }
 
@@ -538,3 +541,16 @@ void ModuleRenderer3D::DrawAABB(float3* cornerPoints)
 	glEnd();
 }
 
+bool ModuleRenderer3D::FrustumCulling(GameObject* go)
+{
+	AABB aabb = go->BB;
+
+	for (int i = 0; i < App->scene_intro->cameras.size(); i++)
+	{
+		if (App->scene_intro->cameras[i]->active == true)
+		{
+			if (App->scene_intro->cameras[i]->ContainsAABB(aabb)) { return true; }
+		}
+	}
+	return false;
+}

@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "ModuleImporter.h"
 #include "Texture.h"
+#include "ComponentCamera.h"
 #include "MathGeoLib/MathGeoLib.h"
 #include "ImGuizmo/ImGuizmo.h"
 
@@ -31,6 +32,7 @@ public:
 	vector<GameObject*> game_objects;
 	vector<Mesh*> meshes;
 	vector<At_Tex*> texs;
+	vector<ComponentCamera*> cameras;
 
 	//void DrawGuizmo(ImGuizmo::OPERATION operation);
 	//ImGuizmo::OPERATION guizmoOperation;
