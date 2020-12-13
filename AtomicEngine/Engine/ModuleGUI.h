@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "ImGui/imgui.h"
 #include "ImGuizmo/ImGuizmo.h"
+#include "MathGeoLib/MathGeoLib.h"
 
 using namespace std;
 
@@ -28,6 +29,8 @@ public:
 
 	void GameObjectPopUps();
 	void ReparentDragDrop(GameObject* go, int& id);
+
+	bool DrawModelImportingWindow(char* file_path);
 
 	const char* GetCaps();
 	void DrawUi();
@@ -55,6 +58,14 @@ public:
 
 	bool printInspector;
 	GameObject* selectedObj;
+	char* file_path;
+	bool showImportWindow = false;
+	float tempScale = 1.f;
+	float3 tempP = {0.f, 0.f, 0.f};
+
+	bool origin = true;
+	bool custom_position = false;
+	bool viewtransform = false;
 
 	char buff[256];
 
@@ -71,7 +82,6 @@ private:
 	bool InspectorWindowActive;
 	bool* dockingWin;
 
-	
 	vector<float> fps_log;
 	vector<float> ms_log;
 	int fps;

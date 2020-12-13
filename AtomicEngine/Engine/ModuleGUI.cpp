@@ -753,6 +753,70 @@ update_status ModuleGUI::Update()
 		ImGui::End();
 	}
 
+	if (showImportWindow)
+	{
+		if (ImGui::Begin("Import Options", NULL))
+		{
+			ImGui::Text("FBX path: %s", file_path);
+
+			ImGui::SetNextItemWidth(70.f);
+			if (ImGui::DragFloat("Scale", &tempScale, 0.05f, 0.f, 0.f, "%.1f")) {
+				App->scene_intro->tempScale = { tempScale, tempScale, tempScale };
+			}
+
+			if (origin == false) { custom_position = true; }
+			else if (custom_position == false) { origin = true; }
+
+			if (ImGui::Checkbox("Import at origin", &origin)) 
+			{
+				App->scene_intro->tempPosition = {0,0,0};
+				custom_position = false;
+				viewtransform = false;
+			}
+
+			if (ImGui::Checkbox("Import at position", &custom_position))
+			{
+				origin = false;
+				viewtransform = true;
+			}
+
+			if (viewtransform) 
+			{
+				ImGui::SetNextItemWidth(58.f);
+				if (ImGui::DragFloat("X", &tempP.x, 0.05f, 0.f, 0.f, "%.2f")) {
+					App->scene_intro->tempPosition.x = tempP.x;
+				}ImGui::SameLine();
+				ImGui::SetNextItemWidth(58.f);
+				if (ImGui::DragFloat("Y", &tempP.y, 0.05f, 0.f, 0.f, "%.2f")) {
+					App->scene_intro->tempPosition.y = tempP.y;
+				}ImGui::SameLine();
+				ImGui::SetNextItemWidth(58.f);
+				if (ImGui::DragFloat("Z", &tempP.z, 0.05f, 0.f, 0.f, "%.2f")) {
+					App->scene_intro->tempPosition.z = tempP.z;
+				}
+			}
+			
+			if (ImGui::Button("Import"))
+			{
+				showImportWindow = false;
+				App->importer->LoadMesh(file_path);
+				tempP = { 0,0,0 };
+				tempScale = 1;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Cancel")) 
+			{
+				showImportWindow = false;
+				tempP = { 0,0,0 };
+				tempScale = 1;
+			}
+
+		}
+		ImGui::End();
+	}
+
 	if (AboutWindowActive)
 	{
 		if (ImGui::Begin("About", &AboutWindowActive)) {
@@ -822,6 +886,7 @@ update_status ModuleGUI::Update()
 		}
 		ImGui::End();
 	}
+	char* file_path = "hola";
 
 	//Demo Window
 	if (demowindow) { ImGui::ShowDemoWindow(&demowindow); }
@@ -982,3 +1047,4 @@ update_status ModuleGUI::DockingSpace(bool* open)
 
 	return ret;
 }
+

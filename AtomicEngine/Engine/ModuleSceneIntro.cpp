@@ -126,6 +126,19 @@ GameObject* ModuleSceneIntro::CreateGameObject(Mesh* mesh, string name)
 	newGameObject->GetCMesh()->m = mesh;
 	App->scene_intro->game_objects.push_back(newGameObject);
 
+	if (App->gui->tempP.x != 0 && App->gui->tempP.y != 0 && App->gui->tempP.z != 0) 
+	{
+		newGameObject->GetCTransform()->SetPosition(tempPosition.x, tempPosition.y, tempPosition.z);
+	}
+
+	if (App->gui->tempScale != 1)
+	{
+		newGameObject->GetCTransform()->SetScale(tempScale.x, tempScale.y, tempScale.z);
+	}
+
+	newGameObject->GetCTransform()->UpdateGlobalMatrix();
+
+	
 	return newGameObject;
 }
 

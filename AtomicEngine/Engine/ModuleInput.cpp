@@ -138,6 +138,13 @@ bool ModuleInput::CleanUp()
 
 void ModuleInput::LoadDraggedFile(SDL_Event e)
 {
+	string file = e.drop.file;
+ 
+	if (file.substr(file.length() - 3) == "FBX" || file.substr(file.length() - 3) == "fbx")
+	{ 
+		App->gui->file_path = e.drop.file;
+		App->gui->showImportWindow = true;
+	}
 	App->importer->LoadTexture(e.drop.file);
-	App->importer->LoadMesh(e.drop.file);
+
 }

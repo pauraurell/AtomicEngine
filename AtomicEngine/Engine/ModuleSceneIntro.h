@@ -38,6 +38,9 @@ public:
 	void DrawGuizmos();
 	ImGuizmo::OPERATION guizmo_operation;
 
+	float3 tempPosition;
+	float3 tempScale;
+
 	GameObject* root;
 	bool grid;
 };
