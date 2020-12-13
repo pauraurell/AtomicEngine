@@ -2,6 +2,7 @@
 #include "ImGui/imgui.h"
 #include "Globals.h"
 #include "GameObject.h"
+#include "ModuleJSON.h"
 
 ComponentTransform::ComponentTransform(GameObject* go) : Component()
 {
@@ -30,6 +31,29 @@ void ComponentTransform::SetGlobalTransform(float4x4 trans)
 	localMat.Decompose(pos, rotQuat, scale);
 	rot = rotQuat.ToEulerXYZ();
 	rot *= RADTODEG;
+}
+
+void ComponentTransform::Save(GnJSONArray& save_array)
+{
+	GnJSONObj save_object;
+	save_object.AddInt("Type", (int)type);
+
+	save_object.AddFloat3("Position", pos);
+	save_object.AddFloat3("Rotation", rot);
+	save_object.AddQuaternion("Rotation Quat", rotQuat);
+	save_object.AddFloat3("Scale", scale);
+
+	save_array.AddObject(save_object);
+}
+
+void ComponentTransform::Load(GnJSONObj& load_object)
+{
+	pos = load_object.GetFloat3("Position");
+	rot = load_object.GetFloat3("Rotation");
+	rotQuat = load_object.GetQuaternion("Rotation Quat");
+	scale = load_object.GetFloat3("Scale");
+
+	UpdateGlobalMatrix();
 }
 
 void ComponentTransform::UpdateLocalMatrix()

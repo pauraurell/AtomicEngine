@@ -252,7 +252,7 @@ GameObject* ModuleImporter::PreorderChildren(const aiScene* scene, aiNode* node,
 	{
 		Mesh* mesh = LoadMesh(scene, node, path);
 		mesh->filename = path;
-		go = App->scene_intro->CreateGameObject(mesh, path);
+		go = App->scene_intro->CreateGameObject(mesh, "GameObject");
 
 		LoadTransform(node, go->GetCTransform());
 	}

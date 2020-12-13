@@ -39,6 +39,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void Save(const char* file_name);
+	void Load(const char* file_name);
 
 private:
 
@@ -64,6 +66,13 @@ public:
 
 	const char* GetTitleName() const;
 	const char* GetOrganizationName() const;
+
+	bool want_to_save;
+	bool want_to_load;
+
+	char file_to_load[256];
+	char file_to_save[256];
+
 };
 
 extern Application* App;

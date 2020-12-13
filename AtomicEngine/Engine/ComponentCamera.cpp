@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ImGui/imgui.h"
+#include "ModuleJSON.h"
 
 ComponentCamera::ComponentCamera(GameObject* go) : Component()
 {
@@ -85,6 +86,44 @@ void ComponentCamera::Update()
 void ComponentCamera::Disable()
 {
 	active = false;
+}
+
+void ComponentCamera::Save(GnJSONArray& save_array)
+{
+	GnJSONObj save_object;
+
+	//save_object.AddString("name", name.c_str());
+	save_object.AddInt("Type", (int)type);
+	/*bool mainCamera = App->renderer3D->GetMainCamera() == this;
+	save_object.AddBool("Main Camera", mainCamera);*/
+	save_object.AddFloat3("position", frustum.pos);
+	save_object.AddFloat3("up", frustum.up);
+	save_object.AddFloat3("front", frustum.front);
+	save_object.AddFloat("horizontalFOV", frustum.horizontalFov * DEGTORAD);
+	save_object.AddFloat("verticalFOV", frustum.verticalFov * DEGTORAD);
+	save_object.AddFloat("nearPlane", frustum.nearPlaneDistance);
+	save_object.AddFloat("farPlane", frustum.farPlaneDistance);
+	save_object.AddFloat("aspectRatio", aspectRatio);
+	save_object.AddFloat3("reference", reference);
+
+	save_array.AddObject(save_object);
+}
+
+void ComponentCamera::Load(GnJSONObj& load_object)
+{
+	/*if (load_object.GetBool("Main Camera", false))
+		App->renderer3D->SetMainCamera(this);*/
+
+	//name = load_object.GetString("name", "camera");
+
+	frustum.pos = load_object.GetFloat3("position");
+	frustum.up = load_object.GetFloat3("up");
+	frustum.front = load_object.GetFloat3("front");
+	frustum.horizontalFov = load_object.GetFloat("horizontalFOV") * RADTODEG;
+	frustum.verticalFov = load_object.GetFloat("verticalFOV") * RADTODEG;
+	frustum.nearPlaneDistance = load_object.GetFloat("nearPlane");
+	frustum.farPlaneDistance = load_object.GetFloat("farPlane");
+	reference = load_object.GetFloat3("reference");
 }
 
 void ComponentCamera::SetFixedFOV(FixedFOV g_fixedFOV)

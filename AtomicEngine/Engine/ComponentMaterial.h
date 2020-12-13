@@ -16,6 +16,9 @@ public:
 	void Update();
 	void Disable();
 
+	void Save(GnJSONArray& save_array) override;
+	void Load(GnJSONObj& load_object) override;
+
 	At_Tex* tex;
 	bool hasTex;
 };

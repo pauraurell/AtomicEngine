@@ -13,6 +13,8 @@ class ComponentTransform;
 class ComponentMaterial;
 class ComponentCamera;
 enum class ComponentType;
+class GnJSONObj;
+class GnJSONArray;
 
 using namespace std;
 
@@ -24,6 +26,9 @@ public:
 	~GameObject();
 
 	void Update();
+	void Save(GnJSONArray& save_array);
+	uint Load(GnJSONObj* object);
+
 	Component* CreateComponent(ComponentType type);
 	void DeleteComponent(Component* comp);
 	void DeleteComponents();
@@ -39,6 +44,7 @@ public:
 	bool DeleteChild(GameObject* to_delete);
 	void DeleteChildren();
 	void SetRootChild();
+	void ChildrenTransform();
 
 	string name;
 	bool active;

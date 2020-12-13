@@ -1,5 +1,7 @@
 #include "Application.h"
 #include "AtTime.h"
+#include "Globals.h"
+#include "ModuleJSON.h"
 
 Application::Application()
 {
@@ -25,6 +27,8 @@ Application::Application()
 
 	AddModule(renderer3D);
 
+	want_to_load = false;
+	want_to_save = false;
 	fps = 0;
 	ms_cap = 1000 / 120;
 	inGame = false;
@@ -109,6 +113,18 @@ update_status Application::Update()
 		ret = list_modules[i]->PostUpdate();
 	}
 
+	if (want_to_save)
+	{
+		scene_intro->SaveScene(file_to_save);
+		want_to_save = false;
+	}
+
+	if (want_to_load)
+	{
+		scene_intro->LoadScene(file_to_load);
+		want_to_load = false;
+	}
+
 	frames_since_start++;
 	FinishUpdate();
 	return ret;
@@ -155,4 +171,16 @@ void Application::StopGame()
 {
 	inGame = false;
 	Time::GameTime.Stop();
+}
+
+void Application::Save(const char* file_name)
+{
+	want_to_save = true;
+	strcpy_s(file_to_save, file_name);
+}
+
+void Application::Load(const char* file_name)
+{
+	want_to_load = true;
+	strcpy_s(file_to_load, file_name);
 }
