@@ -11,10 +11,10 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Y = float3(0.0f, 1.0f, 0.0f);
 	Z = float3(0.0f, 0.0f, 1.0f);
 
-	Position = float3(4.0f, 3.5f, -8.0f);
+	Position = float3(7.f, 20.f, 60.f);
 	Reference = float3(0.0f, 0.0f, 0.0f);
 
-	cam_speed = 0.15;
+	cam_speed = 0.3;
 	sensitivity = 5;
 	speed_multiplier = 2.0f;
 

@@ -30,8 +30,6 @@ public:
 	void GameObjectPopUps();
 	void ReparentDragDrop(GameObject* go, int& id);
 
-	bool DrawModelImportingWindow(char* file_path);
-
 	const char* GetCaps();
 	void DrawUi();
 	void SaveScene();
