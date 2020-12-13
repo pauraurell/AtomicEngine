@@ -47,6 +47,11 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	g = 0.05;
 	b = 0.05;
 	gridSize = 100;
+
+	file_name[0] = '\0';
+	select_file[0] = '\0';
+	folder_name[0] = '\0';
+	sprintf_s(folder_name, 256, "Scenes");
 }
 
 ModuleGUI::~ModuleGUI()
@@ -162,7 +167,12 @@ update_status ModuleGUI::Update()
 
 			if (ImGui::MenuItem("Save", "Ctrl + S"))
 			{
-				SaveScenePopUp();
+				SaveScene();
+			}
+
+			if (ImGui::MenuItem("Load", "Ctrl + L"))
+			{
+				LoadScene();
 			}
 		
 			if (ImGui::MenuItem("Exit", "Alt + F4"))
@@ -985,31 +995,14 @@ update_status ModuleGUI::DockingSpace(bool* open)
 	return ret;
 }
 
-void ModuleGUI::SaveScenePopUp()
+void ModuleGUI::SaveScene()
 {
-	ImGui::OpenPopup("Save File");
-	if (ImGui::BeginPopupModal("Save File"))
-	{
-		char file_name[128];
-		ImGui::PushItemWidth(250.f);
-		if (ImGui::InputText("##file_name", file_name, 128, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
-		{
+	strcpy(file_name, "new_scene");
+	sprintf_s(select_file, 128, "%s.scene", file_name);
+	App->Save(select_file);
+}
 
-		}
-		ImGui::PopItemWidth();
-		ImGui::SameLine();
-		if (ImGui::Button("Ok", ImVec2(50, 20)))
-		{
-			if (file_name[0] == '\0') { strcpy(file_name, "Untitled"); }
-			App->scene_intro->SaveScene(file_name);
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::SameLine();
-
-		if (ImGui::Button("Cancel", ImVec2(50, 20)))
-		{
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::EndPopup();
-	}
+void ModuleGUI::LoadScene(/*const char* filter_extension, const char* from_dir*/)
+{
+	App->Load(select_file);
 }

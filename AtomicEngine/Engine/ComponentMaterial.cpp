@@ -74,10 +74,7 @@ void ComponentMaterial::Load(GnJSONObj& load_object)
 
 	hasTex = load_object.GetBool("hasTex");
 
-	if (tex == nullptr)
-	{
-		tex = new At_Tex();
-	}
+	tex = new At_Tex();
 	tex->texName = (char*)load_object.GetString("texName", "Untitled");
 	tex->Gl_Tex = load_object.GetInt("Gl_Tex");
 	tex->loaded = load_object.GetBool("loaded");

@@ -28,6 +28,7 @@ public:
 	GameObject* CreateGameObject(Mesh* m, string name, float3 pos, Quat rot, float3 scale);
 
 	void DeleteGameObject(GameObject* to_delete);
+	void DeleteScene();
 
 	vector<GameObject*> GetGameObjects();
 	void PushbackGameObjects(GameObject* gameObject, std::vector<GameObject*>& gameObjects);

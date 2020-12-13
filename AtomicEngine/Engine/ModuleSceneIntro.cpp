@@ -170,6 +170,14 @@ void ModuleSceneIntro::DeleteGameObject(GameObject* to_delete)
 
 }
 
+void ModuleSceneIntro::DeleteScene()
+{
+	for (int i = 0; i < game_objects.size(); i++)
+	{
+		DeleteGameObject(game_objects[i]);
+	}
+}
+
 std::vector<GameObject*> ModuleSceneIntro::GetGameObjects()
 {
 	vector<GameObject*> temp;
@@ -244,7 +252,7 @@ bool ModuleSceneIntro::LoadScene(char* file_name)
 		return false;
 	}
 
-	//ClearScene();
+	DeleteScene();
 
 	char* buffer = NULL;
 	App->fileSystem->Load(file_name, &buffer);
@@ -277,7 +285,7 @@ bool ModuleSceneIntro::LoadScene(char* file_name)
 		}
 	}
 
-	root->ChildrenTransform();
+	//root->ChildrenTransform();
 
 	if (root != nullptr)
 		//LOG("Scene: %s loaded successfully", file_name);

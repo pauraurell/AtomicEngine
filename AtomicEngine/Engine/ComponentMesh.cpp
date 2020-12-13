@@ -50,7 +50,7 @@ void ComponentMesh::Save(GnJSONArray& save_array)
 		save_object.AddInt("normals", *m->normals);
 		save_object.AddInt("id_colors", m->id_colors);
 		save_object.AddInt("num_colors", m->num_colors);
-		save_object.AddInt("colors", *m->colors);
+		if (m->colors != nullptr) { save_object.AddInt("colors", *m->colors); }
 		save_object.AddInt("id_texcoords", m->id_texcoords);
 		save_object.AddInt("num_texcoords", m->num_texcoords);
 		save_object.AddInt("texcoords", *m->texcoords);
@@ -69,25 +69,23 @@ void ComponentMesh::Load(GnJSONObj& load_object)
 {
 	//int meshUID = load_object.GetInt("MeshID");
 	//SetResourceUID(meshUID);
-	if (m == nullptr) {
-		m = new Mesh();
-	}
+	m = new Mesh();
 	m->filename = (char*)load_object.GetString("Path", "Untitled");
 	m->id_index = load_object.GetInt("id_index");
 	m->num_index = load_object.GetInt("num_index");
-	*m->index = load_object.GetInt("index");
+	m->index = new uint(load_object.GetInt("index"));
 	m->id_vertex = load_object.GetInt("id_vertex");
 	m->num_vertex = load_object.GetInt("num_vertex");
-	*m->vertex = load_object.GetInt("vertex");
+	m->vertex = new float(load_object.GetInt("vertex"));
 	m->id_normals = load_object.GetInt("id_normals");
 	m->num_normals = load_object.GetInt("num_normals");
-	*m->normals = load_object.GetInt("normals");
+	m->normals = new float(load_object.GetInt("normals"));
 	m->id_colors = load_object.GetInt("id_colors");
 	m->num_colors = load_object.GetInt("num_colors");
-	*m->colors = load_object.GetInt("colors");
+	m->colors = new float(load_object.GetInt("colors"));
 	m->id_texcoords = load_object.GetInt("id_texcoords");
 	m->num_texcoords = load_object.GetInt("num_texcoords");
-	*m->texcoords = load_object.GetInt("texcoords");
+	m->texcoords = new float(load_object.GetInt("texcoords"));
 	m->vNormals = load_object.GetBool("vNormals");
 	m->fNormals = load_object.GetBool("fNormals");
 	m->r = load_object.GetFloat("r");
