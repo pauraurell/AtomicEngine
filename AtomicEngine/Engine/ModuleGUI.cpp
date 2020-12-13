@@ -638,7 +638,7 @@ update_status ModuleGUI::Update()
 							ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
 
 							ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 0.001f, 50.0f);
-							ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 50.0f, 2000.0f);
+							ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 10.0f, 2000.0f);
 
 							ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
 
