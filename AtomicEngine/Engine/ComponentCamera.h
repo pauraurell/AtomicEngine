@@ -22,6 +22,9 @@ public:
 	void Update();
 	void Disable();
 
+	void Save(GnJSONArray& save_array) override;
+	void Load(GnJSONObj& load_object) override;
+
 	void SetFixedFOV(FixedFOV fixedFOV);
 	void AdjustFieldOfView();
 	void AdjustFieldOfView(float width, float height);

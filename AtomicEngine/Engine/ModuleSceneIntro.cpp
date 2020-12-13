@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "Component.h"
 #include "ComponentMesh.h"
+#include "ModuleJSON.h"
 #include <vector>
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -182,6 +183,14 @@ void ModuleSceneIntro::DeleteGameObject(GameObject* to_delete)
 
 }
 
+void ModuleSceneIntro::DeleteScene()
+{
+	for (int i = 0; i < game_objects.size(); i++)
+	{
+		DeleteGameObject(game_objects[i]);
+	}
+}
+
 std::vector<GameObject*> ModuleSceneIntro::GetGameObjects()
 {
 	vector<GameObject*> temp;
@@ -218,4 +227,81 @@ void ModuleSceneIntro::DrawGuizmos()
 
 		if (ImGuizmo::IsUsing()) { App->gui->selectedObj->GetCTransform()->SetTransform(tempTransform); }
 	}	
+}
+
+bool ModuleSceneIntro::SaveScene(char* file_name)
+{
+	bool ret = true;
+
+	GnJSONObj save_file;
+
+	GnJSONArray gameObjects = save_file.AddArray("Game Objects");
+
+	root->Save(gameObjects);
+
+	char* buffer = NULL;
+	uint size = save_file.Save(&buffer);
+
+	App->fileSystem->Save(file_name, buffer, size);
+
+	std::string assets_path = "Assets/Scenes/";
+	assets_path.append(App->fileSystem->GetFile(file_name));
+	App->fileSystem->DuplicateFile(file_name, assets_path.c_str());
+
+	save_file.Release();
+	RELEASE_ARRAY(buffer);
+
+	return ret;
+}
+
+bool ModuleSceneIntro::LoadScene(char* file_name)
+{
+	bool ret = true;
+
+	std::string format = App->fileSystem->GetFileFormat(file_name);
+	if (format != ".scene")
+	{
+		//LOG("%s is not a valid scene format and can't be loaded", file_name);
+		return false;
+	}
+
+	DeleteScene();
+
+	char* buffer = NULL;
+	App->fileSystem->Load(file_name, &buffer);
+
+	GnJSONObj base_object(buffer);
+	GnJSONArray gameObjects(base_object.GetArray("Game Objects"));
+
+	std::vector<GameObject*> createdObjects;
+
+	for (size_t i = 0; i < gameObjects.Size(); i++)
+	{
+		//load game object
+		GameObject* gameObject = new GameObject();
+		uint parentUUID = gameObject->Load(&gameObjects.GetObjectAt(i));
+		createdObjects.push_back(gameObject);
+
+		//check if it's the root game object
+		if (strcmp(gameObject->name.c_str(), "Root") == 0) {
+			root = gameObject;
+			App->gui->selectedObj = root;
+		}
+
+		//Get game object's parent
+		for (size_t i = 0; i < createdObjects.size(); i++)
+		{
+			if (createdObjects[i]->UUID == parentUUID)
+			{
+				createdObjects[i]->CreateChild(gameObject);
+			}
+		}
+	}
+
+	//root->ChildrenTransform();
+
+	if (root != nullptr)
+		//LOG("Scene: %s loaded successfully", file_name);
+
+	return ret;
 }

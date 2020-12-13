@@ -58,6 +58,11 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	igLights = false;
 	igCameras = false;
 	AssetsWindowActive = true;
+
+	file_name[0] = '\0';
+	select_file[0] = '\0';
+	folder_name[0] = '\0';
+	sprintf_s(folder_name, 256, "Scenes");
 }
 
 ModuleGUI::~ModuleGUI()
@@ -171,8 +176,15 @@ update_status ModuleGUI::Update()
 			if (ImGui::MenuItem("Open" ,0, false, false))
 			{}
 
-			if (ImGui::MenuItem("Save", "Ctrl + S", false, false))
-			{}
+			if (ImGui::MenuItem("Save", "Ctrl + S"))
+			{
+				SaveScene();
+			}
+
+			if (ImGui::MenuItem("Load", "Ctrl + L"))
+			{
+				LoadScene();
+			}
 		
 			if (ImGui::MenuItem("Exit", "Alt + F4"))
 			{
@@ -616,7 +628,7 @@ update_status ModuleGUI::Update()
 					ImGui::Separator();
 					if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						ImGui::Checkbox("Disable ", &selectedObj->GetCCamera()->active); ImGui::SameLine();
+						ImGui::Checkbox("Frustum Culling", &selectedObj->GetCCamera()->active); ImGui::SameLine();
 						if (ImGui::Button("Delete  Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
 						if (selectedObj->GetCCamera() != nullptr)
 						{
@@ -1073,3 +1085,14 @@ update_status ModuleGUI::DockingSpace(bool* open)
 	return ret;
 }
 
+void ModuleGUI::SaveScene()
+{
+	strcpy(file_name, "new_scene");
+	sprintf_s(select_file, 128, "%s.scene", file_name);
+	App->Save(select_file);
+}
+
+void ModuleGUI::LoadScene(/*const char* filter_extension, const char* from_dir*/)
+{
+	App->Load(select_file);
+}

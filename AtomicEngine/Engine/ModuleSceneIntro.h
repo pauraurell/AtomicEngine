@@ -19,6 +19,8 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
+	bool SaveScene(char* file_name);
+	bool LoadScene(char* file_name);
 
 	GameObject* CreateGameObject(bool camera = false);
 	GameObject* CreateGameObject(Mesh* m);
@@ -26,6 +28,7 @@ public:
 	GameObject* CreateGameObject(Mesh* m, string name, float3 pos, Quat rot, float3 scale);
 
 	void DeleteGameObject(GameObject* to_delete);
+	void DeleteScene();
 
 	vector<GameObject*> GetGameObjects();
 	void PushbackGameObjects(GameObject* gameObject, std::vector<GameObject*>& gameObjects);

@@ -2,11 +2,16 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
 #include "PhysFS\include\physfs.h"
+#include <fstream>
+#include <iostream>
+#include <Shlwapi.h>
+#include <cctype>
 
 #include "Assimp/include/cfileio.h"
 #include "Assimp/include/types.h"
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
+#pragma comment (lib,"shlwapi.lib")
 
 using namespace std;
 
@@ -376,4 +381,45 @@ void ModuleFileSystem::CreateAssimpIO()
 aiFileIO* ModuleFileSystem::GetAssimpIO()
 {
 	return AssimpIO;
+}
+
+std::string ModuleFileSystem::GetFile(const char* path)
+{
+	std::string file;
+	std::string file_path;
+	std::string extension;
+	SplitFilePath(path, &file_path, &file, &extension);
+	return file + "." + extension;
+}
+
+std::string ModuleFileSystem::GetFileFormat(const char* path)
+{
+	std::string format = PathFindExtensionA(path);
+	std::transform(format.begin(), format.end(), format.begin(), [](unsigned char c) { return std::tolower(c); });
+	return format;
+}
+
+bool ModuleFileSystem::DuplicateFile(const char* srcFile, const char* dstFile)
+{
+	std::ifstream src;
+	src.open(srcFile, std::ios::binary);
+	bool srcOpen = src.is_open();
+	std::ofstream  dst(dstFile, std::ios::binary);
+	bool dstOpen = dst.is_open();
+
+	dst << src.rdbuf();
+
+	src.close();
+	dst.close();
+
+	if (srcOpen && dstOpen)
+	{
+		//LOG("[success] File Duplicated Correctly");
+		return true;
+	}
+	else
+	{
+		//LOG("File %s could not be duplicated into %s, %s", srcFile, dstFile, PHYSFS_getLastError());
+		return false;
+	}
 }

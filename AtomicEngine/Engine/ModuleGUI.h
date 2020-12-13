@@ -34,6 +34,8 @@ public:
 
 	const char* GetCaps();
 	void DrawUi();
+	void SaveScene();
+	void LoadScene(/*const char* filter_extension, const char* from_dir*/);
 
 	std::string caps;
 
@@ -89,6 +91,10 @@ private:
 	vector<float> fps_log;
 	vector<float> ms_log;
 	int fps;
+
+	char folder_name[256];
+	char file_name[128];
+	char select_file[256];
 };
 
 #endif // __ModuleGUI_H__

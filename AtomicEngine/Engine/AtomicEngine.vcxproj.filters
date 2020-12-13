@@ -184,6 +184,9 @@
     <ClCompile Include="ComponentCamera.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleJSON.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -467,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="ComponentCamera.h">
       <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleJSON.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
