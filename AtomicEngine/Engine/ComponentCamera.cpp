@@ -9,6 +9,7 @@ ComponentCamera::ComponentCamera(GameObject* go) : Component()
 {
 	type = ComponentType::Camera;
 	owner = go;
+	beingUsed = false;
 
 	camTransform = new ComponentTransform(owner);
 	camTransform->pos = owner->GetCTransform()->pos;
@@ -75,7 +76,10 @@ void ComponentCamera::Update()
 
 	float3 corner_points[8];
 	frustum.GetCornerPoints(corner_points);
-	App->renderer3D->DrawAABB(corner_points);
+	if (beingUsed == false)
+	{
+		App->renderer3D->DrawAABB(corner_points);
+	}
 }
 
 void ComponentCamera::Disable()

@@ -22,6 +22,8 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	camera = new ComponentCamera();
 	camera->SetPosition(float3(Position));
 	camera->SetReference(Reference);
+	App->scene_intro->cameras.push_back(camera);
+	camera->Disable();
 	Look(Reference);
 
 	//background = { 0.12f, 0.12f, 0.12f, 1.0f };

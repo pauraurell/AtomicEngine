@@ -632,12 +632,23 @@ update_status ModuleGUI::Update()
 							ImGui::Text("Vertical FOV: %.2f", selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG);
 						}
 
-						ImGui::Spacing();
-						ImGui::Separator();
-						ImGui::Spacing();
+						ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
 
 						ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 0.001f, 50.0f);
 						ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 50.0f, 2000.0f);
+
+						ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+
+						if (selectedObj->GetCCamera()->beingUsed == false)
+						{
+							if (ImGui::Button("Use camera")) { App->camera->camera = selectedObj->GetCCamera(); selectedObj->GetCCamera()->beingUsed = true; }
+						}
+						else
+						{
+							if (ImGui::Button("Stop using camera")) { App->camera->camera = App->scene_intro->cameras[0]; selectedObj->GetCCamera()->beingUsed = false; App->camera->Reset(); }
+						}
+
+						ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
 
 						if (selectedObj->GetCCamera()->camTransform != nullptr)
 						{

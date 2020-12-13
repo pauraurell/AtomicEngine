@@ -45,6 +45,7 @@ public:
 	Frustum frustum;
 	float aspectRatio;
 	float3 reference;
+	bool beingUsed;
 
 	ComponentTransform* camTransform;
 };
