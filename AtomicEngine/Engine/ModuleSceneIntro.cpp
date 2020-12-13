@@ -25,7 +25,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(float3(-3, 2, 1));
 	App->camera->LookAt(float3(0.f, 0.f, 0.f));
 
-	App->importer->LoadMesh("Assets/3D Objects/BakerHouse.fbx");
+	App->importer->LoadMesh("Assets/3D Objects/street/Street environment_V01.fbx");
 
 	if (game_objects[0] != nullptr && game_objects[1] != nullptr)
 	{

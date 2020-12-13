@@ -47,6 +47,17 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	g = 0.05;
 	b = 0.05;
 	gridSize = 100;
+
+	showImportWindow = false;
+	tempScale = 1.f;
+	tempP = { 0.f, 0.f, 0.f };
+
+	origin = true;
+	custom_position = false;
+	viewtransform = false;
+	igLights = false;
+	igCameras = false;
+	AssetsWindowActive = true;
 }
 
 ModuleGUI::~ModuleGUI()
@@ -449,6 +460,9 @@ update_status ModuleGUI::Update()
 		ImGui::End();
 	}
 
+	ImGui::Begin("Assets", &AssetsWindowActive);
+	ImGui::End();
+
 	if (InspectorWindowActive)
 	{
 		ImGui::Begin("Inspector", &InspectorWindowActive);
@@ -764,8 +778,11 @@ update_status ModuleGUI::Update()
 				App->scene_intro->tempScale = { tempScale, tempScale, tempScale };
 			}
 
-			if (origin == false) { custom_position = true; }
-			else if (custom_position == false) { origin = true; }
+			if (origin == false) {
+				custom_position = true; viewtransform = true;
+			}
+			else if (custom_position == false) { origin = true; viewtransform = false;
+			}
 
 			if (ImGui::Checkbox("Import at origin", &origin)) 
 			{
@@ -778,6 +795,14 @@ update_status ModuleGUI::Update()
 			{
 				origin = false;
 				viewtransform = true;
+			}
+
+			if (ImGui::Checkbox("Ignore Cameras", &igLights))
+			{
+			}
+
+			if (ImGui::Checkbox("Ignore Lights", &igCameras))
+			{
 			}
 
 			if (viewtransform) 

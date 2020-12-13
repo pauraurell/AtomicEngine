@@ -60,103 +60,12 @@ bool ModuleImporter::CleanUp() {
 void ModuleImporter::LoadMesh(char* file_path, string name)
 {
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	GameObject* root = nullptr;
 
 	if (scene != nullptr && scene->HasMeshes())
 	{
-		for (int i = 0; i < scene->mNumMeshes; i++)
-		{
-			Mesh* myMesh = new Mesh();
-			myMesh->filename = file_path;
-
-			aiMesh* ourMesh = scene->mMeshes[i];
-
-			myMesh->num_vertex = ourMesh->mNumVertices;
-			myMesh->vertex = new float[myMesh->num_vertex * 3];
-			memcpy(myMesh->vertex, ourMesh->mVertices, sizeof(float) * myMesh->num_vertex * 3);
-			atLOG("New mesh with %d vertices", &myMesh->num_vertex);
-
-			// copy faces
-			if (ourMesh->HasFaces())
-			{
-				myMesh->num_index = ourMesh->mNumFaces * 3;
-				myMesh->index = new uint[myMesh->num_index]; // assume each face is a triangle
-				for (uint i = 0; i < ourMesh->mNumFaces; ++i)
-				{
-					if (ourMesh->mFaces[i].mNumIndices != 3)
-					{
-						atLOG("WARNING, geometry face with != 3 indices!");
-					}
-					else
-					{
-						memcpy(&myMesh->index[i * 3], ourMesh->mFaces[i].mIndices, 3 * sizeof(uint));
-					}
-				}
-			}
-
-			if (ourMesh->HasNormals())
-			{
-				myMesh->num_normals = ourMesh->mNumVertices;
-				myMesh->normals = new float[myMesh->num_normals * 3];
-
-				for (unsigned int i = 0, v = 0; i < myMesh->num_normals; i++, v += 3)
-				{
-					myMesh->normals[v] = ourMesh->mNormals[i].x;
-					myMesh->normals[v + 1] = ourMesh->mNormals[i].y;
-					myMesh->normals[v + 2] = ourMesh->mNormals[i].z;
-				}
-			}
-
-			if (ourMesh->HasVertexColors(0))
-			{
-				myMesh->num_colors = ourMesh->mNumVertices;
-				myMesh->colors = new float[myMesh->num_colors * 4];
-
-				for (unsigned int i = 0, v = 0; i < myMesh->num_colors; i++, v += 4)
-				{
-					myMesh->colors[v] = ourMesh->mColors[0][i].r;
-					myMesh->colors[v + 1] = ourMesh->mColors[0][i].g;
-					myMesh->colors[v + 2] = ourMesh->mColors[0][i].b;
-					myMesh->colors[v + 3] = ourMesh->mColors[0][i].a;
-				}
-			}
-
-			if (ourMesh->HasTextureCoords(0))
-			{
-				myMesh->num_texcoords = ourMesh->mNumVertices;
-				myMesh->texcoords = new float[myMesh->num_texcoords * 2];
-
-				for (unsigned int i = 0, v = 0; i < myMesh->num_texcoords; i++, v += 2)
-				{
-					myMesh->texcoords[v] = ourMesh->mTextureCoords[0][i].x;
-					myMesh->texcoords[v + 1] = ourMesh->mTextureCoords[0][i].y;
-				}
-			}
-
-			//aiVector3D position, scaling;
-			//aiQuaternion rotation;
-
-			//scene->mRootNode->mChildren[i]->mTransformation.Decompose(scaling, rotation, position);
-			//scaling.x = scaling.y = scaling.z = 1.0f;
-
-			//float3 pos = float3(position.x, position.y, position.z);
-			//Quat rot = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-			//float3 scale = float3(scaling.x, scaling.y, scaling.z);
-
-			App->scene_intro->meshes.push_back(myMesh);
-
-			for (int i = 0; i < App->scene_intro->meshes.size(); i++)
-			{
-				if (App->scene_intro->meshes[i] == myMesh) {
-					GenerateBuffers(myMesh);
-					if (ourMesh->mName != aiString("")) { App->scene_intro->CreateGameObject(App->scene_intro->meshes[i], ourMesh->mName.C_Str()); }
-					else if (name != "none") { App->scene_intro->CreateGameObject(App->scene_intro->meshes[i], name); }
-					else {
-						App->scene_intro->CreateGameObject(App->scene_intro->meshes[i], "GameObject");
-					}
-				}
-			}
-		}
-
+		aiNode* rootNode = scene->mRootNode;
+		root = PreorderChildren(scene, rootNode, nullptr, nullptr, file_path);
 		aiReleaseImport(scene);
 	}
 	else
@@ -261,4 +170,120 @@ void ModuleImporter::GenerateBuffers(Mesh* m)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->id_index);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * m->num_index, m->index, GL_STATIC_DRAW);
 }
+
+Mesh* ModuleImporter::LoadMesh(const aiScene* scene, aiNode* node, const char* path) {
+	Mesh* currentMesh = new Mesh();
+	aiMesh* currentAiMesh = scene->mMeshes[*node->mMeshes];
+
+	//vertex copying
+	currentMesh->num_vertex = currentAiMesh->mNumVertices;
+	currentMesh->vertex = new float[currentMesh->num_vertex * 3]();
+	memcpy(currentMesh->vertex, currentAiMesh->mVertices, sizeof(float) * currentMesh->num_vertex * 3);
+
+	//indices copying
+	if (currentAiMesh->HasFaces())
+	{
+		currentMesh->num_index = currentAiMesh->mNumFaces * 3;
+		currentMesh->index = new uint[currentMesh->num_index]();
+
+		for (size_t f = 0; f < currentAiMesh->mNumFaces; f++)
+		{
+			if (currentAiMesh->mFaces[f].mNumIndices != 3)
+			{}
+			else
+			{
+				memcpy(&currentMesh->index[f * 3], currentAiMesh->mFaces[f].mIndices, 3 * sizeof(uint));
+			}
+		}
+	}
+
+	currentMesh->texcoords = new float[currentMesh->num_vertex * 2]();
+	currentMesh->colors = new float[currentMesh->num_index * 4]();
+	currentMesh->normals = new float[currentAiMesh->mNumVertices * 3]();
+
+	int t = 0;
+
+	//normals, color and texture coordinates
+	for (size_t v = 0, n = 0, tx = 0, c = 0; v < currentAiMesh->mNumVertices; v++, n += 3, c += 4, tx += 2)
+	{
+		//normal copying
+		if (currentAiMesh->HasNormals())
+		{
+			currentMesh->num_normals = currentAiMesh->mNumVertices;
+			currentMesh->normals[n] = currentAiMesh->mNormals[v].x;
+			currentMesh->normals[n + 1] = currentAiMesh->mNormals[v].y;
+			currentMesh->normals[n + 2] = currentAiMesh->mNormals[v].z;
+		}
+		//color copying
+		if (currentAiMesh->HasVertexColors(0))
+		{
+			currentMesh->num_colors = currentAiMesh->mNumVertices;
+			currentMesh->colors = new float[currentMesh->num_colors * 4];
+
+			for (unsigned int i = 0, v = 0; i < currentMesh->num_colors; i++, v += 4)
+			{
+				currentMesh->colors[v] = currentAiMesh->mColors[0][i].r;
+				currentMesh->colors[v + 1] = currentAiMesh->mColors[0][i].g;
+				currentMesh->colors[v + 2] = currentAiMesh->mColors[0][i].b;
+				currentMesh->colors[v + 3] = currentAiMesh->mColors[0][i].a;
+			}
+		}
+
+		if (currentAiMesh->HasTextureCoords(0))
+		{
+			currentMesh->num_texcoords = currentAiMesh->mNumVertices;
+			currentMesh->texcoords[tx] = currentAiMesh->mTextureCoords[0][v].x;
+			currentMesh->texcoords[tx + 1] = currentAiMesh->mTextureCoords[0][v].y;
+		}
+		t = tx;
+	}
+	//LOG("Texcoords loaded: %d", t);
+	GenerateBuffers(currentMesh);
+
+	return currentMesh;
+}
+
+GameObject* ModuleImporter::PreorderChildren(const aiScene* scene, aiNode* node, aiNode* parentNode, GameObject* parentGameObject, char* path)
+{
+	
+	GameObject* go = nullptr;
+
+	if (node->mMeshes != nullptr)
+	{
+		Mesh* mesh = LoadMesh(scene, node, path);
+		mesh->filename = path;
+		go = App->scene_intro->CreateGameObject(mesh, path);
+
+		LoadTransform(node, go->GetCTransform());
+	}
+	if (parentGameObject != nullptr)
+	{
+		parentGameObject->CreateChild(go);
+		go->parent = parentGameObject;
+	}
+
+	for (size_t i = 0; i < node->mNumChildren; i++)
+	{
+		PreorderChildren(scene, node->mChildren[i], node, go, path);
+	}
+
+	return go;
+}
+
+void ModuleImporter::LoadTransform(aiNode* node, ComponentTransform* transform)
+{
+	aiVector3D position, scaling, eulerRotation;
+	aiQuaternion rotation;
+
+	node->mTransformation.Decompose(scaling, rotation, position);
+	eulerRotation = rotation.GetEuler() * RADTODEG;
+
+	transform->SetPosition(position.x, position.y, position.z);
+	//transform->SetRotation(eulerRotation.x, eulerRotation.y, eulerRotation.z);
+
+	transform->SetScale(1, 1, 1);
+	transform->UpdateLocalMatrix();
+}
+
+
 

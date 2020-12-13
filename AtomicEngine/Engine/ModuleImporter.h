@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include <vector>
 #include <string>
+#include "GameObject.h"
 
 #include "Glew\include\glew.h"
 #include <gl/GL.h>
@@ -23,6 +24,12 @@
 #pragma comment (lib, "Devil/lib/DevIL.lib") 
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
+
+#include "ComponentMesh.h"
+
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
 
 using namespace std;
 
@@ -43,6 +50,9 @@ public:
 		
 	void GenerateBuffers(Mesh* m);
 
-	GLuint Gl_Tex;
+	Mesh* LoadMesh(const aiScene* scene, aiNode* node, const char* path);
+	GameObject* PreorderChildren(const aiScene* scene, aiNode* node, aiNode* parentNode, GameObject* parentGameObject, char* path);
+	void LoadTransform(aiNode* node, ComponentTransform* transform);
 
+	GLuint Gl_Tex;
 };

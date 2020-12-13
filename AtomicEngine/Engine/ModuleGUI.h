@@ -59,13 +59,16 @@ public:
 	bool printInspector;
 	GameObject* selectedObj;
 	char* file_path;
-	bool showImportWindow = false;
-	float tempScale = 1.f;
-	float3 tempP = {0.f, 0.f, 0.f};
+	bool showImportWindow;
+	float tempScale;
+	float3 tempP;
 
-	bool origin = true;
-	bool custom_position = false;
-	bool viewtransform = false;
+	bool origin;
+	bool custom_position;
+	bool viewtransform;
+
+	bool igLights;
+	bool igCameras;
 
 	char buff[256];
 
@@ -79,6 +82,7 @@ private:
 	bool ConsoleWindowActive;
 	bool AboutWindowActive;
 	bool HierarchyWindowActive;
+	bool AssetsWindowActive;
 	bool InspectorWindowActive;
 	bool* dockingWin;
 
