@@ -18,6 +18,7 @@ public:
 	void SetRotation(float x, float y, float z);
 	void SetRotation(Quat rot);
 	void SetScale(float x, float y, float z);
+	void SetTransform(float trans[16]);
 
 	float3 pos;
 	float3 scale;

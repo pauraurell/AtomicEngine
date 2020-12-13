@@ -103,6 +103,11 @@ void ModuleWindow::SetWidth(int width)
 	SDL_SetWindowSize(window, width, App->gui->height);
 }
 
+void ModuleWindow::GetSize(int& g_width, int& g_height)
+{
+	SDL_GetWindowSize(window, &g_width, &g_height);
+}
+
 void ModuleWindow::SetHeight(int height)
 {
 	SDL_SetWindowSize(window, App->gui->width, height);

@@ -46,6 +46,7 @@ public:
 
 	bool gridChecker;
 	bool bbChecker;
+	bool rayChecker;
 	int gridSize;
 
 	float r;

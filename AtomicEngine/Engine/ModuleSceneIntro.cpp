@@ -46,12 +46,13 @@ bool ModuleSceneIntro::CleanUp()
 
 update_status ModuleSceneIntro::PreUpdate()
 {
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT))
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) && ImGuizmo::IsUsing() == false)
 	{
 		GameObject* obj = App->camera->PickGameObject();
 		if (obj != nullptr) 
 		{
 			App->gui->selectedObj = obj;
+			App->gui->printInspector = true;
 		}
 	}
 
@@ -196,18 +197,12 @@ void ModuleSceneIntro::DrawGuizmos()
 		ImGui::Begin("Debug", &open, flags);
 		ImGuizmo::SetDrawlist();
 		ImGui::End();
-		ImGuizmo::SetRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+		ImGuizmo::SetRect(0, 0, App->gui->width, App->gui->height);
 
 		float tempTransform[16];
 		memcpy(tempTransform, objectTransform.ptr(), 16 * sizeof(float));
 		ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), guizmo_operation, ImGuizmo::MODE::WORLD, tempTransform);
 
-		if (ImGuizmo::IsUsing())
-		{
-			float4x4 newTransform;
-			newTransform.Set(tempTransform);
-			newTransform.Transpose();
-			App->gui->selectedObj->GetCTransform()->SetGlobalTransform(newTransform);
-		}
+		if (ImGuizmo::IsUsing()) { App->gui->selectedObj->GetCTransform()->SetTransform(tempTransform); }
 	}	
 }
