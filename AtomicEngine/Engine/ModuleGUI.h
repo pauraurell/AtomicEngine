@@ -35,7 +35,7 @@ public:
 	const char* GetCaps();
 	void DrawUi();
 	void SaveScene();
-	void LoadScene(/*const char* filter_extension, const char* from_dir*/);
+	void LoadScene();
 
 	std::string caps;
 
