@@ -282,7 +282,7 @@ void ModuleImporter::LoadTransform(aiNode* node, ComponentTransform* transform)
 	//transform->SetRotation(eulerRotation.x, eulerRotation.y, eulerRotation.z);
 
 	transform->SetScale(1, 1, 1);
-	transform->UpdateLocalMatrix();
+	transform->UpdateGlobalMatrix();
 }
 
 

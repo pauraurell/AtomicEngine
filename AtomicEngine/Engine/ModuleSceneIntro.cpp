@@ -29,10 +29,54 @@ bool ModuleSceneIntro::Start()
 
 	if (game_objects[0] != nullptr && game_objects[1] != nullptr)
 	{
+		App->gui->selectedObj = game_objects[7];
+		App->importer->LoadTexture("Assets/3D Objects/street/building_016_c.tga");
+		App->gui->selectedObj = game_objects[2];
+		App->importer->LoadTexture("Assets/3D Objects/street/building_016_c.tga");
+		App->gui->selectedObj = game_objects[13];
+		App->importer->LoadTexture("Assets/3D Objects/street/building_016_c.tga");
+		App->gui->selectedObj = game_objects[15];
+		App->importer->LoadTexture("Assets/3D Objects/street/building05_c.tga");
+		App->gui->selectedObj = game_objects[9];
+		App->importer->LoadTexture("Assets/3D Objects/street/building03_c.tga");
 		App->gui->selectedObj = game_objects[0];
-		App->importer->LoadTexture("Assets/Textures/BakerHouseTexture.png");
+		App->importer->LoadTexture("Assets/3D Objects/street/building03_c.tga");
+		App->gui->selectedObj = game_objects[20];
+		App->importer->LoadTexture("Assets/3D Objects/street/building03_c.tga");
+		App->gui->selectedObj = game_objects[4];
+		App->importer->LoadTexture("Assets/3D Objects/street/building03_c.tga");
 		App->gui->selectedObj = game_objects[1];
-		App->importer->LoadTexture("Assets/Textures/BakerHouseTexture.png");
+		App->importer->LoadTexture("Assets/3D Objects/street/building_025_c.tga");
+		App->gui->selectedObj = game_objects[29];
+		App->importer->LoadTexture("Assets/3D Objects/street/building_025_c.tga");
+		App->gui->selectedObj = game_objects[18];
+		App->importer->LoadTexture("Assets/3D Objects/street/Building_V01_C.png");
+		App->gui->selectedObj = game_objects[19];
+		App->importer->LoadTexture("Assets/3D Objects/street/Building_V01_C.png");
+		App->gui->selectedObj = game_objects[28];
+		App->importer->LoadTexture("Assets/3D Objects/street/Building_V01_C.png");
+		App->gui->selectedObj = game_objects[27];
+		App->importer->LoadTexture("Assets/3D Objects/street/Building_V01_C.png");
+		App->gui->selectedObj = game_objects[8];
+		App->importer->LoadTexture("Assets/3D Objects/street/Building_V02_C.png");
+		App->gui->selectedObj = game_objects[24];
+		App->importer->LoadTexture("Assets/3D Objects/street/Building_V02_C.png");
+		App->gui->selectedObj = game_objects[21];
+		App->importer->LoadTexture("Assets/3D Objects/street/Building_V02_C.png");
+		App->gui->selectedObj = game_objects[25];
+		App->importer->LoadTexture("Assets/3D Objects/street/building_025_c.tga");
+		App->gui->selectedObj = game_objects[26];
+		App->importer->LoadTexture("Assets/3D Objects/street/building_025_c.tga");
+		App->gui->selectedObj = game_objects[12];
+		App->importer->LoadTexture("Assets/3D Objects/street/building_025_c.tga");
+		App->gui->selectedObj = game_objects[23];
+		App->importer->LoadTexture("Assets/3D Objects/street/building 01_c.tga");
+		App->gui->selectedObj = game_objects[16];
+		App->importer->LoadTexture("Assets/3D Objects/street/building 01_c.tga");
+		App->gui->selectedObj = game_objects[3];
+		App->importer->LoadTexture("Assets/3D Objects/street/building_016_c.tga");
+
+
 		App->gui->selectedObj = nullptr;
 	}
 
@@ -59,6 +103,12 @@ update_status ModuleSceneIntro::PreUpdate()
 	if ((App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)) { guizmo_operation = ImGuizmo::OPERATION::TRANSLATE; }
 	else if ((App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)) { guizmo_operation = ImGuizmo::OPERATION::ROTATE; }
 	else if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)) { guizmo_operation = ImGuizmo::OPERATION::SCALE; }
+
+	for (int i = 0; i < game_objects.size(); i++) {
+		if (App->gui->selectedObj == game_objects[i]) {
+			atLOG("%i", i);
+		}
+	}
 
 	return UPDATE_CONTINUE;
 }
