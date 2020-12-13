@@ -28,6 +28,10 @@ bool ModuleSceneIntro::Start()
 
 	App->importer->LoadMesh("Assets/3D Objects/street/Street environment_V01.fbx");
 
+	GameObject* camera = CreateGameObject(true);
+	camera->GetCTransform()->SetPosition(-29.90, 12.80, 3.40);
+	camera->GetCTransform()->SetRotation(150, 0, 0);
+
 	if (game_objects[0] != nullptr && game_objects[1] != nullptr)
 	{
 		App->gui->selectedObj = game_objects[7];
@@ -104,12 +108,6 @@ update_status ModuleSceneIntro::PreUpdate()
 	if ((App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)) { guizmo_operation = ImGuizmo::OPERATION::TRANSLATE; }
 	else if ((App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)) { guizmo_operation = ImGuizmo::OPERATION::ROTATE; }
 	else if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)) { guizmo_operation = ImGuizmo::OPERATION::SCALE; }
-
-	for (int i = 0; i < game_objects.size(); i++) {
-		if (App->gui->selectedObj == game_objects[i]) {
-			atLOG("%i", i);
-		}
-	}
 
 	return UPDATE_CONTINUE;
 }
