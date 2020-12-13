@@ -443,193 +443,198 @@ update_status ModuleGUI::Update()
 	if (InspectorWindowActive)
 	{
 		ImGui::Begin("Inspector", &InspectorWindowActive);
-		if (printInspector) {
-			selectedObj->flag = ImGuiTreeNodeFlags_Selected;
-			strcpy(buff, selectedObj->name.c_str());
-			ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine(); 
-			if (ImGui::InputText(" ", buff, IM_ARRAYSIZE(buff), ImGuiInputTextFlags_EnterReturnsTrue)) {
-				selectedObj->name.assign(buff);
-			}
-			ImGui::Text("UUID: %i", selectedObj->UUID);
-			printInspector = true;
-			
-			ImGui::Separator();
-			if (selectedObj->GetCTransform() != nullptr) 
-			{
-				if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
-				{
-					ImGui::Text("             X"); ImGui::SameLine(); 
-					ImGui::Text("        Y"); ImGui::SameLine();
-					ImGui::Text("       Z"); 
-					ComponentTransform* transform = (ComponentTransform*)selectedObj->GetCTransform();
-
-					ImGui::Text("Position "); ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
-					
-					if (ImGui::DragFloat("##posx", &transform->pos.x, 0.05f, 0.f, 0.f, "%.2f")) {
-						transform->SetPosition(transform->pos.x, transform->pos.y, transform->pos.z);
-						transform->UpdateGlobalMatrix();
-					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
-
-					if (ImGui::DragFloat("##posy", &transform->pos.y, 0.05f, 0.f, 0.f, "%.2f")) {
-						transform->SetPosition(transform->pos.x, transform->pos.y, transform->pos.z);
-						transform->UpdateGlobalMatrix();
-					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
-					
-					if (ImGui::DragFloat("##posz", &transform->pos.z, 0.05f, 0.f, 0.f, "%.2f")) {
-						transform->SetPosition(transform->pos.x, transform->pos.y, transform->pos.z);
-						transform->UpdateGlobalMatrix();
-					}
-
-					ImGui::Text("Rotation "); ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
-
-					if (ImGui::DragFloat("##rotx", &transform->rot.x, 0.05f, 0.f, 0.f, "%.2f")) {
-						transform->SetRotation(transform->rot.x, transform->rot.y, transform->rot.z);
-						transform->UpdateGlobalMatrix();
-					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
-
-					if (ImGui::DragFloat("##roty", &transform->rot.y, 0.05f, 0.f, 0.f, "%.2f")) {
-						transform->SetRotation(transform->rot.x, transform->rot.y, transform->rot.z);
-						transform->UpdateGlobalMatrix();
-					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
-	
-					if (ImGui::DragFloat("##rotz", &transform->rot.z, 0.05f, 0.f, 0.f, "%.2f")) {
-						transform->SetRotation(transform->rot.x, transform->rot.y, transform->rot.z);
-						transform->UpdateGlobalMatrix();
-					}
-
-					ImGui::Text("Scale    "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
-					
-					if (ImGui::DragFloat("##scalex", &transform->scale.x, 0.05f, 0.f, 0.f, "%.2f")) {
-						transform->SetScale(transform->scale.x, transform->scale.y, transform->scale.z);
-						transform->UpdateGlobalMatrix();
-					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
-
-					if (ImGui::DragFloat("##scaley", &transform->scale.y, 0.05f, 0.f, 0.f, "%.2f")) {
-						transform->SetScale(transform->scale.x, transform->scale.y, transform->scale.z);
-						transform->UpdateGlobalMatrix();
-					}ImGui::SameLine();ImGui::SetNextItemWidth(56.f);
-
-					if (ImGui::DragFloat("##scalez", &transform->scale.z, 0.05f, 0.f, 0.f, "%.2f")) {
-						transform->SetScale(transform->scale.x, transform->scale.y, transform->scale.z);
-						transform->UpdateGlobalMatrix();
-					}
+		if (selectedObj != nullptr) 
+		{
+			if (printInspector) {
+				selectedObj->flag = ImGuiTreeNodeFlags_Selected;
+				strcpy(buff, selectedObj->name.c_str());
+				ImGui::Checkbox("Enabled", &selectedObj->active); ImGui::SameLine();
+				if (ImGui::InputText(" ", buff, IM_ARRAYSIZE(buff), ImGuiInputTextFlags_EnterReturnsTrue)) {
+					selectedObj->name.assign(buff);
 				}
-			}
+				ImGui::Text("UUID: %i", selectedObj->UUID);
+				printInspector = true;
 
-			if (selectedObj->GetCMesh() != nullptr)
-			{
 				ImGui::Separator();
-				if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+				if (selectedObj->GetCTransform() != nullptr)
 				{
-					ImGui::Checkbox("Active", &selectedObj->GetCMesh()->active); ImGui::SameLine();
-					if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCMesh()); }
-					if (selectedObj->GetCMesh() != nullptr) 
+					if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						ImGui::Text("File:"); ImGui::SameLine();
-						ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMesh()->m->filename);
-						ImGui::Separator(); ImGui::NextColumn();
-						ImGui::Text("Draw:");
-						ImGui::Checkbox("Vertex Normals", &selectedObj->GetCMesh()->m->vNormals);
-						ImGui::Checkbox("Face Normals", &selectedObj->GetCMesh()->m->fNormals);
-						ImGui::Separator();
-						ImGui::Text("Indexes: %i", selectedObj->GetCMesh()->m->num_index);
-						ImGui::Text("Normals: %i", selectedObj->GetCMesh()->m->num_normals);
-						ImGui::Text("Vertex: %i", selectedObj->GetCMesh()->m->num_vertex);
-						ImGui::Text("Tex Coords: %i", selectedObj->GetCMesh()->m->num_texcoords);
-					}
-				}
-			}
-			if (selectedObj->GetCMaterial() != nullptr)
-			{
-				ImGui::Separator();
-				if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
-				{
-					if (selectedObj->GetCMaterial()->hasTex == true)
-					{
-						ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
-						if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); 
-						selectedObj->GetCMesh()->m->color = false;
+						ImGui::Text("             X"); ImGui::SameLine();
+						ImGui::Text("        Y"); ImGui::SameLine();
+						ImGui::Text("       Z");
+						ComponentTransform* transform = (ComponentTransform*)selectedObj->GetCTransform();
+
+						ImGui::Text("Position "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+						if (ImGui::DragFloat("##posx", &transform->pos.x, 0.05f, 0.f, 0.f, "%.2f")) {
+							transform->SetPosition(transform->pos.x, transform->pos.y, transform->pos.z);
+							transform->UpdateGlobalMatrix();
+						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+						if (ImGui::DragFloat("##posy", &transform->pos.y, 0.05f, 0.f, 0.f, "%.2f")) {
+							transform->SetPosition(transform->pos.x, transform->pos.y, transform->pos.z);
+							transform->UpdateGlobalMatrix();
+						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+						if (ImGui::DragFloat("##posz", &transform->pos.z, 0.05f, 0.f, 0.f, "%.2f")) {
+							transform->SetPosition(transform->pos.x, transform->pos.y, transform->pos.z);
+							transform->UpdateGlobalMatrix();
 						}
-						if (selectedObj->GetCMaterial() != nullptr)
+
+						ImGui::Text("Rotation "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+						if (ImGui::DragFloat("##rotx", &transform->rot.x, 0.05f, 0.f, 0.f, "%.2f")) {
+							transform->SetRotation(transform->rot.x, transform->rot.y, transform->rot.z);
+							transform->UpdateGlobalMatrix();
+						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+						if (ImGui::DragFloat("##roty", &transform->rot.y, 0.05f, 0.f, 0.f, "%.2f")) {
+							transform->SetRotation(transform->rot.x, transform->rot.y, transform->rot.z);
+							transform->UpdateGlobalMatrix();
+						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+						if (ImGui::DragFloat("##rotz", &transform->rot.z, 0.05f, 0.f, 0.f, "%.2f")) {
+							transform->SetRotation(transform->rot.x, transform->rot.y, transform->rot.z);
+							transform->UpdateGlobalMatrix();
+						}
+
+						ImGui::Text("Scale    "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+						if (ImGui::DragFloat("##scalex", &transform->scale.x, 0.05f, 0.f, 0.f, "%.2f")) {
+							transform->SetScale(transform->scale.x, transform->scale.y, transform->scale.z);
+							transform->UpdateGlobalMatrix();
+						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+						if (ImGui::DragFloat("##scaley", &transform->scale.y, 0.05f, 0.f, 0.f, "%.2f")) {
+							transform->SetScale(transform->scale.x, transform->scale.y, transform->scale.z);
+							transform->UpdateGlobalMatrix();
+						}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+						if (ImGui::DragFloat("##scalez", &transform->scale.z, 0.05f, 0.f, 0.f, "%.2f")) {
+							transform->SetScale(transform->scale.x, transform->scale.y, transform->scale.z);
+							transform->UpdateGlobalMatrix();
+						}
+					}
+				}
+
+				if (selectedObj->GetCMesh() != nullptr)
+				{
+					ImGui::Separator();
+					if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::Checkbox("Active", &selectedObj->GetCMesh()->active); ImGui::SameLine();
+						if (ImGui::Button("Delete Component")) { selectedObj->DeleteComponent(selectedObj->GetCMesh()); }
+						if (selectedObj->GetCMesh() != nullptr)
 						{
-							ImGui::Text("Texture path:"); ImGui::SameLine();
-							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMaterial()->tex->texName);
-							ImGui::Text("Size: %u x %u px", selectedObj->GetCMaterial()->tex->w, selectedObj->GetCMaterial()->tex->h);
-							ImGui::Checkbox("Checkers Texture", &selectedObj->GetCMaterial()->tex->checkers);
+							ImGui::Text("File:"); ImGui::SameLine();
+							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMesh()->m->filename);
+							ImGui::Separator(); ImGui::NextColumn();
+							ImGui::Text("Draw:");
+							ImGui::Checkbox("Vertex Normals", &selectedObj->GetCMesh()->m->vNormals);
+							ImGui::Checkbox("Face Normals", &selectedObj->GetCMesh()->m->fNormals);
 							ImGui::Separator();
-							float color[3] = { selectedObj->GetCMesh()->m->r, selectedObj->GetCMesh()->m->g, selectedObj->GetCMesh()->m->b };
-							ImGui::Checkbox("Use Diffuse Texture", &selectedObj->GetCMaterial()->tex->visible);
-							ImGui::Checkbox("Use Albedo", &selectedObj->GetCMesh()->m->color);
-							ImGui::ColorPicker3("", color, ImGuiColorEditFlags_Float);
-							selectedObj->GetCMesh()->m->r = color[0]; selectedObj->GetCMesh()->m->g = color[1]; selectedObj->GetCMesh()->m->b = color[2];
+							ImGui::Text("Indexes: %i", selectedObj->GetCMesh()->m->num_index);
+							ImGui::Text("Normals: %i", selectedObj->GetCMesh()->m->num_normals);
+							ImGui::Text("Vertex: %i", selectedObj->GetCMesh()->m->num_vertex);
+							ImGui::Text("Tex Coords: %i", selectedObj->GetCMesh()->m->num_texcoords);
 						}
 					}
-					else
+				}
+				if (selectedObj->GetCMaterial() != nullptr)
+				{
+					ImGui::Separator();
+					if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
-						if (ImGui::Button(" Delete Component ")) { selectedObj->DeleteComponent(selectedObj->GetCMaterial()); selectedObj->GetCMesh()->m->color = false;
-						}
-						if (selectedObj->GetCMaterial() != nullptr)
+						if (selectedObj->GetCMaterial()->hasTex == true)
 						{
-							ImGui::Text("Texture path:"); ImGui::SameLine();
-							ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), "No texture...");
-							if(selectedObj->GetCMesh() != nullptr)
+							ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
+							if (ImGui::Button(" Delete Component ")) {
+								selectedObj->DeleteComponent(selectedObj->GetCMaterial());
+								selectedObj->GetCMesh()->m->color = false;
+							}
+							if (selectedObj->GetCMaterial() != nullptr)
 							{
-								ImGui::Checkbox("Use Albedo", &selectedObj->GetCMesh()->m->color);
+								ImGui::Text("Texture path:"); ImGui::SameLine();
+								ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), selectedObj->GetCMaterial()->tex->texName);
+								ImGui::Text("Size: %u x %u px", selectedObj->GetCMaterial()->tex->w, selectedObj->GetCMaterial()->tex->h);
+								ImGui::Checkbox("Checkers Texture", &selectedObj->GetCMaterial()->tex->checkers);
+								ImGui::Separator();
 								float color[3] = { selectedObj->GetCMesh()->m->r, selectedObj->GetCMesh()->m->g, selectedObj->GetCMesh()->m->b };
+								ImGui::Checkbox("Use Diffuse Texture", &selectedObj->GetCMaterial()->tex->visible);
+								ImGui::Checkbox("Use Albedo", &selectedObj->GetCMesh()->m->color);
 								ImGui::ColorPicker3("", color, ImGuiColorEditFlags_Float);
 								selectedObj->GetCMesh()->m->r = color[0]; selectedObj->GetCMesh()->m->g = color[1]; selectedObj->GetCMesh()->m->b = color[2];
 							}
 						}
-					}
-				}
-			}
-			if (selectedObj->GetCCamera() != nullptr)
-			{
-				ImGui::Separator();
-				if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
-				{
-					ImGui::Checkbox("Disable ", &selectedObj->GetCCamera()->active); ImGui::SameLine();
-					if (ImGui::Button("Delete  Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
-					if (selectedObj->GetCCamera() != nullptr)
-					{
-						ImGui::Spacing();
-
-						bool fixedVerticalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_VERTICAL_FOV;
-						bool fixedHorizontalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_HORIZONTAL_FOV;
-
-						if (ImGui::RadioButton("Fixed VerticalFOV", fixedVerticalFOV))
-							selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_VERTICAL_FOV;
-						ImGui::SameLine();
-						if (ImGui::RadioButton("Fixed HorizontalFOV", fixedHorizontalFOV))
-							selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_HORIZONTAL_FOV;
-
-						ImGui::Spacing();
-
-						//Fixed Vertical FOV Settings
-						if (fixedVerticalFOV)
-						{
-							float verticalFOV = selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG;
-							if (ImGui::SliderFloat("Vertical FOV", &verticalFOV, 20.0f, 60.0f))
-							{
-								selectedObj->GetCCamera()->frustum.verticalFov = verticalFOV * RADTODEG;
-								selectedObj->GetCCamera()->frustum.horizontalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.verticalFov * 0.5f) * (selectedObj->GetCCamera()->aspectRatio));
-							}
-
-							ImGui::Spacing();
-							ImGui::Text("Horizontal FOV: %.2f", selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG);
-						}
-						//Fixed Horizontal FOV Settings
 						else
 						{
-							float horizontalFOV = selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG;
-							if (ImGui::SliderFloat("Horizontal FOV", &horizontalFOV, 25.0f, 115.0f))
-							{
-								selectedObj->GetCCamera()->frustum.horizontalFov = horizontalFOV * DEGTORAD;
-								selectedObj->GetCCamera()->frustum.verticalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.horizontalFov * 0.5f) * (1 / selectedObj->GetCCamera()->aspectRatio));
+							ImGui::Checkbox("Disable", &selectedObj->GetCMaterial()->active); ImGui::SameLine();
+							if (ImGui::Button(" Delete Component ")) {
+								selectedObj->DeleteComponent(selectedObj->GetCMaterial()); selectedObj->GetCMesh()->m->color = false;
 							}
+							if (selectedObj->GetCMaterial() != nullptr)
+							{
+								ImGui::Text("Texture path:"); ImGui::SameLine();
+								ImGui::TextColored(ImVec4(0.95f, 0.5f, 0.07f, 1.0f), "No texture...");
+								if (selectedObj->GetCMesh() != nullptr)
+								{
+									ImGui::Checkbox("Use Albedo", &selectedObj->GetCMesh()->m->color);
+									float color[3] = { selectedObj->GetCMesh()->m->r, selectedObj->GetCMesh()->m->g, selectedObj->GetCMesh()->m->b };
+									ImGui::ColorPicker3("", color, ImGuiColorEditFlags_Float);
+									selectedObj->GetCMesh()->m->r = color[0]; selectedObj->GetCMesh()->m->g = color[1]; selectedObj->GetCMesh()->m->b = color[2];
+								}
+							}
+						}
+					}
+				}
+				if (selectedObj->GetCCamera() != nullptr)
+				{
+					ImGui::Separator();
+					if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						ImGui::Checkbox("Disable ", &selectedObj->GetCCamera()->active); ImGui::SameLine();
+						if (ImGui::Button("Delete  Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
+						if (selectedObj->GetCCamera() != nullptr)
+						{
 							ImGui::Spacing();
-							ImGui::Text("Vertical FOV: %.2f", selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG);
+
+							bool fixedVerticalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_VERTICAL_FOV;
+							bool fixedHorizontalFOV = selectedObj->GetCCamera()->fixedFOV == FixedFOV::FIXED_HORIZONTAL_FOV;
+
+							if (ImGui::RadioButton("Fixed VerticalFOV", fixedVerticalFOV))
+								selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_VERTICAL_FOV;
+							ImGui::SameLine();
+							if (ImGui::RadioButton("Fixed HorizontalFOV", fixedHorizontalFOV))
+								selectedObj->GetCCamera()->fixedFOV = FixedFOV::FIXED_HORIZONTAL_FOV;
+
+							ImGui::Spacing();
+
+							//Fixed Vertical FOV Settings
+							if (fixedVerticalFOV)
+							{
+								float verticalFOV = selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG;
+								if (ImGui::SliderFloat("Vertical FOV", &verticalFOV, 20.0f, 60.0f))
+								{
+									selectedObj->GetCCamera()->frustum.verticalFov = verticalFOV * RADTODEG;
+									selectedObj->GetCCamera()->frustum.horizontalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.verticalFov * 0.5f) * (selectedObj->GetCCamera()->aspectRatio));
+								}
+
+								ImGui::Spacing();
+								ImGui::Text("Horizontal FOV: %.2f", selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG);
+							}
+							//Fixed Horizontal FOV Settings
+							else
+							{
+								float horizontalFOV = selectedObj->GetCCamera()->frustum.horizontalFov * RADTODEG;
+								if (ImGui::SliderFloat("Horizontal FOV", &horizontalFOV, 25.0f, 115.0f))
+								{
+									selectedObj->GetCCamera()->frustum.horizontalFov = horizontalFOV * DEGTORAD;
+									selectedObj->GetCCamera()->frustum.verticalFov = 2.0f * std::atan(std::tan(selectedObj->GetCCamera()->frustum.horizontalFov * 0.5f) * (1 / selectedObj->GetCCamera()->aspectRatio));
+								}
+								ImGui::Spacing();
+								ImGui::Text("Vertical FOV: %.2f", selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG);
+							}
 						}
 
 						ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
@@ -696,46 +701,46 @@ update_status ModuleGUI::Update()
 						}
 					}
 				}
-			}
-			ImGui::Separator();
-			if (ImGui::Button("Add Component..."))
-			{
-				ImGui::OpenPopup("AddPopUp");
-			}
-			if (ImGui::BeginPopup("AddPopUp"))
-			{
-				if (ImGui::MenuItem("Material..."))
+				ImGui::Separator();
+				if (ImGui::Button("Add Component..."))
 				{
-					if (selectedObj->GetCMaterial() == nullptr)
-					{
-						selectedObj->CreateComponent(ComponentType::Material);
-					}
-					ImGui::CloseCurrentPopup();
+					ImGui::OpenPopup("AddPopUp");
 				}
-				if (ImGui::MenuItem("Camera..."))
+				if (ImGui::BeginPopup("AddPopUp"))
 				{
-					if (selectedObj->GetCCamera() == nullptr)
+					if (ImGui::MenuItem("Material..."))
 					{
-						selectedObj->CreateComponent(ComponentType::Camera);
-					}
-					ImGui::CloseCurrentPopup();
-				}
-				/*else 
-				{
-					if (ImGui::IsMouseClicked(0)) 
-					{ 
-						atLOG("This GameObject already has a Component Material!");
-						ImGui::CloseCurrentPopup(); 
-					}
-					if (ImGui::MenuItem("Material...", 0, false, false))
-					{						
+						if (selectedObj->GetCMaterial() == nullptr)
+						{
+							selectedObj->CreateComponent(ComponentType::Material);
+						}
 						ImGui::CloseCurrentPopup();
 					}
-				}*/
-				ImGui::EndPopup();
+					if (ImGui::MenuItem("Camera..."))
+					{
+						if (selectedObj->GetCCamera() == nullptr)
+						{
+							selectedObj->CreateComponent(ComponentType::Camera);
+						}
+						ImGui::CloseCurrentPopup();
+					}
+					/*else
+					{
+						if (ImGui::IsMouseClicked(0))
+						{
+							atLOG("This GameObject already has a Component Material!");
+							ImGui::CloseCurrentPopup();
+						}
+						if (ImGui::MenuItem("Material...", 0, false, false))
+						{
+							ImGui::CloseCurrentPopup();
+						}
+					}*/
+					ImGui::EndPopup();
+				}
 			}
 		}
-		
+			
 		ImGui::End();
 	}
 

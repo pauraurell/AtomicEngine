@@ -21,13 +21,16 @@ public:
 	void OnResize(int width, int height);
 	void Look(float3& position);
 	void LookAt(const float3& Spot);
+	void LookAt(const vec3& Spot);
 	ComponentCamera* GetCamera();
 	float* GetViewMatrix();
 	float4x4 GetViewMatrixM();
 	float* GetProjectionMatrix();
 	float4x4 GetProjectionMatrixM();
 	float3 GetPosition();
-	//GameObject* PickGameObject();
+	GameObject* PickGameObject();
+	void GoToOrigin();
+	void LookAtSelectedObject(bool go_to_gameObj = false);
 
 	FixedFOV GetFixedFOV();
 	void SetFixedFOV(FixedFOV fixedFOV);

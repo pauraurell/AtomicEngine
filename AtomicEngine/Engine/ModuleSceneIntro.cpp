@@ -46,7 +46,20 @@ bool ModuleSceneIntro::CleanUp()
 	return true;
 }
 
-// Update: draw background
+update_status ModuleSceneIntro::PreUpdate()
+{
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT))
+	{
+		GameObject* obj = App->camera->PickGameObject();
+		if (obj != nullptr) 
+		{
+			App->gui->selectedObj = obj;
+		}
+	}
+
+	return UPDATE_CONTINUE;
+}
+
 update_status ModuleSceneIntro::Update()
 {
 	pPlane plane(0.f, 1.f, 0.f, 1.f);

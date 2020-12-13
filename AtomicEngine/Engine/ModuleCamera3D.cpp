@@ -3,6 +3,7 @@
 #include "ModuleCamera3D.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
+#include <map>
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -113,11 +114,6 @@ update_status ModuleCamera3D::Update()
 	{
 		Orbit();
 	}
-	/*if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && !ImGuizmo::IsOver())
-	{
-		GameObject* pickedGameObject = PickGameObject();
-		App->gui->selectedObj = pickedGameObject;
-	}*/
 
 	Position += newPos;
 	camera->SetPosition(Position);
@@ -180,31 +176,31 @@ float3 ModuleCamera3D::GetPosition()
 	return Position;
 }
 
-/*GameObject* ModuleCamera3D::PickGameObject()
+GameObject* ModuleCamera3D::PickGameObject()
 {
-	float normalized_x = App->editor->mouseScenePosition.x / App->editor->image_size.x;
-	float normalized_y = App->editor->mouseScenePosition.y / App->editor->image_size.y;
+	float normalized_x = (float)App->input->GetMouseX() / (float)SCREEN_WIDTH;
+	float normalized_y = (float)App->input->GetMouseY() / (float)SCREEN_HEIGHT;
 
 	normalized_x = (normalized_x - 0.5f) * 2.0f;
 	normalized_y = -(normalized_y - 0.5f) * 2.0f;
 
-	LineSegment my_ray = _camera->GetFrustum().UnProjectLineSegment(normalized_x, normalized_y);
+	LineSegment my_ray = camera->GetFrustum().UnProjectLineSegment(normalized_x, normalized_y);
 
-	App->renderer3D->_ray = my_ray;
+	App->renderer3D->ray = my_ray;
 
-	std::vector<GameObject*> sceneGameObjects = App->scene->GetAllGameObjects();
+	std::vector<GameObject*> sceneGameObjects = App->scene_intro->GetGameObjects();
 	std::map<float, GameObject*> hitGameObjects;
 
 	//find all hit GameObjects
 	for (size_t i = 0; i < sceneGameObjects.size(); i++)
 	{
-		bool hit = my_ray.Intersects(sceneGameObjects[i]->GetAABB());
+		bool hit = my_ray.Intersects(sceneGameObjects[i]->BB);
 
 		if (hit)
 		{
 			float dNear;
 			float dFar;
-			hit = my_ray.Intersects(sceneGameObjects[i]->GetAABB(), dNear, dFar);
+			hit = my_ray.Intersects(sceneGameObjects[i]->BB, dNear, dFar);
 			hitGameObjects[dNear] = sceneGameObjects[i];
 		}
 	}
@@ -215,35 +211,37 @@ float3 ModuleCamera3D::GetPosition()
 		GameObject* gameObject = it->second;
 
 		LineSegment ray_local_space = my_ray;
-		ray_local_space.Transform(gameObject->GetTransform()->GetGlobalTransform().Inverted());
+		ray_local_space.Transform(gameObject->GetCTransform()->globalMat.Inverted());
 
-		GnMesh* mesh = (GnMesh*)gameObject->GetComponent(ComponentType::MESH);
-		ResourceMesh* resourceMesh = dynamic_cast<ResourceMesh*>(mesh->GetResource(ResourceType::RESOURCE_MESH));
-
-		for (size_t i = 0; i < resourceMesh->indices_amount; i += 3)
+		if (gameObject->GetCMesh() != nullptr) 
 		{
-			//create every triangle
-			float3 v1(resourceMesh->vertices[resourceMesh->indices[i] * 3], resourceMesh->vertices[resourceMesh->indices[i] * 3 + 1],
-				resourceMesh->vertices[resourceMesh->indices[i] * 3 + 2]);
+			Mesh* mesh = (Mesh*)gameObject->GetCMesh()->m;
 
-			float3 v2(resourceMesh->vertices[resourceMesh->indices[i + 1] * 3], resourceMesh->vertices[resourceMesh->indices[i + 1] * 3 + 1],
-				resourceMesh->vertices[resourceMesh->indices[i + 1] * 3 + 2]);
+			for (size_t i = 0; i < mesh->num_index; i += 3)
+			{
+				//create every triangle
+				float3 v1(mesh->vertex[mesh->index[i] * 3], mesh->vertex[mesh->index[i] * 3 + 1],
+					mesh->vertex[mesh->index[i] * 3 + 2]);
 
-			float3 v3(resourceMesh->vertices[resourceMesh->indices[i + 2] * 3], resourceMesh->vertices[resourceMesh->indices[i + 2] * 3 + 1],
-				resourceMesh->vertices[resourceMesh->indices[i + 2] * 3 + 2]);
+				float3 v2(mesh->vertex[mesh->index[i + 1] * 3], mesh->vertex[mesh->index[i + 1] * 3 + 1],
+					mesh->vertex[mesh->index[i + 1] * 3 + 2]);
 
-			const Triangle triangle(v1, v2, v3);
+				float3 v3(mesh->vertex[mesh->index[i + 2] * 3], mesh->vertex[mesh->index[i + 2] * 3 + 1],
+					mesh->vertex[mesh->index[i + 2] * 3 + 2]);
 
-			float distance;
-			float3 intersectionPoint;
-			if (ray_local_space.Intersects(triangle, &distance, &intersectionPoint)) {
-				return gameObject;
+				const Triangle triangle(v1, v2, v3);
+
+				float distance;
+				float3 intersectionPoint;
+				if (ray_local_space.Intersects(triangle, &distance, &intersectionPoint)) {
+					return gameObject;
+				}
 			}
 		}
 	}
 
 	return nullptr;
-}*/
+}
 
 FixedFOV ModuleCamera3D::GetFixedFOV()
 {
