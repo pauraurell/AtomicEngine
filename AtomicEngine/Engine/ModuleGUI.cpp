@@ -635,67 +635,67 @@ update_status ModuleGUI::Update()
 								ImGui::Spacing();
 								ImGui::Text("Vertical FOV: %.2f", selectedObj->GetCCamera()->frustum.verticalFov * RADTODEG);
 							}
-						}
 
-						ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+							ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
 
-						ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 0.001f, 50.0f);
-						ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 50.0f, 2000.0f);
+							ImGui::DragFloat("Near Plane", &selectedObj->GetCCamera()->frustum.nearPlaneDistance, 0.05f, 0.001f, 50.0f);
+							ImGui::DragFloat("Far Plane", &selectedObj->GetCCamera()->frustum.farPlaneDistance, 5.0f, 50.0f, 2000.0f);
 
-						ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
+							ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
 
-						if (selectedObj->GetCCamera()->beingUsed == false)
-						{
-							if (ImGui::Button("Use camera")) { App->camera->camera = selectedObj->GetCCamera(); selectedObj->GetCCamera()->beingUsed = true; }
-						}
-						else
-						{
-							if (ImGui::Button("Stop using camera")) { App->camera->camera = App->scene_intro->cameras[0]; selectedObj->GetCCamera()->beingUsed = false; App->camera->Reset(); }
-						}
-
-						ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
-
-						if (selectedObj->GetCCamera()->camTransform != nullptr)
-						{
-							if (ImGui::CollapsingHeader("Camera Transform", ImGuiTreeNodeFlags_DefaultOpen))
+							if (selectedObj->GetCCamera()->beingUsed == false)
 							{
-								ImGui::Text("             X"); ImGui::SameLine();
-								ImGui::Text("        Y"); ImGui::SameLine();
-								ImGui::Text("       Z");
-								ComponentTransform* cTransform = (ComponentTransform*)selectedObj->GetCCamera()->camTransform;
+								if (ImGui::Button("Use camera")) { App->camera->camera = selectedObj->GetCCamera(); selectedObj->GetCCamera()->beingUsed = true; }
+							}
+							else
+							{
+								if (ImGui::Button("Stop using camera")) { App->camera->camera = App->scene_intro->cameras[0]; selectedObj->GetCCamera()->beingUsed = false; App->camera->Reset(); }
+							}
 
-								ImGui::Text("Position "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+							ImGui::Spacing(); ImGui::Separator(); ImGui::Spacing();
 
-								if (ImGui::DragFloat("##cposx", &cTransform->pos.x, 0.05f, 0.f, 0.f, "%.2f")) {
-									cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
-									cTransform->UpdateGlobalMatrix();
-								}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+							if (selectedObj->GetCCamera()->camTransform != nullptr)
+							{
+								if (ImGui::CollapsingHeader("Camera Transform", ImGuiTreeNodeFlags_DefaultOpen))
+								{
+									ImGui::Text("             X"); ImGui::SameLine();
+									ImGui::Text("        Y"); ImGui::SameLine();
+									ImGui::Text("       Z");
+									ComponentTransform* cTransform = (ComponentTransform*)selectedObj->GetCCamera()->camTransform;
 
-								if (ImGui::DragFloat("##cposy", &cTransform->pos.y, 0.05f, 0.f, 0.f, "%.2f")) {
-									cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
-									cTransform->UpdateGlobalMatrix();
-								}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+									ImGui::Text("Position "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-								if (ImGui::DragFloat("##cposz", &cTransform->pos.z, 0.05f, 0.f, 0.f, "%.2f")) {
-									cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
-									cTransform->UpdateGlobalMatrix();
-								}
+									if (ImGui::DragFloat("##cposx", &cTransform->pos.x, 0.05f, 0.f, 0.f, "%.2f")) {
+										cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
+										cTransform->UpdateGlobalMatrix();
+									}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-								ImGui::Text("Rotation "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+									if (ImGui::DragFloat("##cposy", &cTransform->pos.y, 0.05f, 0.f, 0.f, "%.2f")) {
+										cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
+										cTransform->UpdateGlobalMatrix();
+									}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-								if (ImGui::DragFloat("##crotx", &cTransform->rot.x, 0.05f, 0.f, 0.f, "%.2f")) {
-									cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
-									cTransform->UpdateGlobalMatrix();
-								}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+									if (ImGui::DragFloat("##cposz", &cTransform->pos.z, 0.05f, 0.f, 0.f, "%.2f")) {
+										cTransform->SetPosition(cTransform->pos.x, cTransform->pos.y, cTransform->pos.z);
+										cTransform->UpdateGlobalMatrix();
+									}
 
-								if (ImGui::DragFloat("##croty", &cTransform->rot.y, 0.05f, 0.f, 0.f, "%.2f")) {
-									cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
-									cTransform->UpdateGlobalMatrix();
-								}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+									ImGui::Text("Rotation "); ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
 
-								if (ImGui::DragFloat("##crotz", &cTransform->rot.z, 0.05f, 0.f, 0.f, "%.2f")) {
-									cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
-									cTransform->UpdateGlobalMatrix();
+									if (ImGui::DragFloat("##crotx", &cTransform->rot.x, 0.05f, 0.f, 0.f, "%.2f")) {
+										cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
+										cTransform->UpdateGlobalMatrix();
+									}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+									if (ImGui::DragFloat("##croty", &cTransform->rot.y, 0.05f, 0.f, 0.f, "%.2f")) {
+										cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
+										cTransform->UpdateGlobalMatrix();
+									}ImGui::SameLine(); ImGui::SetNextItemWidth(56.f);
+
+									if (ImGui::DragFloat("##crotz", &cTransform->rot.z, 0.05f, 0.f, 0.f, "%.2f")) {
+										cTransform->SetRotation(cTransform->rot.x, cTransform->rot.y, cTransform->rot.z);
+										cTransform->UpdateGlobalMatrix();
+									}
 								}
 							}
 						}
