@@ -1092,7 +1092,7 @@ void ModuleGUI::SaveScene()
 	App->Save(select_file);
 }
 
-void ModuleGUI::LoadScene(/*const char* filter_extension, const char* from_dir*/)
+void ModuleGUI::LoadScene()
 {
 	App->Load(select_file);
 }

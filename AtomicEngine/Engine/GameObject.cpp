@@ -269,6 +269,8 @@ void GameObject::CreateChild(GameObject* child)
 void GameObject::CreateNewChild()
 {
 	GameObject* child = new GameObject();
+	child->CreateComponent(ComponentType::Transform);
+	App->scene_intro->game_objects.push_back(child);
 	if (child != nullptr)
 	{
 		children.push_back(child);
