@@ -66,7 +66,6 @@ bool ModuleGUI::Init()
 	
 	App->window->SetResizable(resizable);
 	App->window->SetBorderless(borderless);
-	ImGuizmo::Enable(false);
 
 	return true;
 }
@@ -76,7 +75,7 @@ update_status ModuleGUI::PreUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
-	ImGuizmo::BeginFrame();
+
 
 	return UPDATE_CONTINUE;
 }

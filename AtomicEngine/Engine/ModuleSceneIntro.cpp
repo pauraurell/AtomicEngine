@@ -8,7 +8,7 @@
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-
+	guizmo_operation = ImGuizmo::OPERATION::TRANSLATE;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -17,8 +17,6 @@ ModuleSceneIntro::~ModuleSceneIntro()
 bool ModuleSceneIntro::Start()
 {
 	bool ret = true;
-
-	ImGuizmo::Enable(false);
 
 	root = new GameObject();
 	root->name = "Root Node";
@@ -57,6 +55,10 @@ update_status ModuleSceneIntro::PreUpdate()
 		}
 	}
 
+	if ((App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)) { guizmo_operation = ImGuizmo::OPERATION::TRANSLATE; }
+	else if ((App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)) { guizmo_operation = ImGuizmo::OPERATION::ROTATE; }
+	else if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)) { guizmo_operation = ImGuizmo::OPERATION::SCALE; }
+
 	return UPDATE_CONTINUE;
 }
 
@@ -75,6 +77,7 @@ update_status ModuleSceneIntro::Update()
 			game_objects[i]->Update();
 		}
 	}
+	DrawGuizmos();
 
 	return UPDATE_CONTINUE;
 }
@@ -180,3 +183,31 @@ void ModuleSceneIntro::PushbackGameObjects(GameObject* gameObject, std::vector<G
 	}
 }
 
+void ModuleSceneIntro::DrawGuizmos()
+{
+	if (App->gui->selectedObj != nullptr) 
+	{
+		float4x4 viewMatrix = App->camera->GetViewMatrixM().Transposed();
+		float4x4 projectionMatrix = App->camera->GetProjectionMatrixM().Transposed();
+		float4x4 objectTransform = App->gui->selectedObj->GetCTransform()->globalMat.Transposed();
+
+		bool open = true;
+		ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove;
+		ImGui::Begin("Debug", &open, flags);
+		ImGuizmo::SetDrawlist();
+		ImGui::End();
+		ImGuizmo::SetRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+		float tempTransform[16];
+		memcpy(tempTransform, objectTransform.ptr(), 16 * sizeof(float));
+		ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), guizmo_operation, ImGuizmo::MODE::WORLD, tempTransform);
+
+		if (ImGuizmo::IsUsing())
+		{
+			float4x4 newTransform;
+			newTransform.Set(tempTransform);
+			newTransform.Transpose();
+			App->gui->selectedObj->GetCTransform()->SetGlobalTransform(newTransform);
+		}
+	}	
+}

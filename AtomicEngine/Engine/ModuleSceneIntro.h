@@ -35,8 +35,8 @@ public:
 	vector<At_Tex*> texs;
 	vector<ComponentCamera*> cameras;
 
-	//void DrawGuizmo(ImGuizmo::OPERATION operation);
-	//ImGuizmo::OPERATION guizmoOperation;
+	void DrawGuizmos();
+	ImGuizmo::OPERATION guizmo_operation;
 
 	GameObject* root;
 	bool grid;

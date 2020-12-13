@@ -28,7 +28,7 @@ public:
 	float* GetProjectionMatrix();
 	float4x4 GetProjectionMatrixM();
 	float3 GetPosition();
-	GameObject* PickGameObject();
+	
 	void GoToOrigin();
 	void LookAtSelectedObject(bool go_to_gameObj = false);
 
@@ -40,6 +40,9 @@ public:
 	void SetHorizontalFieldOfView(float horizontalFOV, int screen_width, int screen_height);
 	void Reset();
 
+	GameObject* PickGameObject();
+	LineSegment CreateRay();
+	Triangle CreateTri(Mesh*m, int i);
 
 	void Move(const float3 &Movement);
 	void Orbit();

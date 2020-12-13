@@ -7,8 +7,6 @@
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	//CalculateViewMatrix();
-
 	X = float3(1.0f, 0.0f, 0.0f);
 	Y = float3(0.0f, 1.0f, 0.0f);
 	Z = float3(0.0f, 0.0f, 1.0f);
@@ -26,8 +24,6 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	App->scene_intro->cameras.push_back(camera);
 	camera->Disable();
 	Look(Reference);
-
-	//background = { 0.12f, 0.12f, 0.12f, 1.0f };
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -56,65 +52,74 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update()
 {
 	float3 newPos = float3::zero;
-	speed_multiplier = 1;
-
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) { speed_multiplier = 2; }
-
-	//Up/Down
-	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_REPEAT) { newPos.y += cam_speed; }
-
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_REPEAT) { newPos.y -= cam_speed; }
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 	{
 		if (App->gui->selectedObj != nullptr)
 		{
-			float3 center(App->gui->selectedObj->GetCTransform()->pos);
-			LookAt(center);
+			LookAtSelectedObject(true);
 		}
 	}
 
-	//Forwards/Backwards
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) 
 	{
-		newPos += camera->GetFrustum().front * cam_speed * speed_multiplier;
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) { newPos += camera->GetFrustum().front * cam_speed * speed_multiplier; }
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) { newPos -= camera->GetFrustum().front * cam_speed * speed_multiplier; }
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) { newPos += camera->GetFrustum().WorldRight() * cam_speed * speed_multiplier; }
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) { newPos -= camera->GetFrustum().WorldRight() * cam_speed * speed_multiplier; }
 	}
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+	else 
 	{
-		newPos -= camera->GetFrustum().front * cam_speed * speed_multiplier;
-	}
-	//Left/Right
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-	{
-		newPos += camera->GetFrustum().WorldRight() * cam_speed * speed_multiplier;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-	{
-		newPos -= camera->GetFrustum().WorldRight() * cam_speed * speed_multiplier;
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) { newPos += camera->GetFrustum().front * cam_speed; }
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) { newPos -= camera->GetFrustum().front * cam_speed; }
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) { newPos += camera->GetFrustum().WorldRight() * cam_speed; }
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) { newPos -= camera->GetFrustum().WorldRight() * cam_speed; }
 	}
 
-	//Drag
 	if ((App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT))
 	{
 		newPos -= camera->GetFrustum().WorldRight() * App->input->GetMouseXMotion() * cam_speed;
 		newPos += camera->GetFrustum().up * App->input->GetMouseYMotion() * cam_speed;
 	}
 
-	// Zoom 
-	if (App->input->GetMouseZ() > 0)
-	{
-		newPos += camera->GetFrustum().front * cam_speed;
-	}
-	else if (App->input->GetMouseZ() < 0)
-	{
-		newPos -= camera->GetFrustum().front * cam_speed;
-	}
+	if (App->input->GetMouseZ() > 0) { newPos += camera->GetFrustum().front * cam_speed; }
+	else if (App->input->GetMouseZ() < 0) {	newPos -= camera->GetFrustum().front * cam_speed; }
 
-	if ((App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT) || ((App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT) && (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)))
-	{
-		Orbit();
-	}
+	if ((App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT) && (App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)){ Orbit(); }
 
+	if ((App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT))
+	{
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+		{
+			if (App->gui->selectedObj != nullptr)
+			{
+				Orbit();
+				LookAtSelectedObject();
+			}
+		}
+
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+		{
+			/*if (App->gui->selectedObj != nullptr)
+			{
+				LookAtSelectedObject();
+				float zoom_speed = 0.5;
+
+				if (App->input->GetMouseYMotion() > 0)
+				{
+					Position += Z * zoom_speed;
+				}
+
+				if (App->input->GetMouseYMotion() < 0)
+				{
+					Position -= Z * zoom_speed;
+				}
+
+				LookAtSelectedObject();
+			}*/
+		}
+	}
+		
 	Position += newPos;
 	camera->SetPosition(Position);
 	Reference += newPos;
@@ -123,20 +128,17 @@ update_status ModuleCamera3D::Update()
 	return UPDATE_CONTINUE;
 }
 
-// -----------------------------------------------------------------
 void ModuleCamera3D::OnResize(int width, int height)
 {
 	camera->AdjustFieldOfView(width, height);
 }
 
-// -----------------------------------------------------------------
 void ModuleCamera3D::Look(float3& position)
 {
 	camera->Look(position);
 	Reference = position;
 }
 
-// -----------------------------------------------------------------
 void ModuleCamera3D::LookAt(const float3& Spot)
 {
 	camera->Look(Spot);
@@ -148,19 +150,16 @@ ComponentCamera* ModuleCamera3D::GetCamera()
 	return camera;
 }
 
-// -----------------------------------------------------------------
 float* ModuleCamera3D::GetViewMatrix()
 {
 	return camera->GetViewMatrix();
 }
 
-// -----------------------------------------------------------------
 float4x4 ModuleCamera3D::GetViewMatrixM()
 {
 	return camera->GetFrustum().ViewMatrix();
 }
 
-// -----------------------------------------------------------------
 float* ModuleCamera3D::GetProjectionMatrix()
 {
 	return camera->GetProjectionMatrix();
@@ -178,40 +177,26 @@ float3 ModuleCamera3D::GetPosition()
 
 GameObject* ModuleCamera3D::PickGameObject()
 {
-	float normalized_x = (float)App->input->GetMouseX() / (float)SCREEN_WIDTH;
-	float normalized_y = (float)App->input->GetMouseY() / (float)SCREEN_HEIGHT;
-
-	normalized_x = (normalized_x - 0.5f) * 2.0f;
-	normalized_y = -(normalized_y - 0.5f) * 2.0f;
-
-	LineSegment my_ray = camera->GetFrustum().UnProjectLineSegment(normalized_x, normalized_y);
-
-	App->renderer3D->ray = my_ray;
+	LineSegment ray = CreateRay();
 
 	std::vector<GameObject*> sceneGameObjects = App->scene_intro->GetGameObjects();
-	std::map<float, GameObject*> hitGameObjects;
-
-	//find all hit GameObjects
+	std::map<float, GameObject*> go;
 	for (size_t i = 0; i < sceneGameObjects.size(); i++)
 	{
-		bool hit = my_ray.Intersects(sceneGameObjects[i]->BB);
-
-		if (hit)
-		{
-			float dNear;
-			float dFar;
-			hit = my_ray.Intersects(sceneGameObjects[i]->BB, dNear, dFar);
-			hitGameObjects[dNear] = sceneGameObjects[i];
+		bool hit = ray.Intersects(sceneGameObjects[i]->BB);
+		if (hit) {
+			float sDistance;
+			float fDistance;
+			hit = ray.Intersects(sceneGameObjects[i]->BB, sDistance, fDistance);
+			go[sDistance] = sceneGameObjects[i];
 		}
 	}
 
-	std::map<float, GameObject*>::iterator it = hitGameObjects.begin();
-	for (it; it != hitGameObjects.end(); it++)
+	std::map<float, GameObject*>::iterator it = go.begin();
+	for (it; it != go.end(); it++)
 	{
 		GameObject* gameObject = it->second;
-
-		LineSegment ray_local_space = my_ray;
-		ray_local_space.Transform(gameObject->GetCTransform()->globalMat.Inverted());
+		ray.Transform(gameObject->GetCTransform()->globalMat.Inverted());
 
 		if (gameObject->GetCMesh() != nullptr) 
 		{
@@ -219,21 +204,10 @@ GameObject* ModuleCamera3D::PickGameObject()
 
 			for (size_t i = 0; i < mesh->num_index; i += 3)
 			{
-				//create every triangle
-				float3 v1(mesh->vertex[mesh->index[i] * 3], mesh->vertex[mesh->index[i] * 3 + 1],
-					mesh->vertex[mesh->index[i] * 3 + 2]);
-
-				float3 v2(mesh->vertex[mesh->index[i + 1] * 3], mesh->vertex[mesh->index[i + 1] * 3 + 1],
-					mesh->vertex[mesh->index[i + 1] * 3 + 2]);
-
-				float3 v3(mesh->vertex[mesh->index[i + 2] * 3], mesh->vertex[mesh->index[i + 2] * 3 + 1],
-					mesh->vertex[mesh->index[i + 2] * 3 + 2]);
-
-				const Triangle triangle(v1, v2, v3);
-
-				float distance;
+				Triangle tri = CreateTri(mesh, i);
+				float d;
 				float3 intersectionPoint;
-				if (ray_local_space.Intersects(triangle, &distance, &intersectionPoint)) {
+				if (ray.Intersects(tri, &d, &intersectionPoint)) {
 					return gameObject;
 				}
 			}
@@ -241,6 +215,33 @@ GameObject* ModuleCamera3D::PickGameObject()
 	}
 
 	return nullptr;
+}
+
+LineSegment ModuleCamera3D::CreateRay() 
+{
+	float x = (float)App->input->GetMouseX() / (float)SCREEN_WIDTH;
+	float y = (float)App->input->GetMouseY() / (float)SCREEN_HEIGHT;
+
+	x = (x - 0.5f) * 2.0f;
+	y = -(y - 0.5f) * 2.0f;
+
+	LineSegment line = camera->GetFrustum().UnProjectLineSegment(x, y);
+	App->renderer3D->ray = line;
+
+	return line;
+}
+
+Triangle ModuleCamera3D::CreateTri(Mesh* m, int i)
+{
+	float3 vertex1(m->vertex[m->index[i] * 3], m->vertex[m->index[i] * 3 + 1],
+		m->vertex[m->index[i] * 3 + 2]);
+	float3 vertex2(m->vertex[m->index[i + 1] * 3], m->vertex[m->index[i + 1] * 3 + 1],
+		m->vertex[m->index[i + 1] * 3 + 2]);
+	float3 vertex3(m->vertex[m->index[i + 2] * 3], m->vertex[m->index[i + 2] * 3 + 1],
+		m->vertex[m->index[i + 2] * 3 + 2]);
+
+	const Triangle tri(vertex1, vertex2, vertex3);
+	return tri;
 }
 
 FixedFOV ModuleCamera3D::GetFixedFOV()
@@ -263,6 +264,18 @@ float ModuleCamera3D::GetHorizontalFieldOfView()
 	return camera->GetFrustum().horizontalFov;
 }
 
+void ModuleCamera3D::GoToOrigin()
+{
+	LookAt(float3(0.f, 0.f, 0.f));
+	Position = float3(2.0f, 3.8f, -5.0f);
+}
+
+void ModuleCamera3D::LookAtSelectedObject(bool go_to_gameObj)
+{
+	float3 position = App->gui->selectedObj->GetCTransform()->pos;
+	LookAt(float3(position.x, position.y, position.z));
+	if (go_to_gameObj) Position = float3(position.x + 2.0f, position.y + 3.8f, position.z - 5.0f);
+}
 
 void ModuleCamera3D::SetVerticalFieldOfView(float verticalFOV, int screen_width, int screen_height)
 {
@@ -284,7 +297,6 @@ void ModuleCamera3D::Reset()
 
 	Position = float3(4.0f, 3.5f, -8.0f);
 	Reference = float3(0.0f, 0.0f, 0.0f);
-
 	Move(float3(1.0f, 1.0f, 0.0f));
 	LookAt(float3(0.0f, 0.0f, 0.0f));
 }
@@ -297,17 +309,13 @@ void ModuleCamera3D::Move(const float3 &Movement)
 
 void ModuleCamera3D::Orbit()
 {
-	int dx = -App->input->GetMouseXMotion();
-	int dy = -App->input->GetMouseYMotion();
+	Quat y(camera->GetFrustum().up, -App->input->GetMouseXMotion() * sensitivity * 0.003f);
+	Quat x(camera->GetFrustum().WorldRight(), -App->input->GetMouseYMotion() * sensitivity * 0.003f);
 
-	Quat y_rotation(camera->GetFrustum().up, dx * cam_speed * 0.1f);
-	Quat x_rotation(camera->GetFrustum().WorldRight(), dy * cam_speed * 0.1f);
-
-	float3 distance = Position - Reference;
-	distance = x_rotation.Transform(distance);
-	distance = y_rotation.Transform(distance);
-
-	Position = distance + Reference;
+	float3 d = Position - Reference;
+	d = x.Transform(d);
+	d = y.Transform(d);
+	Position = d + Reference;
 	camera->SetPosition(Position);
 	camera->Look(Reference);
 }
