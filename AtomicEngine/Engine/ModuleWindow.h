@@ -21,6 +21,7 @@ public:
 	void SetTitle(const char* title);
 	void SetBrightness(float bright);
 	void SetWidth(int width);
+	void GetSize(int& width, int& height);
 	void SetHeight(int height);
 	void SetFullscreen(bool state);
 	void SetResizable(bool state);

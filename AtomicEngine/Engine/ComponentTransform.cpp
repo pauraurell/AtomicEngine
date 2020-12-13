@@ -89,3 +89,11 @@ void ComponentTransform::SetScale(float x, float y, float z)
 	scale.z = z;
 	UpdateGlobalMatrix();
 }
+
+void ComponentTransform::SetTransform(float trans[16])
+{
+	float4x4 transform;
+	transform.Set(trans);
+	transform.Transpose();
+	SetGlobalTransform(transform);
+}

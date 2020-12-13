@@ -41,6 +41,7 @@ ModuleGUI::ModuleGUI(Application* app, bool start_enabled) : Module(app, start_e
 	printInspector = false;
 
 	selectedObj = nullptr;
+	rayChecker = false;
 
 	r = 0.05;
 	g = 0.05;
@@ -76,6 +77,7 @@ update_status ModuleGUI::PreUpdate()
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 
+	App->window->GetSize(width, height);
 
 	return UPDATE_CONTINUE;
 }
@@ -87,6 +89,14 @@ update_status ModuleGUI::Update()
 	bool visible = true;
 	if (ImGui::Begin("Game Time Buttons", &visible, flags))
 	{
+		if (ImGui::Checkbox("Bounding Boxes", &bbChecker)) {
+			bbChecker != bbChecker;
+		}ImGui::SameLine();
+
+		if (ImGui::Checkbox("Mouse Pick Ray", &rayChecker)) {
+			rayChecker != rayChecker;
+		}ImGui::SameLine(); ImGui::Text("       "); ImGui::SameLine();
+
 		if (Time::GameTime.GetTimeSinceStartup() > 0) 
 		{
 			if (Time::GameTime.paused == false)

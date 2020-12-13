@@ -118,7 +118,7 @@ bool ModuleRenderer3D::Init()
 	}
 
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	OnResize(App->gui->width, App->gui->height);
 	
 	return ret;
 }
@@ -145,10 +145,13 @@ update_status ModuleRenderer3D::PreUpdate()
 
 update_status ModuleRenderer3D::Update()
 {
-	glBegin(GL_LINES);
-	glVertex3f(ray.a.x, ray.a.y, ray.a.z);
-	glVertex3f(ray.b.x, ray.b.y, ray.b.z);
-	glEnd();
+	if (App->gui->rayChecker) 
+	{
+		glBegin(GL_LINES);
+		glVertex3f(ray.a.x, ray.a.y, ray.a.z);
+		glVertex3f(ray.b.x, ray.b.y, ray.b.z);
+		glEnd();
+	}
 	return UPDATE_CONTINUE;
 }
 

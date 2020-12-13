@@ -219,11 +219,8 @@ GameObject* ModuleCamera3D::PickGameObject()
 
 LineSegment ModuleCamera3D::CreateRay() 
 {
-	float x = (float)App->input->GetMouseX() / (float)SCREEN_WIDTH;
-	float y = (float)App->input->GetMouseY() / (float)SCREEN_HEIGHT;
-
-	x = (x - 0.5f) * 2.0f;
-	y = -(y - 0.5f) * 2.0f;
+	float x = (((float)App->input->GetMouseX() / (float)App->gui->width ) - 0.50f) * 2.0f;
+	float y = -(((float)App->input->GetMouseY() / (float)App->gui->height) - 0.50f) * 2.0f;
 
 	LineSegment line = camera->GetFrustum().UnProjectLineSegment(x, y);
 	App->renderer3D->ray = line;
