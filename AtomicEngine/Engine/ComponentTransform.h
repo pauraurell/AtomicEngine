@@ -9,6 +9,9 @@ public:
 	ComponentTransform(GameObject* go);
 	~ComponentTransform();
 
+	void Save(GnJSONArray& save_array) override;
+	void Load(GnJSONObj& load_object) override;
+
 	void SetGlobalTransform(float4x4 trans);
 	void UpdateLocalMatrix();
 	void UpdateGlobalMatrix();

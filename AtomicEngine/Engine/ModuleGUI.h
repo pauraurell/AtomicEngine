@@ -31,6 +31,8 @@ public:
 
 	const char* GetCaps();
 	void DrawUi();
+	void SaveScenePopUp();
+	void SaveScene(char* file_name);
 
 	std::string caps;
 

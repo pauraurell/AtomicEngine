@@ -19,6 +19,8 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	bool CleanUp();
+	bool SaveScene(char* file_name);
+	bool LoadScene(char* file_name);
 
 	GameObject* CreateGameObject(bool camera = false);
 	GameObject* CreateGameObject(Mesh* m);

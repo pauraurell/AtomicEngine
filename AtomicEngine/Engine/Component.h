@@ -26,6 +26,11 @@ public:
 	virtual void Disable()
 	{}
 
+	virtual void Save(GnJSONArray& save_array)
+	{};
+	virtual void Load(GnJSONObj& load_object)
+	{};
+
 	GameObject* owner;
 	ComponentType type;
 	bool active;

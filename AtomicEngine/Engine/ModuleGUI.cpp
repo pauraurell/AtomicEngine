@@ -160,8 +160,10 @@ update_status ModuleGUI::Update()
 			if (ImGui::MenuItem("Open" ,0, false, false))
 			{}
 
-			if (ImGui::MenuItem("Save", "Ctrl + S", false, false))
-			{}
+			if (ImGui::MenuItem("Save", "Ctrl + S"))
+			{
+				SaveScenePopUp();
+			}
 		
 			if (ImGui::MenuItem("Exit", "Alt + F4"))
 			{
@@ -602,7 +604,7 @@ update_status ModuleGUI::Update()
 					ImGui::Separator();
 					if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
 					{
-						ImGui::Checkbox("Disable ", &selectedObj->GetCCamera()->active); ImGui::SameLine();
+						ImGui::Checkbox("Frustum Culling", &selectedObj->GetCCamera()->active); ImGui::SameLine();
 						if (ImGui::Button("Delete  Component")) { selectedObj->DeleteComponent(selectedObj->GetCCamera()); }
 						if (selectedObj->GetCCamera() != nullptr)
 						{
@@ -981,4 +983,33 @@ update_status ModuleGUI::DockingSpace(bool* open)
 	ImGui::End();
 
 	return ret;
+}
+
+void ModuleGUI::SaveScenePopUp()
+{
+	ImGui::OpenPopup("Save File");
+	if (ImGui::BeginPopupModal("Save File"))
+	{
+		char file_name[128];
+		ImGui::PushItemWidth(250.f);
+		if (ImGui::InputText("##file_name", file_name, 128, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+		{
+
+		}
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		if (ImGui::Button("Ok", ImVec2(50, 20)))
+		{
+			if (file_name[0] == '\0') { strcpy(file_name, "Untitled"); }
+			App->scene_intro->SaveScene(file_name);
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel", ImVec2(50, 20)))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
 }
