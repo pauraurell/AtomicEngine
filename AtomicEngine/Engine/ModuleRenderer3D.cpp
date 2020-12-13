@@ -190,7 +190,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 void ModuleRenderer3D::RenderGameObject(GameObject* go) {
 
 	CheckWireframeMode();
-	if (FrustumCulling(go) == false || go == App->gui->selectedObj)
+	if (FrustumCulling(go) == true || go == App->gui->selectedObj)
 	{
 		if (go->GetCMaterial() != nullptr)
 		{
